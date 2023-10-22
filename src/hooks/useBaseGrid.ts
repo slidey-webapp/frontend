@@ -41,7 +41,7 @@ export function useBaseGrid<TData>({
 
         const response = await requestApi<PaginatedList<TData>>('get', props.url, {}, { params: query });
 
-        if (response.data?.success) {
+        if (response.status === 200) {
             setState({
                 loading: false,
                 data: response.data?.result?.items,

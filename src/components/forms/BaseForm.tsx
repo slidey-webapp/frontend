@@ -4,7 +4,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { FieldErrors, useForm } from 'react-hook-form';
 import { MixedSchema, NumberSchema, ObjectSchema, ObjectShape, StringSchema, mixed, number, object, string } from 'yup';
 import { ComboOption, GridClassNameCol } from '~/types/shared';
-import { ButtonBase } from '../buttons/ButtonBase';
 import BaseDatePickerField from './fields/BaseDatePickerField';
 import BaseImagePickerField from './fields/BaseImagePickerField';
 import BasePasswordField from './fields/BasePasswordField';
@@ -23,10 +22,12 @@ export interface Props {
     };
 }
 
+type FormFieldType = 'text' | 'number' | 'positive' | 'email' | 'password' | 'select' | 'date' | 'image';
+
 export interface FormField {
     name: string;
     classNameCol: GridClassNameCol;
-    type?: 'text' | 'number' | 'positive' | 'password' | 'select' | 'date' | 'image';
+    type?: FormFieldType;
     label?: string;
     required?: boolean;
     disabled?: boolean;
@@ -48,9 +49,11 @@ const convertObjectShape = (fields: FormField[]): ObjectShape => {
             case 'number':
                 schemaItem = number();
                 break;
-
             case 'positive':
                 schemaItem = number().positive();
+                break;
+            case 'email':
+                schemaItem = string().email('Email không đúng định dạng');
                 break;
             case 'image':
                 const _2MbSize = 2097152;
@@ -64,7 +67,7 @@ const convertObjectShape = (fields: FormField[]): ObjectShape => {
         }
 
         // required
-        if (field.required) schemaItem = schemaItem.required();
+        if (field.required) schemaItem = schemaItem.required(`${field.label} không được trống`);
 
         Object.assign(objectShape, {
             [field.name]: schemaItem,
@@ -77,13 +80,15 @@ const convertObjectShape = (fields: FormField[]): ObjectShape => {
 const BaseForm: React.FC<Props> = ({ fields, initialValues, onError, onSubmit, buttons }) => {
     const schema = object().shape(convertObjectShape(fields));
 
-    const { handleSubmit, control, getValues } = useForm({
+    const { handleSubmit, control } = useForm({
         defaultValues: initialValues,
         resolver: yupResolver(schema),
     });
 
     const renderField = (field: FormField) => {
         switch (field.type) {
+            case 'email':
+                return <BaseTextField {...field} control={control} />;
             case 'text':
                 return <BaseTextField {...field} control={control} />;
             case 'number':

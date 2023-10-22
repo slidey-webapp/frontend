@@ -1,15 +1,31 @@
 export interface AuthUser {
     claims: string[];
-    user: Account;
+    user: User;
+    token: string;
+    refreshToken: string;
 }
 
 export interface Account {
-    id: string;
-    //todo: add more
+    accountID: number;
+    email: string;
+    status: 'UNVERIFIED' | 'ACTIVE';
 }
 
+export interface Person {
+    fullName: string;
+}
+
+export interface User extends Account, Person {}
+
 export interface LoginParam {
-    username: string;
+    email: string;
     password: string;
     rememberMe: boolean;
+}
+
+export interface SignUpParam {
+    password: string;
+    email: string;
+    fullname: string;
+    confirmPassword: string;
 }

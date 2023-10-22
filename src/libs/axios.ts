@@ -1,23 +1,16 @@
 import Axios, { AxiosRequestConfig, AxiosResponse, Method } from 'axios';
+import MockAdapter from 'axios-mock-adapter';
+import Cookies from 'js-cookie';
 import { NotificationConstant } from '~/configs/constants';
 import NotifyUtil from '~/utils/NotifyUtil';
-import MockAdapter from 'axios-mock-adapter';
-
-export const axios = Axios.create({
-    baseURL: '/',
-    headers: { Accept: 'application/json' },
-});
 
 const mockAxios = new MockAdapter(Axios, { delayResponse: 500, onNoMatch: 'passthrough' });
 export const MockAxios = mockAxios;
 
 export type ApiResponse<T = any> = {
-    success: boolean;
-    errors?: Record<string, string[]>;
+    errors?: Record<string, string>;
     message?: string;
     result?: T;
-    totalCount?: number;
-    error?: Record<string, string[]>;
 };
 
 export type PaginatedList<T = any> = {
@@ -49,33 +42,37 @@ export const requestApi = <T = any>(
     data?: any,
     config?: AxiosRequestConfig,
 ): ResultResponse<T> => {
+    const token = Cookies.get('token');
+    const includeHeadersAuthorizationConfig = {
+        ...config,
+        headers: {
+            accept: 'application/json',
+            Authorization: `Bearer ${token}`,
+        },
+    };
     switch (method) {
         case 'get':
         case 'GET':
             return Axios.get(url, {
                 params: data,
-                ...config,
+                ...includeHeadersAuthorizationConfig,
             }).catch(error => {
-                console.log('errorRequest', error, error?.response, error?.response?.status);
                 return Promise.resolve({
                     ...error.response,
                     data: {
                         success: false,
-                        message: '',
-                        errors: error.response?.data?.errors,
+                        ...error.response?.data,
                     },
                 });
             });
         case 'post':
         case 'POST':
-            return Axios.post(url, data, config).catch(error => {
-                console.log('errorRequest', error, error.response, error.response?.status);
+            return Axios.post(url, data, includeHeadersAuthorizationConfig).catch(error => {
                 return Promise.resolve({
                     ...error.response,
                     data: {
                         success: false,
-                        message: '',
-                        errors: error.response?.data?.errors || error.response?.data?.error,
+                        ...error.response?.data,
                     },
                 });
             });
@@ -83,43 +80,37 @@ export const requestApi = <T = any>(
         case 'DELETE':
             return Axios.delete(url, {
                 params: data,
-                ...config,
+                ...includeHeadersAuthorizationConfig,
             }).catch(error => {
-                console.log('errorRequest', error, error.response, error.response?.status);
                 return Promise.resolve({
                     ...error.response,
                     data: {
                         success: false,
-                        message: '',
-                        errors: error.response?.data?.errors,
+                        ...error.response?.data,
                     },
                 });
             });
         case 'put':
         case 'PUT':
-            return Axios.put(url, data, config).catch(error => {
-                console.log('errorRequest', error, error.response, error.response?.status);
+            return Axios.put(url, data, includeHeadersAuthorizationConfig).catch(error => {
                 return Promise.resolve({
                     ...error.response,
                     data: {
                         success: false,
-                        message: '',
-                        errors: error.response?.data?.errors,
+                        ...error.response?.data,
                     },
                 });
             });
         default:
             return Axios.get(url, {
                 params: data,
-                ...config,
+                ...includeHeadersAuthorizationConfig,
             }).catch(error => {
-                console.log('errorRequest', error, error.response, error.response?.status);
                 return Promise.resolve({
                     ...error.response,
                     data: {
                         success: false,
-                        message: '',
-                        errors: error.response?.data?.errors,
+                        ...error.response?.data,
                     },
                 });
             });
@@ -128,7 +119,7 @@ export const requestApi = <T = any>(
 
 export const baseDeleteApi = async (url: string, id: string) => {
     const response = await requestApi('delete', `${url}/${id}`);
-    if (response.data?.success) {
+    if (response.status === 200) {
         NotifyUtil.success(NotificationConstant.DESCRIPTION_DELETE_SUCCESS);
     } else {
         NotifyUtil.error(response.data?.message || NotificationConstant.DESCRIPTION_DELETE_FAIL);

@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import axios from 'axios';
+import Cookies from 'js-cookie';
 import { AppThunk } from '~/AppStore';
 import { CHECK_AUTH_API, LOGIN_API, LOGOUT_API } from '~/configs/global.api';
 import { requestApi } from '~/libs/axios';
@@ -48,12 +48,9 @@ export const { setAuthData, setLoading, setLogout, setLoadingCheckLogin } = auth
 export const fetchAuthDataAsync = (): AppThunk => async dispatch => {
     dispatch(setLoadingCheckLogin(true));
     try {
-        const instanceAxios = axios.create();
-        const response = await instanceAxios.get(CHECK_AUTH_API);
-        // @ts-ignore
-        if (response.data?.success) {
-            // @ts-ignore
-            await dispatch(setAuthData(response.data.result));
+        const response = await requestApi('get', CHECK_AUTH_API);
+        if (response.status === 200) {
+            dispatch(setAuthData(response.data.result));
         }
     } catch (err) {
         console.error(err);
@@ -63,17 +60,24 @@ export const fetchAuthDataAsync = (): AppThunk => async dispatch => {
 };
 
 export const loginAsync =
-    (params: LoginParam, loginSuccessFullCallback: () => void): AppThunk =>
+    (params: LoginParam, loginSuccessFullCallback: (authUser?: AuthUser) => void): AppThunk =>
     async dispatch => {
         dispatch(setLoading(true));
         const response = await requestApi<AuthUser>('post', LOGIN_API, params);
         dispatch(setLoading(false));
-        if (response?.status == 200 || response?.status == 400) {
-            if (response.data.success) {
+        if (response?.status === 200 || response?.status === 400) {
+            if (response.status === 200) {
                 dispatch(setAuthData(response.data.result));
-                loginSuccessFullCallback();
+                loginSuccessFullCallback(response.data.result);
+                if (!response.data.result) return;
+                Cookies.set('token', response.data.result.token, {
+                    expires: 1,
+                });
+                Cookies.set('refresh-token', response.data.result.refreshToken, {
+                    expires: 1,
+                });
             } else {
-                NotifyUtil.error('Sai tài khoản hoặc mật khẩu');
+                NotifyUtil.error(response.data?.message || 'Có lỗi xảy ra');
             }
         } else {
             NotifyUtil.error('Lỗi kết nối máy chủ, xin vui lòng liên hệ quản trị viên hoặc thử lại sau');
@@ -82,14 +86,16 @@ export const loginAsync =
     };
 
 export const logoutAsync =
-    (loginSuccessFullCallback: () => void): AppThunk =>
+    (logoutSuccessFullCallback: () => void): AppThunk =>
     async dispatch => {
         dispatch(setLoading(true));
-        const response = await requestApi<AuthUser>('get', LOGOUT_API);
-        if (response.data.success) {
+        const response = await requestApi('post', LOGOUT_API);
+        if (response.status === 200) {
             NotifyUtil.success('Đăng xuất thành công!');
+            Cookies.remove('token');
+            Cookies.remove('refresh-token');
             dispatch(setLogout());
-            loginSuccessFullCallback();
+            logoutSuccessFullCallback();
         }
         dispatch(setLoading(false));
         return true;

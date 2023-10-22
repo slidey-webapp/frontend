@@ -26,7 +26,7 @@ const ExampleGrid: React.FC<Props> = () => {
     };
 
     const handleUpdate = (data: ExampleGridDto) => {
-        console.log(data)
+        console.log(data);
         modalRef.current?.onOpen(<div>Update modal</div>, 'Cập nhật', '50%');
     };
 

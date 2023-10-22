@@ -1,33 +1,47 @@
 import * as React from 'react';
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import { Navigate, useRoutes } from 'react-router-dom';
 import { RootState, useAppSelector } from '~/AppStore';
-import LoginView from '~/components/layouts/LoginView';
-import RegisterView from '~/components/layouts/RegisterView';
+import Loading from '~/components/loadings/Loading';
 import { fetchAuthDataAsync } from '~/store/authSlice';
+const LoginView = React.lazy(() => import('~/components/layouts/LoginView'));
+const RegisterView = React.lazy(() => import('~/components/layouts/RegisterView'));
 
 type Props = {
     children: React.ReactNode;
 };
 
+const authRouteList = [
+    {
+        path: '/register',
+        element: (
+            <Suspense>
+                <RegisterView />
+            </Suspense>
+        ),
+    },
+    {
+        path: '/*',
+        element: (
+            <Suspense>
+                <LoginView />
+            </Suspense>
+        ),
+    },
+];
+
 export const AuthProvider: React.FC<Props> = ({ children }: Props) => {
     const dispatch = useDispatch();
+    const elements = useRoutes(authRouteList);
 
-    const { loading, isAuthenticated, checkLoginLoading, authUser } = useAppSelector((state: RootState) => state.auth);
+    const { isAuthenticated, checkLoginLoading } = useAppSelector((state: RootState) => state.auth);
 
     useEffect(() => {
         dispatch(fetchAuthDataAsync());
     }, []);
 
-    if (checkLoginLoading) return <>Loading...</>;
-    if (!isAuthenticated) {
-        const pathName = location.pathname;
-        if (pathName.includes('register')) {
-            return <RegisterView />;
-        }
-
-        return <LoginView />;
-    }
-
+    if (checkLoginLoading) return <Loading />;
+    if (!isAuthenticated) return elements;
     return <>{children}</>;
 };

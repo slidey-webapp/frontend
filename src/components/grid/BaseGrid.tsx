@@ -2,8 +2,6 @@ import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-mod
 import { ColDef, ColGroupDef, GetDataPath, ModuleRegistry, RowGroupingDisplayType } from '@ag-grid-community/core';
 import { AgGridReact } from '@ag-grid-community/react';
 import { RowGroupingModule } from '@ag-grid-enterprise/row-grouping';
-import PencilSquareIcon from '@heroicons/react/24/solid/PencilSquareIcon';
-import TrashIcon from '@heroicons/react/24/solid/TrashIcon';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import _ from 'lodash';
@@ -11,9 +9,8 @@ import React from 'react';
 import NotifyUtil from '~/utils/NotifyUtil';
 import { ButtonBase } from '../buttons/ButtonBase';
 
-import { SvgIcon } from '@mui/material';
+import Loading from '../loadings/Loading';
 import './styles/base-grid.scss';
-import BaseIcon from '../icons/BaseIcon';
 
 export interface BaseGridColDef extends ColDef, Partial<ColGroupDef> {}
 
@@ -146,7 +143,7 @@ const BaseGrid = React.forwardRef<BaseGridRef, BaseGridProps>((props, ref) => {
                             floatingFilter: false,
                             ...props.defaultColDef,
                         }}
-                        loadingOverlayComponent={() => <div>Loading...</div>}
+                        loadingOverlayComponent={() => <Loading />}
                         pagination={pagination}
                         paginationPageSize={paginationPageSize}
                         onGridReady={params => params.api.sizeColumnsToFit()}
