@@ -46,6 +46,9 @@ const convertObjectShape = (fields: FormField[]): ObjectShape => {
             case 'text':
                 schemaItem = string();
                 break;
+            case 'password':
+                schemaItem = string().min(6, `${field.label} phải có ít nhất 6 ký tự`);
+                break;
             case 'number':
                 schemaItem = number();
                 break;

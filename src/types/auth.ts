@@ -23,6 +23,8 @@ export interface LoginParam {
     rememberMe: boolean;
 }
 
+export type LoginType = 'login' |'google-login'
+
 export interface SignUpParam {
     password: string;
     email: string;

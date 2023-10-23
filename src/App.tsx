@@ -11,6 +11,7 @@ import './App.scss';
 import store from './AppStore';
 import { AuthProvider } from './providers/AuthProvider';
 import AppRoute from './routes/AppRoute';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 const ErrorFallback = () => {
     return (
@@ -24,15 +25,17 @@ const App = () => {
     return (
         <React.Fragment>
             <Provider store={store}>
-                <ErrorBoundary FallbackComponent={ErrorFallback}>
-                    <QueryClientProvider client={queryClient}>
-                        <Router>
-                            <AuthProvider>
-                                <AppRoute />
-                            </AuthProvider>
-                        </Router>
-                    </QueryClientProvider>
-                </ErrorBoundary>
+                <GoogleOAuthProvider clientId={process.env.REACT_APP_OAUTH_GOOGLE_CLIENT_ID as string}>
+                    <ErrorBoundary FallbackComponent={ErrorFallback}>
+                        <QueryClientProvider client={queryClient}>
+                            <Router>
+                                <AuthProvider>
+                                    <AppRoute />
+                                </AuthProvider>
+                            </Router>
+                        </QueryClientProvider>
+                    </ErrorBoundary>
+                </GoogleOAuthProvider>
             </Provider>
             <ToastContainer />
         </React.Fragment>

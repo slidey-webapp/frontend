@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import Cookies from 'js-cookie';
 import { AppThunk } from '~/AppStore';
-import { CHECK_AUTH_API, LOGIN_API, LOGOUT_API } from '~/configs/global.api';
+import { CHECK_AUTH_API, GOOGLE_LOGIN_API, LOGIN_API, LOGOUT_API } from '~/configs/global.api';
 import { requestApi } from '~/libs/axios';
-import { AuthUser, LoginParam } from '~/types/auth';
+import { AuthUser, LoginParam, LoginType } from '~/types/auth';
 import NotifyUtil from '~/utils/NotifyUtil';
 
 interface AuthState {
@@ -60,10 +60,20 @@ export const fetchAuthDataAsync = (): AppThunk => async dispatch => {
 };
 
 export const loginAsync =
-    (params: LoginParam, loginSuccessFullCallback: (authUser?: AuthUser) => void): AppThunk =>
+    (
+        {
+            type,
+            params,
+        }: {
+            type: LoginType;
+            params: LoginParam | { token: string };
+        },
+        loginSuccessFullCallback: (authUser?: AuthUser) => void,
+        callback?: () => void,
+    ): AppThunk =>
     async dispatch => {
         dispatch(setLoading(true));
-        const response = await requestApi<AuthUser>('post', LOGIN_API, params);
+        const response = await requestApi<AuthUser>('post', type === 'login' ? LOGIN_API : GOOGLE_LOGIN_API, params);
         dispatch(setLoading(false));
         if (response?.status === 200 || response?.status === 400) {
             if (response.status === 200) {
@@ -82,6 +92,7 @@ export const loginAsync =
         } else {
             NotifyUtil.error('Lỗi kết nối máy chủ, xin vui lòng liên hệ quản trị viên hoặc thử lại sau');
         }
+        callback?.();
         return true;
     };
 

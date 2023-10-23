@@ -13,3 +13,11 @@ body {
 code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
+
+.google-login-button {
+    iframe {
+        width: calc(100% + 20px) !important;
+        margin: unset !important;
+        left: -10px !important;
+    }
+}
