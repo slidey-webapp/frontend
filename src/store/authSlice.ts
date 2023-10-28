@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import Cookies from 'js-cookie';
 import { AppThunk } from '~/AppStore';
-import { CHECK_AUTH_API, GOOGLE_LOGIN_API, LOGIN_API, LOGOUT_API } from '~/configs/global.api';
+import { CHECK_AUTH_API, GOOGLE_LOGIN_API, LOGIN_API, LOGOUT_API, VERIFY_ACCOUNT_API } from '~/configs/global.api';
 import { requestApi } from '~/libs/axios';
-import { AuthUser, LoginParam, LoginType } from '~/types/auth';
+import { AuthUser, LoginParam, LoginType, VerifyAccountParam } from '~/types/auth';
 import NotifyUtil from '~/utils/NotifyUtil';
 
 interface AuthState {

@@ -4,5 +4,6 @@ export const CHECK_AUTH_API = APP_API_PATH + '/account/auth';
 export const LOGIN_API = APP_API_PATH + '/account/login';
 export const SIGN_UP_API = APP_API_PATH + '/account/sign-up';
 export const GOOGLE_LOGIN_API = APP_API_PATH + '/account/google-login';
+export const VERIFY_ACCOUNT_API = APP_API_PATH + '/account/verify';
 
 export const LOGOUT_API = APP_API_PATH + '/account/logout';

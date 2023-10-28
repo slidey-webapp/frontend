@@ -23,7 +23,7 @@ export interface LoginParam {
     rememberMe: boolean;
 }
 
-export type LoginType = 'login' |'google-login'
+export type LoginType = 'login' | 'google-login';
 
 export interface SignUpParam {
     password: string;
@@ -31,3 +31,8 @@ export interface SignUpParam {
     fullname: string;
     confirmPassword: string;
 }
+
+export type VerifyAccountParam = {
+    accountID?: string;
+    token?: string;
+};

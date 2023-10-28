@@ -17,10 +17,13 @@ const RegisterView: React.FC = () => {
     const navigate = useNavigate();
     const overlayRef = useRef<OverlayRef>(null);
     const dispatch = useAppDispatch();
+
     const handleSubmit = async (formValues: SignUpParam) => {
+        overlayRef.current?.open()
         const response = await requestApi('post', SIGN_UP_API, formValues);
+        overlayRef.current?.close()
         if (response.status === 200) {
-            NotifyUtil.success('Đăng ký tài khoản thành công!');
+            NotifyUtil.success('Đăng ký tài khoản thành công. Vui lòng kiểm tra email để xác thực tài khoản!');
             navigate('/login');
         } else {
             NotifyUtil.error(response.data?.message || 'Có lỗi xảy ra!');

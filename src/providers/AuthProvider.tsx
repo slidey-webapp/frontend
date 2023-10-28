@@ -7,6 +7,8 @@ import Loading from '~/components/loadings/Loading';
 import { fetchAuthDataAsync } from '~/store/authSlice';
 const LoginView = React.lazy(() => import('~/components/layouts/LoginView'));
 const RegisterView = React.lazy(() => import('~/components/layouts/RegisterView'));
+const VerifyAccount = React.lazy(() => import('~/components/layouts/VerifyAccount'));
+
 
 type Props = {
     children: React.ReactNode;
@@ -18,6 +20,14 @@ const authRouteList = [
         element: (
             <Suspense>
                 <RegisterView />
+            </Suspense>
+        ),
+    },
+    {
+        path: '/account/:accountID/verify/:token',
+        element: (
+            <Suspense>
+                <VerifyAccount />
             </Suspense>
         ),
     },
