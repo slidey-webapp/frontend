@@ -57,8 +57,9 @@ const BaseGrid = React.forwardRef<BaseGridRef, BaseGridProps>((props, ref) => {
                   {
                       field: 'stt',
                       headerName: 'STT',
-                      width: 60,
-                      maxWidth: 60,
+                      width: 50,
+                      maxWidth: 50,
+                      minWidth: 50,
                       cellStyle: {
                           display: 'flex',
                           alignItems: 'center',

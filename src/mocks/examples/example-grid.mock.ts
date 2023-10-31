@@ -1,14 +1,19 @@
-import { MockAxios, ResultResponse } from '~/libs/axios';
+import { MockAxios } from '~/libs/axios';
 
-MockAxios.onGet('/api/example/grid/index').reply<any>(200, {
+MockAxios.onGet('/api/example/grid/index', {
+    params: {
+        offset: 0,
+        limit: 2,
+    },
+}).reply<any>(200, {
     status: 200,
     success: true,
     result: {
-        totalCount: 2,
+        totalCount: 5,
+        totalPages: 3,
         offset: 0,
-        limit: 10,
-        totalPages: 1,
-        currentPage: 1,
+        limit: 2,
+        currentPage: 0,
         items: [
             {
                 id: '1',
@@ -19,6 +24,72 @@ MockAxios.onGet('/api/example/grid/index').reply<any>(200, {
             },
             {
                 id: '2',
+                name: 'Khoa Trần',
+                code: 'KT',
+                age: 23,
+                gender: 'Male',
+            },
+        ],
+    },
+});
+
+MockAxios.onGet('/api/example/grid/index', {
+    params: {
+        offset: 2,
+        limit: 2,
+    },
+}).reply<any>(200, {
+    status: 200,
+    success: true,
+    result: {
+        totalCount: 5,
+        totalPages: 3,
+        offset: 2,
+        limit: 2,
+        currentPage: 1,
+        items: [
+            {
+                id: '3',
+                name: 'Khoa Trần',
+                code: 'KT',
+                age: 23,
+                gender: 'Male',
+            },
+            {
+                id: '4',
+                name: 'Khoa Trần',
+                code: 'KT',
+                age: 23,
+                gender: 'Male',
+            },
+            {
+                id: '5',
+                name: 'Khoa Trần',
+                code: 'KT',
+                age: 23,
+                gender: 'Male',
+            },
+        ],
+    },
+});
+
+MockAxios.onGet('/api/example/grid/index', {
+    params: {
+        offset: 4,
+        limit: 2,
+    },
+}).reply<any>(200, {
+    status: 200,
+    success: true,
+    result: {
+        totalCount: 5,
+        totalPages: 3,
+        offset: 4,
+        limit: 2,
+        currentPage: 2,
+        items: [
+            {
+                id: '5',
                 name: 'Khoa Trần',
                 code: 'KT',
                 age: 23,

@@ -10,18 +10,23 @@ export interface ConfigItemProps {
 
 const ConfigItems: ConfigItemProps[] = [
     {
-        title: 'Example Grid',
-        path: '/example/grid',
+        title: 'Quản lý nhóm',
+        path: '/dashboard/group',
         icon: 'table-cells',
     },
     {
-        title: 'Example Form',
-        path: '/example/form',
+        title: 'Dashboard Grid',
+        path: '/dashboard/grid',
         icon: 'table-cells',
     },
     {
-        title: 'Example External',
-        path: '/example/external',
+        title: 'Dashboard Form',
+        path: '/dashboard/form',
+        icon: 'table-cells',
+    },
+    {
+        title: 'Dashboard External',
+        path: '/dashboard/external',
         icon: 'table-cells',
         external: true,
     },

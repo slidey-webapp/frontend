@@ -26,7 +26,7 @@ export class NotificationConstant {
     static NOT_EMPTY = 'Không được để trống!';
 }
 
-export class AdminLayoutConstant {
+export class DashboardLayoutConstant {
     static SIDE_NAV_WIDTH = 280;
     static TOP_NAV_HEIGHT = 64;
 }

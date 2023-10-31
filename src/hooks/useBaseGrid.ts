@@ -33,7 +33,7 @@ export function useBaseGrid<TData>({
     }, []);
 
     const fetchData = async (limit: number = pageSize) => {
-        props.gridRef?.current?.api.showLoadingOverlay();
+        props.gridRef?.current?.api?.showLoadingOverlay?.();
         const query: PaginatedListQuery = {
             offset: 0,
             limit: limit,

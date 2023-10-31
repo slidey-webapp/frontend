@@ -8,6 +8,7 @@ import BaseDatePickerField from './fields/BaseDatePickerField';
 import BaseImagePickerField from './fields/BaseImagePickerField';
 import BasePasswordField from './fields/BasePasswordField';
 import BaseSelectField from './fields/BaseSelectField';
+import BaseTextAreaField from './fields/BaseTextAreaField';
 import BaseTextField from './fields/BaseTextField';
 
 export interface Props {
@@ -22,7 +23,7 @@ export interface Props {
     };
 }
 
-type FormFieldType = 'text' | 'number' | 'positive' | 'email' | 'password' | 'select' | 'date' | 'image';
+type FormFieldType = 'text' | 'textArea' | 'number' | 'positive' | 'email' | 'password' | 'select' | 'date' | 'image';
 
 export interface FormField {
     name: string;
@@ -44,6 +45,7 @@ const convertObjectShape = (fields: FormField[]): ObjectShape => {
         // type
         switch (field.type) {
             case 'text':
+            case 'textArea':
                 schemaItem = string();
                 break;
             case 'password':
@@ -94,6 +96,8 @@ const BaseForm: React.FC<Props> = ({ fields, initialValues, onError, onSubmit, b
                 return <BaseTextField {...field} control={control} />;
             case 'text':
                 return <BaseTextField {...field} control={control} />;
+            case 'textArea':
+                return <BaseTextAreaField {...field} control={control} />;
             case 'number':
                 return <BaseTextField {...field} control={control} />;
             case 'positive':

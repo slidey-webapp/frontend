@@ -4,7 +4,12 @@ import { Link, RouteObject, useRoutes } from 'react-router-dom';
 const LoginView = React.lazy(() => import('~/components/layouts/LoginView'));
 const RegisterView = React.lazy(() => import('~/components/layouts/RegisterView'));
 
-const AdminLayout = React.lazy(() => import('~/components/layouts/admin/AdminLayout'));
+// #region Dashboard
+const DashboardLayout = React.lazy(() => import('~/components/layouts/dashboard/DashboardLayout'));
+const GroupPage = React.lazy(() => import('~/pages/dashboards/groups/GroupPage'));
+
+// #endregion
+
 
 // #region example
 const ExampleGrid = React.lazy(() => import('~/pages/examples/grids/ExampleGrid'));
@@ -15,9 +20,9 @@ const routeList = [
         path: '/',
         element: (
             <>
-                <Link to="/example">Example admin page</Link>
-                <Link to="/example/grid">Example grid</Link>
-                <Link to="/example/form">Example form</Link>
+                <Link to="/dashboard">Example admin page</Link>
+                <Link to="/dashboard/grid">Example grid</Link>
+                <Link to="/dashboard/form">Example form</Link>
             </>
         ),
     },
@@ -38,13 +43,21 @@ const routeList = [
         ),
     },
     {
-        path: '/example',
+        path: '/dashboard',
         element: (
             <Suspense>
-                <AdminLayout />
+                <DashboardLayout />
             </Suspense>
         ),
         children: [
+            {
+                path: 'group',
+                element: (
+                    <Suspense>
+                        <GroupPage />
+                    </Suspense>
+                ),
+            },
             {
                 path: 'grid',
                 element: (

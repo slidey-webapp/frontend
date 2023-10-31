@@ -2,7 +2,7 @@ import { CssBaseline, ThemeProvider } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useCallback, useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import { AdminLayoutConstant } from '~/configs/constants';
+import { DashboardLayoutConstant } from '~/configs/constants';
 import { createTheme } from '~/themes';
 import SideNav from './SideNav';
 import TopNav from './TopNav';
@@ -11,9 +11,9 @@ const LayoutRoot = styled('div')(({ theme }) => ({
     display: 'flex',
     flex: '1 1 auto',
     maxWidth: '100%',
-    height: `calc(100% - ${AdminLayoutConstant.TOP_NAV_HEIGHT}px)`,
+    height: `calc(100% - ${DashboardLayoutConstant.TOP_NAV_HEIGHT}px)`,
     [theme.breakpoints.up('lg')]: {
-        paddingLeft: AdminLayoutConstant.SIDE_NAV_WIDTH,
+        paddingLeft: DashboardLayoutConstant.SIDE_NAV_WIDTH,
     },
 }));
 
@@ -26,7 +26,7 @@ const LayoutContainer = styled('div')({
 
 interface Props {}
 
-const AdminLayout: React.FC<Props> = props => {
+const DashboardLayout: React.FC<Props> = () => {
     const [openNav, setOpenNav] = useState(false);
     const theme = createTheme();
 
@@ -46,7 +46,7 @@ const AdminLayout: React.FC<Props> = props => {
             <div style={{ height: '100%' }}>
                 <TopNav onNavOpen={() => setOpenNav(true)} />
                 <SideNav onClose={() => setOpenNav(false)} open={openNav} />
-                <LayoutRoot className="hasidhasida">
+                <LayoutRoot className="">
                     <LayoutContainer>
                         <Outlet />
                     </LayoutContainer>
@@ -56,4 +56,4 @@ const AdminLayout: React.FC<Props> = props => {
     );
 };
 
-export default AdminLayout;
+export default DashboardLayout;

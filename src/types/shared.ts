@@ -16,3 +16,21 @@ export interface ComboOption {
     value: Id;
     label: string;
 }
+
+export interface AuditedTimeDto {
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+export interface AuditedDto extends AuditedTimeDto {
+    createdBy: number;
+}
+export interface FullAuditedDto extends AuditedDto {
+    deletedAt: Date;
+}
+
+export interface BaseFormModalProps {
+    onSuccess: () => void;
+    onClose: () => void;
+    modalType: 'create' | 'update' | 'detail';
+}

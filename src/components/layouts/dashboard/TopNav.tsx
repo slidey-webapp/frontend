@@ -2,7 +2,7 @@ import { Avatar, Badge, Box, IconButton, Stack, SvgIcon, Tooltip, useMediaQuery 
 import { alpha, useTheme } from '@mui/material/styles';
 import AccountPopover from './AccountPopover';
 import { usePopover } from '~/hooks/usePopover';
-import { AdminLayoutConstant } from '~/configs/constants';
+import { DashboardLayoutConstant } from '~/configs/constants';
 import BaseIcon from '~/components/icons/BaseIcon';
 
 interface Props {
@@ -23,11 +23,11 @@ const TopNav: React.FC<Props> = ({ onNavOpen }) => {
                     backgroundColor: theme => alpha(theme.palette.background.default, 0.8),
                     position: 'sticky',
                     left: {
-                        lg: `${AdminLayoutConstant.SIDE_NAV_WIDTH}px`,
+                        lg: `${DashboardLayoutConstant.SIDE_NAV_WIDTH}px`,
                     },
                     top: 0,
                     width: {
-                        lg: `calc(100% - ${AdminLayoutConstant.SIDE_NAV_WIDTH}px)`,
+                        lg: `calc(100% - ${DashboardLayoutConstant.SIDE_NAV_WIDTH}px)`,
                     },
                     zIndex: theme => theme.zIndex.appBar,
                 }}
@@ -38,7 +38,7 @@ const TopNav: React.FC<Props> = ({ onNavOpen }) => {
                     justifyContent="space-between"
                     spacing={2}
                     sx={{
-                        minHeight: AdminLayoutConstant.TOP_NAV_HEIGHT,
+                        minHeight: DashboardLayoutConstant.TOP_NAV_HEIGHT,
                         px: 2,
                     }}
                 >
