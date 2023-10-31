@@ -2,6 +2,7 @@ import { common } from '@mui/material/colors';
 import { PaletteOptions, alpha } from '@mui/material/styles';
 import { error, indigo, info, neutral, success, warning } from './colors';
 
+// todo: change light palette
 export const createPalette = (): PaletteOptions => {
     return {
         action: {
