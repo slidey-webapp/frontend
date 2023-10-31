@@ -62,9 +62,9 @@ const GroupPage: React.FC<Props> = () => {
     return (
         <AppContainer>
             <BaseGrid
+            {...gridController}
                 columnDefs={groupGridColDef}
                 ref={gridRef}
-                data={[]}
                 actionRowsList={{
                     hasEditBtn: true,
                     hasDeleteBtn: true,

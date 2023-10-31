@@ -1,58 +1,74 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BaseGridRef } from '~/components/grid/BaseGrid';
 import { PaginatedList, PaginatedListQuery, requestApi } from '~/libs/axios';
 
+type Param = {
+    [key: string]: any;
+};
+
 export interface BaseGridResponse<TData> {
-    loading: boolean;
-    data: TData[] | undefined;
-    reloadData(): void;
+    paginatedList: PaginatedList<TData>;
+    reloadData: () => void;
+    onChangePage: (pageNumber: number) => void;
 }
 
-interface Props {
+interface Props<TData> {
     url: string;
-    gridRef?: React.RefObject<BaseGridRef>;
+    gridRef: React.RefObject<BaseGridRef>;
     pageSize?: number;
+    params?: Param;
+    customData?: (data: TData[]) => TData[];
 }
 
-interface State<TData> {
-    loading: boolean;
-    data: TData[] | undefined;
-}
-
-export function useBaseGrid<TData>({
-    pageSize = Number.MAX_SAFE_INTEGER,
-    ...props
-}: Props): BaseGridResponse<TData> | null {
-    const [state, setState] = React.useState<State<TData>>({
-        loading: true,
-        data: undefined,
+export function useBaseGrid<TData>(props: Props<TData>): BaseGridResponse<TData> {
+    const [paginatedQuery, setPaginatedQuery] = useState<PaginatedListQuery>({
+        offset: 0,
+        limit: props.pageSize || Number.MAX_VALUE,
+    });
+    const [paginatedList, setPaginatedList] = useState<PaginatedList<TData>>({
+        totalCount: 0,
+        offset: paginatedQuery.offset,
+        limit: paginatedQuery.limit,
+        totalPages: 0,
+        currentPage: 0,
+        items: [],
     });
 
-    React.useEffect(() => {
+    useEffect(() => {
         fetchData();
-    }, []);
+    }, [paginatedQuery.offset, paginatedQuery.limit]);
 
-    const fetchData = async (limit: number = pageSize) => {
+    const onChangePage = (pageNumber: number) => {
+        setPaginatedQuery(pre => ({
+            ...pre,
+            offset: (pageNumber - 1) * pre.limit,
+        }));
+    };
+
+    const fetchData = async () => {
         props.gridRef?.current?.api?.showLoadingOverlay?.();
-        const query: PaginatedListQuery = {
-            offset: 0,
-            limit: limit,
-        };
+        const response = await requestApi<PaginatedList<TData>>(
+            'get',
+            props.url,
+            {},
+            {
+                params: {
+                    ...props.params,
+                    ...paginatedQuery,
+                },
+            },
+        );
 
-        const response = await requestApi<PaginatedList<TData>>('get', props.url, {}, { params: query });
-
-        if (response.status === 200) {
-            setState({
-                loading: false,
-                data: response.data?.result?.items,
-            });
+        if (response.status === 200 && response.data?.result) {
+            setPaginatedList(response.data?.result);
         }
         props.gridRef?.current?.api.sizeColumnsToFit();
         props.gridRef?.current?.api.hideOverlay();
     };
 
     return {
-        ...state,
+        paginatedList: paginatedList,
         reloadData: fetchData,
+        onChangePage,
     };
 }

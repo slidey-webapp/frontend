@@ -2,7 +2,6 @@ import React, { useRef } from 'react';
 import BaseGrid, { BaseGridRef } from '~/components/grid/BaseGrid';
 import GridToolbar from '~/components/grid/components/GridToolbar';
 import { AppContainer } from '~/components/layouts/AppContainer';
-import Loading from '~/components/loadings/Loading';
 import ModalBase, { ModalBaseRef } from '~/components/modals/ModalBase';
 import { useBaseGrid } from '~/hooks/useBaseGrid';
 import { baseDeleteApi } from '~/libs/axios';
@@ -27,7 +26,6 @@ const ExampleGrid: React.FC<Props> = () => {
     };
 
     const handleUpdate = (data: ExampleGridDto) => {
-        console.log(data);
         modalRef.current?.onOpen(<div>Update modal</div>, 'Cập nhật', '50%');
     };
 
@@ -36,12 +34,11 @@ const ExampleGrid: React.FC<Props> = () => {
         gridController?.reloadData();
     };
 
-    if (gridController?.loading) return <Loading />;
     return (
         <AppContainer>
             <BaseGrid
+                {...gridController}
                 columnDefs={ExampleGridColDef}
-                data={gridController?.data}
                 ref={gridRef}
                 actionRowsList={{
                     hasEditBtn: true,
@@ -53,6 +50,7 @@ const ExampleGrid: React.FC<Props> = () => {
                     autoHeight: true,
                 }}
                 actionRowsWidth={100}
+                pagination
             >
                 <GridToolbar
                     hasCreateButton

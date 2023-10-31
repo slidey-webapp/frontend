@@ -14,6 +14,10 @@ const IconsMap = {
     'magnifying-glass': loadable(() => import('@heroicons/react/24/solid/MagnifyingGlassIcon')),
     users: loadable(() => import('@heroicons/react/24/solid/UsersIcon')),
     'x-mark': loadable(() => import('@heroicons/react/24/solid/XMarkIcon')),
+    'chevron-left': loadable(() => import('@heroicons/react/24/solid/ChevronLeftIcon')),
+    'chevron-double-left': loadable(() => import('@heroicons/react/24/solid/ChevronDoubleLeftIcon')),
+    'chevron-right': loadable(() => import('@heroicons/react/24/solid/ChevronRightIcon')),
+    'chevron-double-right': loadable(() => import('@heroicons/react/24/solid/ChevronDoubleRightIcon')),
 };
 
 type Size = 18 | 20 | 22;

@@ -17,14 +17,14 @@ MockAxios.onGet('/api/example/grid/index', {
         items: [
             {
                 id: '1',
-                name: 'Khoa Trần',
+                name: 'Khoa Trần 1 ',
                 code: 'KT',
                 age: 23,
                 gender: 'Male',
             },
             {
                 id: '2',
-                name: 'Khoa Trần',
+                name: 'Khoa Trần 2 ',
                 code: 'KT',
                 age: 23,
                 gender: 'Male',
@@ -50,21 +50,14 @@ MockAxios.onGet('/api/example/grid/index', {
         items: [
             {
                 id: '3',
-                name: 'Khoa Trần',
+                name: 'Khoa Trần 3',
                 code: 'KT',
                 age: 23,
                 gender: 'Male',
             },
             {
                 id: '4',
-                name: 'Khoa Trần',
-                code: 'KT',
-                age: 23,
-                gender: 'Male',
-            },
-            {
-                id: '5',
-                name: 'Khoa Trần',
+                name: 'Khoa Trần 4',
                 code: 'KT',
                 age: 23,
                 gender: 'Male',
@@ -90,7 +83,7 @@ MockAxios.onGet('/api/example/grid/index', {
         items: [
             {
                 id: '5',
-                name: 'Khoa Trần',
+                name: 'Khoa Trần 5',
                 code: 'KT',
                 age: 23,
                 gender: 'Male',

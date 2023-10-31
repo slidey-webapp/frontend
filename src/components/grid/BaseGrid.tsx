@@ -9,16 +9,17 @@ import React from 'react';
 import NotifyUtil from '~/utils/NotifyUtil';
 import { ButtonBase } from '../buttons/ButtonBase';
 
+import { BaseGridResponse } from '~/hooks/useBaseGrid';
 import Loading from '../loadings/Loading';
+import GridPagination from './components/GridPagination';
 import './styles/base-grid.scss';
 
 export interface BaseGridColDef extends ColDef, Partial<ColGroupDef> {}
 
 ModuleRegistry.registerModules([ClientSideRowModelModule, RowGroupingModule]);
 
-export interface BaseGridProps {
+export interface BaseGridProps extends BaseGridResponse<any> {
     columnDefs: BaseGridColDef[];
-    data: any[] | undefined;
     defaultColDef?: BaseGridColDef;
     gridConfig?: GridConfig;
     numberRows?: boolean;
@@ -40,7 +41,6 @@ export interface BaseGridProps {
     autoGroupColumnDef?: ColDef<any>;
     groupDisplayType?: RowGroupingDisplayType;
     pagination?: boolean;
-    paginationPageSize?: number;
     children?: React.ReactNode; // grid tool bar
 }
 
@@ -49,7 +49,7 @@ interface GridConfig {}
 export interface BaseGridRef extends AgGridReact {}
 
 const BaseGrid = React.forwardRef<BaseGridRef, BaseGridProps>((props, ref) => {
-    const { numberRows = true, actionRows = true, actionRowsList, pagination = true, paginationPageSize = 10 } = props;
+    const { numberRows = true, actionRows = true, actionRowsList, pagination = true, paginatedList } = props;
 
     const customColDefs = (
         numberRows
@@ -133,10 +133,11 @@ const BaseGrid = React.forwardRef<BaseGridRef, BaseGridProps>((props, ref) => {
         <div className="w-full h-full">
             <div className="h-[6%]">{props.children}</div>
             <div className="w-full h-[94%] ag-theme-alpine grid base-grid">
-                {props.data && (
+                <div className="w-full h-full flex flex-col">
                     <AgGridReact
+                        className="flex-1"
                         ref={ref}
-                        rowData={props.data}
+                        rowData={paginatedList.items}
                         autoGroupColumnDef={props.autoGroupColumnDef}
                         columnDefs={customColDefs}
                         defaultColDef={{
@@ -145,8 +146,6 @@ const BaseGrid = React.forwardRef<BaseGridRef, BaseGridProps>((props, ref) => {
                             ...props.defaultColDef,
                         }}
                         loadingOverlayComponent={() => <Loading />}
-                        pagination={pagination}
-                        paginationPageSize={paginationPageSize}
                         onGridReady={params => params.api.sizeColumnsToFit()}
                         treeData={props.treeData}
                         animateRows
@@ -156,7 +155,14 @@ const BaseGrid = React.forwardRef<BaseGridRef, BaseGridProps>((props, ref) => {
                         groupDisplayType={props.groupDisplayType}
                         {...props.gridConfig}
                     />
-                )}
+                    {pagination && (
+                        <GridPagination
+                            onChangePage={props.onChangePage}
+                            paginatedList={props.paginatedList}
+                            reloadData={props.reloadData}
+                        />
+                    )}
+                </div>
             </div>
         </div>
     );
