@@ -1,8 +1,8 @@
 import { Box, Button } from '@mui/material';
+import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BaseIcon from '~/components/icons/BaseIcon';
 import { ConfigItemProps } from './Config';
-import { useMemo } from 'react';
 
 interface Props extends ConfigItemProps {}
 
@@ -31,12 +31,12 @@ const SideNavItem: React.FC<Props> = ({ disabled, external, icon, path, title })
                     py: '6px',
                     textAlign: 'left',
                     width: '100%',
-                    ...(active && {
-                        backgroundColor: 'rgba(255, 255, 255, 0.04)',
-                    }),
                     '&:hover': {
                         backgroundColor: 'rgba(255, 255, 255, 0.04)',
                     },
+                    ...(active && {
+                        backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                    }),
                 }}
                 onClick={() => handleMenuItemClick()}
             >

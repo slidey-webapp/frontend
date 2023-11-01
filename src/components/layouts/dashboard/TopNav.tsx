@@ -45,12 +45,12 @@ const TopNav: React.FC<Props> = ({ onNavOpen }) => {
                     <Stack alignItems="center" direction="row" spacing={2}>
                         {!lgUp && (
                             <IconButton onClick={onNavOpen}>
-                                <BaseIcon type="bars-3" />
+                                <BaseIcon type="bars-3" size={24} />
                             </IconButton>
                         )}
                         <Tooltip title="Search">
                             <IconButton>
-                                <BaseIcon type="magnifying-glass" />
+                                <BaseIcon type="magnifying-glass" size={24} />
                             </IconButton>
                         </Tooltip>
                     </Stack>
@@ -58,7 +58,7 @@ const TopNav: React.FC<Props> = ({ onNavOpen }) => {
                         <Tooltip title="Contacts">
                             <IconButton>
                                 <SvgIcon fontSize="small">
-                                    <BaseIcon type="users" />
+                                    <BaseIcon type="users" size={24} />
                                 </SvgIcon>
                             </IconButton>
                         </Tooltip>
@@ -66,7 +66,7 @@ const TopNav: React.FC<Props> = ({ onNavOpen }) => {
                             <IconButton>
                                 <Badge badgeContent={4} color="success" variant="dot">
                                     <SvgIcon fontSize="small">
-                                        <BaseIcon type="bell" />
+                                        <BaseIcon type="bell" size={24} />
                                     </SvgIcon>
                                 </Badge>
                             </IconButton>

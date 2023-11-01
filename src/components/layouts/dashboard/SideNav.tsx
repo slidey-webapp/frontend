@@ -1,4 +1,4 @@
-import { Box, Divider, Drawer, Stack, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Drawer, Stack, useMediaQuery, useTheme } from '@mui/material';
 import { Link } from 'react-router-dom';
 import Scrollbar from '~/components/scrollbar/Scrollbar';
 import ConfigItems from './Config';
@@ -21,7 +21,7 @@ const SideNav: React.FC<Props> = ({ open, onClose }) => {
                     height: '100%',
                 },
                 '& .simplebar-scrollbar:before': {
-                    background: 'neutral.400',
+                    background: 'neutral.500',
                 },
             }}
         >
@@ -45,7 +45,6 @@ const SideNav: React.FC<Props> = ({ open, onClose }) => {
                         logo
                     </Box>
                 </Box>
-                <Divider sx={{ borderColor: 'neutral.700' }} />
                 <Box
                     component="nav"
                     sx={{
@@ -79,8 +78,8 @@ const SideNav: React.FC<Props> = ({ open, onClose }) => {
                 open
                 PaperProps={{
                     sx: {
-                        backgroundColor: 'neutral.800',
-                        color: 'common.white',
+                        backgroundColor: 'neutral.700',
+                        color: 'neutral.400',
                         width: 280,
                     },
                 }}
@@ -98,8 +97,8 @@ const SideNav: React.FC<Props> = ({ open, onClose }) => {
             open={open}
             PaperProps={{
                 sx: {
-                    backgroundColor: 'neutral.800',
-                    color: 'common.white',
+                    backgroundColor: 'neutral.700',
+                    color: 'neutral.400',
                     width: 280,
                 },
             }}

@@ -1,8 +1,6 @@
-import { common } from '@mui/material/colors';
 import { PaletteOptions, alpha } from '@mui/material/styles';
 import { error, indigo, info, neutral, success, warning } from './colors';
 
-// todo: change light palette
 export const createPalette = (): PaletteOptions => {
     return {
         action: {
@@ -13,22 +11,19 @@ export const createPalette = (): PaletteOptions => {
             hover: alpha(neutral[900] || '', 0.04),
             selected: alpha(neutral[900] || '', 0.12),
         },
-        background: {
-            default: neutral[900],
-            paper: neutral[800] ,
-        },
         divider: neutral[600],
         error,
         info,
-        mode: 'dark',
+        mode: 'light',
         // @ts-ignore
         neutral,
         primary: indigo,
         success,
         text: {
-            primary: neutral[100],
-            secondary: neutral[400],
-            disabled: alpha(neutral[400] || '', 0.38),
+            primary: neutral[900],
+            secondary: neutral[500],
+            // @ts-ignore
+            disabled: alpha(neutral[900], 0.38),
         },
         warning,
     };

@@ -20,7 +20,7 @@ const IconsMap = {
     'chevron-double-right': loadable(() => import('@heroicons/react/24/solid/ChevronDoubleRightIcon')),
 };
 
-type Size = 18 | 20 | 22;
+type Size = 18 | 20 | 22 | 24;
 
 export interface BaseIconProps {
     type: keyof typeof IconsMap;
