@@ -2,7 +2,6 @@ import React, { useRef } from 'react';
 import BaseGrid, { BaseGridRef } from '~/components/grid/BaseGrid';
 import GridToolbar from '~/components/grid/components/GridToolbar';
 import { AppContainer } from '~/components/layouts/AppContainer';
-import Loading from '~/components/loadings/Loading';
 import ModalBase, { ModalBaseRef } from '~/components/modals/ModalBase';
 import { useBaseGrid } from '~/hooks/useBaseGrid';
 import { baseDeleteApi } from '~/libs/axios';
@@ -62,7 +61,7 @@ const GroupPage: React.FC<Props> = () => {
     return (
         <AppContainer>
             <BaseGrid
-            {...gridController}
+                {...gridController}
                 columnDefs={groupGridColDef}
                 ref={gridRef}
                 actionRowsList={{
@@ -75,14 +74,17 @@ const GroupPage: React.FC<Props> = () => {
                     autoHeight: true,
                 }}
                 actionRowsWidth={100}
-            >
-                <GridToolbar
-                    hasCreateButton
-                    hasRefreshButton
-                    onClickCreateButton={handleCreate}
-                    onClickRefreshButton={gridController?.reloadData}
-                />
-            </BaseGrid>
+                toolbar={{
+                    rightToolbar: (
+                        <GridToolbar
+                            hasCreateButton
+                            hasRefreshButton
+                            onClickCreateButton={handleCreate}
+                            onClickRefreshButton={gridController?.reloadData}
+                        />
+                    ),
+                }}
+            />
             <ModalBase ref={modalRef} />
         </AppContainer>
     );

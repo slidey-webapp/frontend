@@ -8,6 +8,7 @@ import { baseDeleteApi } from '~/libs/axios';
 import { EXAMPLE_GRID_DELETE_API, EXAMPLE_GRID_INDEX_API } from './api/example-grid.api';
 import { ExampleGridColDef } from './configs/colDef';
 import { ExampleGridDto } from './types/example-grid';
+import { Typography } from '@mui/material';
 
 export interface Props {}
 
@@ -51,14 +52,19 @@ const ExampleGrid: React.FC<Props> = () => {
                 }}
                 actionRowsWidth={100}
                 pagination
-            >
-                <GridToolbar
-                    hasCreateButton
-                    hasRefreshButton
-                    onClickCreateButton={handleCreate}
-                    onClickRefreshButton={gridController?.reloadData}
-                />
-            </BaseGrid>
+                toolbar={{
+                    leftToolbar: <Typography variant="h4">Customers</Typography>,
+
+                    rightToolbar: (
+                        <GridToolbar
+                            hasCreateButton
+                            hasRefreshButton
+                            onClickCreateButton={handleCreate}
+                            onClickRefreshButton={gridController?.reloadData}
+                        />
+                    ),
+                }}
+            />
             <ModalBase ref={modalRef} />
         </AppContainer>
     );

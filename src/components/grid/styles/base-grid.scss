@@ -1,13 +1,29 @@
-$border-color: #e9e9e9;
-$header-color: #333;
 $cell-padding: 11px;
+$wrapper-radius: 20px;
+$grid-radius: 10px;
+
+.ag-theme-alpine {
+    --ag-header-background-color: #f8f9fa;
+    --ag-row-hover-color: #f8f9fa;
+    --ag-border-color: #e5e7eb;
+    --ag-header-column-resize-handle-color: #e5e7eb;
+    --ag-row-border-color: #f2f4f7;
+    --ag-header-foreground-color: #2f3746;
+    --ag-alpine-active-color: transparent;
+}
+
 .base-grid {
+    border-radius: $wrapper-radius;
+    box-shadow: rgba(0, 0, 0, 0.04) 0px 5px 22px, rgba(0, 0, 0, 0.03) 0px 0px 0px 0.5px;
+    padding: 10px;
+
     .ag-root-wrapper {
-        border-color: $border-color;
+        border-radius: $grid-radius;
+
         /* width - height */
         ::-webkit-scrollbar {
             width: 8px; //dọc
-            height: 5px; //ngang
+            height: 8px; //ngang
         }
 
         /* Track */
@@ -27,25 +43,18 @@ $cell-padding: 11px;
             opacity: 1;
         }
 
-        .ag-header.ag-pivot-off {
-            border-color: $border-color;
-        }
-
         .ag-header {
+            z-index: 1000;
             .ag-header-row {
                 .ag-header-cell {
                     padding-left: $cell-padding;
                     padding-right: $cell-padding;
                     .ag-header-cell-label {
-                        color: $header-color;
+                        font-weight: 600;
                         display: flex;
                         justify-content: center;
                     }
                 }
-            }
-
-            .ag-header-row:not(:first-child) .ag-header-cell {
-                border-color: $border-color;
             }
 
             .ag-header-group-cell-label {
@@ -60,24 +69,12 @@ $cell-padding: 11px;
                 padding-left: $cell-padding;
                 padding-right: $cell-padding;
             }
-            
         }
 
         .ag-header-cell-resize::after {
             width: 1px;
             height: 100%;
             top: 0;
-            background-color: $border-color;
-        }
-
-        .ag-paging-panel {
-            border-color: $border-color;
-        }
-    }
-
-    .ag-ltr {
-        .ag-cell-focus:not(.ag-cell-range-selected):focus-within {
-            border-color: transparent !important;
         }
     }
 }

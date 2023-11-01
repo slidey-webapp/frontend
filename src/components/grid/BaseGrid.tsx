@@ -41,7 +41,10 @@ export interface BaseGridProps extends BaseGridResponse<any> {
     autoGroupColumnDef?: ColDef<any>;
     groupDisplayType?: RowGroupingDisplayType;
     pagination?: boolean;
-    children?: React.ReactNode; // grid tool bar
+    toolbar?: {
+        rightToolbar?: JSX.Element;
+        leftToolbar?: JSX.Element;
+    };
 }
 
 interface GridConfig {}
@@ -65,6 +68,7 @@ const BaseGrid = React.forwardRef<BaseGridRef, BaseGridProps>((props, ref) => {
                           alignItems: 'center',
                           justifyContent: 'center',
                       },
+                      suppressMovable: true,
                       valueGetter: params => {
                           const rowIndex = _.get(params, 'node.rowIndex');
 
@@ -88,6 +92,8 @@ const BaseGrid = React.forwardRef<BaseGridRef, BaseGridProps>((props, ref) => {
                 alignItems: 'center',
                 justifyContent: 'center',
             },
+            resizable: false,
+            suppressMovable: true,
             cellRenderer: (params: any) => {
                 const data = _.get(params, 'data');
                 return (
@@ -130,9 +136,24 @@ const BaseGrid = React.forwardRef<BaseGridRef, BaseGridProps>((props, ref) => {
         });
 
     return (
-        <div className="w-full h-full">
-            <div className="h-[6%]">{props.children}</div>
-            <div className="w-full h-[94%] ag-theme-alpine grid base-grid">
+        <div className="w-full h-full flex flex-col">
+            {!_.isEmpty(props.toolbar) && (
+                <div className="w-full h-fit min-h-[40px] mb-7">
+                    <div className="w-full flex items-center justify-between">
+                        {props.toolbar.leftToolbar && (
+                            <div className="flex flex-1 items-center justify-start mr-2">
+                                {props.toolbar.leftToolbar}
+                            </div>
+                        )}
+                        {props.toolbar.rightToolbar && (
+                            <div className="flex flex-1 items-center justify-end ml-2">
+                                {props.toolbar.rightToolbar}
+                            </div>
+                        )}
+                    </div>
+                </div>
+            )}
+            <div className="w-full flex-1 ag-theme-alpine grid base-grid">
                 <div className="w-full h-full flex flex-col">
                     <AgGridReact
                         className="flex-1"
