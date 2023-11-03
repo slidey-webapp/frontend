@@ -7,9 +7,9 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
 import _ from 'lodash';
 import React from 'react';
 import NotifyUtil from '~/utils/NotifyUtil';
-import { ButtonBase } from '../buttons/ButtonBase';
 
 import { BaseGridResponse } from '~/hooks/useBaseGrid';
+import ButtonIconBase from '../buttons/ButtonIconBase';
 import Loading from '../loadings/Loading';
 import GridPagination from './components/GridPagination';
 import './styles/base-grid.scss';
@@ -99,9 +99,8 @@ const BaseGrid = React.forwardRef<BaseGridRef, BaseGridProps>((props, ref) => {
                 return (
                     <div className="w-full h-full flex items-center justify-center">
                         {actionRowsList?.hasDetailBtn && (
-                            <ButtonBase
-                                startIcon={'information-circle'}
-                                variant={'primary'}
+                            <ButtonIconBase
+                                icon={'info'}
                                 onClick={() => {
                                     actionRowsList.onClickDetailBtn?.(data);
                                 }}
@@ -109,9 +108,9 @@ const BaseGrid = React.forwardRef<BaseGridRef, BaseGridProps>((props, ref) => {
                             />
                         )}
                         {actionRowsList?.hasEditBtn && (
-                            <ButtonBase
-                                startIcon={'pencil-square'}
-                                variant={'success'}
+                            <ButtonIconBase
+                                icon={'edit'}
+                                color={'success'}
                                 onClick={() => {
                                     actionRowsList.onClickEditBtn?.(data);
                                 }}
@@ -119,10 +118,10 @@ const BaseGrid = React.forwardRef<BaseGridRef, BaseGridProps>((props, ref) => {
                             />
                         )}
                         {actionRowsList?.hasDeleteBtn && (
-                            <ButtonBase
-                                startIcon={'trash'}
+                            <ButtonIconBase
+                                icon={'delete'}
                                 tooltip="Xóa"
-                                variant={'danger'}
+                                color={'error'}
                                 onClick={() => {
                                     NotifyUtil.confirmDialog('Thông báo', 'Bạn có chắc muốn xóa ?').then(confirm => {
                                         if (confirm.isConfirmed) actionRowsList.onClickDeleteBtn?.(data);

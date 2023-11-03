@@ -11,7 +11,7 @@ export const createPalette = (): PaletteOptions => {
             hover: alpha(neutral[900] || '', 0.04),
             selected: alpha(neutral[900] || '', 0.12),
         },
-        divider: neutral[600],
+        divider: neutral[100],
         error,
         info,
         mode: 'light',

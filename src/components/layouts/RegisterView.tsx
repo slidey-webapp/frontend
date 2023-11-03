@@ -19,9 +19,9 @@ const RegisterView: React.FC = () => {
     const dispatch = useAppDispatch();
 
     const handleSubmit = async (formValues: SignUpParam) => {
-        overlayRef.current?.open()
+        overlayRef.current?.open();
         const response = await requestApi('post', SIGN_UP_API, formValues);
-        overlayRef.current?.close()
+        overlayRef.current?.close();
         if (response.status === 200) {
             NotifyUtil.success('Đăng ký tài khoản thành công. Vui lòng kiểm tra email để xác thực tài khoản!');
             navigate('/login');
@@ -85,13 +85,7 @@ const RegisterView: React.FC = () => {
                     ]}
                     buttons={{
                         submitButton: (
-                            <ButtonBase
-                                className="w-full h-10 flex items-center !m-0"
-                                size="sm"
-                                type="submit"
-                                variant="primary"
-                                title="Đăng ký"
-                            />
+                            <ButtonBase className="w-full h-10 flex items-center !mx-0" type="submit" title="Đăng ký" />
                         ),
                     }}
                 />
@@ -101,8 +95,7 @@ const RegisterView: React.FC = () => {
                 <GoogleLogin
                     onSuccess={credentialResponse => {
                         const token = credentialResponse.credential as string;
-                        // @ts-ignore
-                        handleLogin('google-login', { token, email: 'abs', fullname: 'abc' });
+                        handleLogin('google-login', { token });
                     }}
                     onError={() => {
                         NotifyUtil.error('Đăng nhập thất bại');

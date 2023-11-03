@@ -12,22 +12,22 @@ const ConfigItems: ConfigItemProps[] = [
     {
         title: 'Quản lý nhóm',
         path: '/dashboard/group',
-        icon: 'table-cells',
+        icon: 'list',
     },
     {
         title: 'Dashboard Grid',
         path: '/dashboard/grid',
-        icon: 'table-cells',
+        icon: 'list',
     },
     {
         title: 'Dashboard Form',
         path: '/dashboard/form',
-        icon: 'table-cells',
+        icon: 'list',
     },
     {
         title: 'Dashboard External',
         path: '/dashboard/external',
-        icon: 'table-cells',
+        icon: 'list',
         external: true,
     },
 ];

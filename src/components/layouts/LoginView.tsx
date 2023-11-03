@@ -58,10 +58,8 @@ const LoginView: React.FC = () => {
                     buttons={{
                         submitButton: (
                             <ButtonBase
-                                className="w-full h-10 flex items-center !m-0"
-                                size="sm"
+                                className="w-full h-10 flex items-center !mx-0"
                                 type="submit"
-                                variant="primary"
                                 title="Đăng nhập"
                             />
                         ),

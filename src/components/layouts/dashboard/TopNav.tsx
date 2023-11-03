@@ -45,12 +45,12 @@ const TopNav: React.FC<Props> = ({ onNavOpen }) => {
                     <Stack alignItems="center" direction="row" spacing={2}>
                         {!lgUp && (
                             <IconButton onClick={onNavOpen}>
-                                <BaseIcon type="bars-3" size={24} />
+                                <BaseIcon type="menu" size={24} />
                             </IconButton>
                         )}
                         <Tooltip title="Search">
                             <IconButton>
-                                <BaseIcon type="magnifying-glass" size={24} />
+                                <BaseIcon type="search" size={24} />
                             </IconButton>
                         </Tooltip>
                     </Stack>

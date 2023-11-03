@@ -85,7 +85,7 @@ const ModalBase = forwardRef<ModalBaseRef, Props>((props, ref) => {
                 <div>{state.title}</div>
                 <div className="w-6 h-6 rounded-full duration-300">
                     <IconButton onClick={handleClose}>
-                        <BaseIcon type="x-mark" />
+                        <BaseIcon type="close" />
                     </IconButton>
                 </div>
             </Typography>
