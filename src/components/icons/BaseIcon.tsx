@@ -16,6 +16,7 @@ const IconsMap = {
     close: loadable(() => import('@mui/icons-material/Close')),
     'chevron-left': loadable(() => import('@mui/icons-material/ChevronLeft')),
     'chevron-right': loadable(() => import('@mui/icons-material/ChevronRight')),
+    'home': loadable(() => import('@mui/icons-material/Home')),
 };
 
 type Size = 14 | 16 | 18 | 20 | 22 | 24;

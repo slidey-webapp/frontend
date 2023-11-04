@@ -1,5 +1,6 @@
 import React, { Suspense } from 'react';
 import { Link, RouteObject, useRoutes } from 'react-router-dom';
+import { BaseIconProps } from '~/components/icons/BaseIcon';
 
 const LoginView = React.lazy(() => import('~/components/layouts/LoginView'));
 const RegisterView = React.lazy(() => import('~/components/layouts/RegisterView'));
@@ -10,13 +11,22 @@ const GroupPage = React.lazy(() => import('~/pages/dashboards/groups/GroupPage')
 
 // #endregion
 
-
 // #region example
 const ExampleGrid = React.lazy(() => import('~/pages/examples/grids/ExampleGrid'));
 // #endregion
 
-const routeList = [
+type RouteDefinition = Omit<RouteObject, 'children'> & {
+    title: string;
+    disabled?: boolean;
+    external?: boolean;
+    path: string;
+    icon?: BaseIconProps['type'];
+    children?: RouteDefinition[];
+};
+
+export const routeList: RouteDefinition[] = [
     {
+        title: 'Trang chủ',
         path: '/',
         element: (
             <>
@@ -27,6 +37,7 @@ const routeList = [
         ),
     },
     {
+        title: 'Đăng nhập',
         path: '/login',
         element: (
             <Suspense>
@@ -35,6 +46,7 @@ const routeList = [
         ),
     },
     {
+        title: 'Đăng ký',
         path: '/register',
         element: (
             <Suspense>
@@ -43,6 +55,7 @@ const routeList = [
         ),
     },
     {
+        title: 'Dashboard',
         path: '/dashboard',
         element: (
             <Suspense>
@@ -51,14 +64,27 @@ const routeList = [
         ),
         children: [
             {
+                title: 'Quản lý nhóm',
                 path: 'group',
                 element: (
                     <Suspense>
                         <GroupPage />
                     </Suspense>
                 ),
+                children: [
+                    {
+                        title: 'Chi tiết quản lý nhóm',
+                        path: ':groupId',
+                        element: (
+                            <Suspense>
+                                <GroupPage />
+                            </Suspense>
+                        ),
+                    },
+                ],
             },
             {
+                title: 'Example grid',
                 path: 'grid',
                 element: (
                     <Suspense>
@@ -67,6 +93,7 @@ const routeList = [
                 ),
             },
             {
+                title: 'Example form',
                 path: 'form',
                 element: (
                     <Suspense>
@@ -76,22 +103,21 @@ const routeList = [
                 ),
             },
             {
+                title: 'Example external side menu',
                 path: 'external',
-                element: (
-                    <Suspense>
-                        Example External
-                    </Suspense>
-                ),
+                element: <Suspense>Example External</Suspense>,
             },
         ],
     },
     {
+        title: 'Not found',
         path: '/*',
         element: <div>notfound</div>,
     },
-] as RouteObject[];
+];
 
 const AppRoute: React.FC = () => {
+    // @ts-ignore
     const elements = useRoutes(routeList);
     return <>{elements}</>;
 };

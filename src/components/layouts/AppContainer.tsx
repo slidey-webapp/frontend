@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 import React, { CSSProperties, PropsWithChildren } from 'react';
+import Breadcrumb from '../bread-crumb/BreadCrumb';
 
 interface Props extends PropsWithChildren {
     className?: string;
@@ -15,6 +16,9 @@ export const AppContainer: React.FC<Props> = (props: Props) => {
             )}
             style={props.style}
         >
+            <div className="w-full mb-1">
+                <Breadcrumb />
+            </div>
             {props.children}
         </div>
     );
