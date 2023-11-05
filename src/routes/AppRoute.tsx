@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { Link, RouteObject, useRoutes } from 'react-router-dom';
+import { Link, Navigate, RouteObject, useRoutes } from 'react-router-dom';
 import { BaseIconProps } from '~/components/icons/BaseIcon';
 
 const LoginView = React.lazy(() => import('~/components/layouts/LoginView'));
@@ -7,21 +7,26 @@ const RegisterView = React.lazy(() => import('~/components/layouts/RegisterView'
 
 // #region Dashboard
 const DashboardLayout = React.lazy(() => import('~/components/layouts/dashboard/DashboardLayout'));
+const DashboardHomePage = React.lazy(() => import('~/pages/dashboards/home/DashboardHomePage'));
 const GroupPage = React.lazy(() => import('~/pages/dashboards/groups/GroupPage'));
-
 // #endregion
 
 // #region example
 const ExampleGrid = React.lazy(() => import('~/pages/examples/grids/ExampleGrid'));
 // #endregion
 
-type RouteDefinition = Omit<RouteObject, 'children'> & {
+export type RouteDefinition = Omit<RouteObject, 'children'> & {
     title: string;
     disabled?: boolean;
     external?: boolean;
     path: string;
     icon?: BaseIconProps['type'];
     children?: RouteDefinition[];
+    layout?: 'dashboard'; // todo: add more;
+    group?: boolean;
+    divider?: boolean;
+    hide?: boolean;
+    permission?: string[]; //todo: check permission later
 };
 
 export const routeList: RouteDefinition[] = [
@@ -62,7 +67,28 @@ export const routeList: RouteDefinition[] = [
                 <DashboardLayout />
             </Suspense>
         ),
+        icon: 'add',
+        layout: 'dashboard',
+        group: true,
+        divider: true,
         children: [
+            {
+                title: '',
+                path: '',
+                hide: true,
+                element: <Navigate to="home" />,
+            },
+            {
+                title: 'Tổng quan',
+                path: 'home',
+                element: (
+                    <Suspense>
+                        <DashboardHomePage />
+                    </Suspense>
+                ),
+                icon: 'home',
+                divider: true,
+            },
             {
                 title: 'Quản lý nhóm',
                 path: 'group',
@@ -73,6 +99,7 @@ export const routeList: RouteDefinition[] = [
                 ),
                 children: [
                     {
+                        hide: true,
                         title: 'Chi tiết quản lý nhóm',
                         path: ':groupId',
                         element: (
@@ -82,6 +109,7 @@ export const routeList: RouteDefinition[] = [
                         ),
                     },
                 ],
+                icon: 'list',
             },
             {
                 title: 'Example grid',
@@ -91,6 +119,7 @@ export const routeList: RouteDefinition[] = [
                         <ExampleGrid />
                     </Suspense>
                 ),
+                icon: 'list',
             },
             {
                 title: 'Example form',
@@ -101,11 +130,13 @@ export const routeList: RouteDefinition[] = [
                         Example form
                     </Suspense>
                 ),
+                icon: 'list',
             },
             {
                 title: 'Example external side menu',
                 path: 'external',
                 element: <Suspense>Example External</Suspense>,
+                icon: 'list',
             },
         ],
     },

@@ -16,10 +16,13 @@ const IconsMap = {
     close: loadable(() => import('@mui/icons-material/Close')),
     'chevron-left': loadable(() => import('@mui/icons-material/ChevronLeft')),
     'chevron-right': loadable(() => import('@mui/icons-material/ChevronRight')),
-    'home': loadable(() => import('@mui/icons-material/Home')),
+    home: loadable(() => import('@mui/icons-material/Home')),
+    'expand-more': loadable(() => import('@mui/icons-material/ExpandMore')),
+    'expand-less': loadable(() => import('@mui/icons-material/ExpandLess')),
+    dot: loadable(() => import('@mui/icons-material/FiberManualRecord')),
 };
 
-type Size = 14 | 16 | 18 | 20 | 22 | 24;
+type Size = 8 | 10 | 12 | 14 | 16 | 18 | 20 | 22 | 24;
 
 export interface BaseIconProps {
     type: keyof typeof IconsMap;

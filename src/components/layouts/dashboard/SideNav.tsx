@@ -1,7 +1,13 @@
-import { Box, Drawer, Stack, useMediaQuery, useTheme } from '@mui/material';
+import {
+    Box,
+    Drawer,
+    useMediaQuery,
+    useTheme
+} from '@mui/material';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import Scrollbar from '~/components/scrollbar/Scrollbar';
-import ConfigItems from './Config';
+import { routeList } from '~/routes/AppRoute';
 import SideNavItem from './SideNavItem';
 
 interface Props {
@@ -12,6 +18,8 @@ interface Props {
 const SideNav: React.FC<Props> = ({ open, onClose }) => {
     const theme = useTheme();
     const lgUp = useMediaQuery(theme.breakpoints.up('lg'));
+
+    const dashboardRoutes = routeList.filter(x => x.layout === 'dashboard');
 
     const content = (
         <Scrollbar
@@ -32,7 +40,7 @@ const SideNav: React.FC<Props> = ({ open, onClose }) => {
                     height: '100%',
                 }}
             >
-                <Box sx={{ p: 3 }}>
+                <Box sx={{ py: 3, px: 4 }}>
                     <Box
                         component={Link}
                         to="/"
@@ -45,28 +53,9 @@ const SideNav: React.FC<Props> = ({ open, onClose }) => {
                         logo
                     </Box>
                 </Box>
-                <Box
-                    component="nav"
-                    sx={{
-                        flexGrow: 1,
-                        px: 2,
-                        py: 3,
-                    }}
-                >
-                    <Stack
-                        component="ul"
-                        spacing={0.5}
-                        sx={{
-                            listStyle: 'none',
-                            p: 0,
-                            m: 0,
-                        }}
-                    >
-                        {ConfigItems.map(item => {
-                            return <SideNavItem key={item.path} {...item} />;
-                        })}
-                    </Stack>
-                </Box>
+                {dashboardRoutes.map(item => (
+                    <SideNavItem key={item.path} routeDefinition={item} />
+                ))}
             </Box>
         </Scrollbar>
     );
