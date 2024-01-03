@@ -7,6 +7,21 @@ import NotifyUtil from '~/utils/NotifyUtil';
 const mockAxios = new MockAdapter(Axios, { delayResponse: 500, onNoMatch: 'passthrough' });
 export const MockAxios = mockAxios;
 
+export enum ApiStatus {
+    Ok = 'OK',
+    NotFound = 'NOT_FOUND',
+    InternalServerError = 'INTERNAL_ERROR',
+    UnAuthorized = 'UNAUTHORIZED',
+    DbError = 'DB_ERROR',
+    InvalidInput = 'INVALID_INPUT',
+    Existed = 'EXISTED',
+    TokenExpired = 'TOKEN_EXPIRED',
+    PermissionDenied = 'PERMISSION_DENIED',
+    SendEmailError = 'SEND_EMAIL_ERROR',
+    ReceiveEmailError = 'RECEIVE_EMAIL_ERROR',
+    NotVerified = 'NOT_VERIFIED',
+}
+
 export type ApiResponse<T = any> = {
     errors?: Record<string, string>;
     message?: string;
@@ -117,8 +132,17 @@ export const requestApi = <T = any>(
     }
 };
 
-export const baseDeleteApi = async (url: string, id: string) => {
-    const response = await requestApi('delete', `${url}/${id}`);
+export const baseDeleteApi = async (url: string, id: number, method?: Method) => {
+    const response = await requestApi(method ?? 'delete', `${url}/${id}`);
+    if (response.status === 200) {
+        NotifyUtil.success(NotificationConstant.DESCRIPTION_DELETE_SUCCESS);
+    } else {
+        NotifyUtil.error(response.data?.message || NotificationConstant.DESCRIPTION_DELETE_FAIL);
+    }
+};
+
+export const baseDeleteWithoutIdApi = async (url: string, data?: Record<string, any>, method?: Method) => {
+    const response = await requestApi(method ?? 'delete', url, data);
     if (response.status === 200) {
         NotifyUtil.success(NotificationConstant.DESCRIPTION_DELETE_SUCCESS);
     } else {

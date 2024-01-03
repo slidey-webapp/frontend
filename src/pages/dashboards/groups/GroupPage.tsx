@@ -4,7 +4,7 @@ import GridToolbar from '~/components/grid/components/GridToolbar';
 import { AppContainer } from '~/components/layouts/AppContainer';
 import ModalBase, { ModalBaseRef } from '~/components/modals/ModalBase';
 import { useBaseGrid } from '~/hooks/useBaseGrid';
-import { baseDeleteApi } from '~/libs/axios';
+import { baseDeleteApi, baseDeleteWithoutIdApi } from '~/libs/axios';
 import NotifyUtil from '~/utils/NotifyUtil';
 import { GROUP_DELETE_API, GROUP_INDEX_API } from './api/group.api';
 import GroupForm from './components/GroupForm';
@@ -40,7 +40,7 @@ const GroupPage: React.FC<Props> = () => {
     const handleUpdate = (data: GroupDto) => {
         modalRef.current?.onOpen(
             <GroupForm
-                groupID={data.groupID}
+                rowData={data}
                 modalType="create"
                 onClose={modalRef.current.onClose}
                 onSuccess={() => {
@@ -53,8 +53,8 @@ const GroupPage: React.FC<Props> = () => {
         );
     };
 
-    const handleDelete = (data: Record<string, any>) => {
-        baseDeleteApi(GROUP_DELETE_API, data.id, 'post');
+    const handleDelete = async (data: GroupDto) => {
+        await baseDeleteWithoutIdApi(GROUP_DELETE_API, { groupID: data.groupID }, 'post');
         gridController?.reloadData();
     };
 

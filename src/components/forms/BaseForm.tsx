@@ -17,13 +17,14 @@ export interface Props {
     onSubmit: (formValues: Record<string, any> | any) => void;
     onError?: (errors: FieldErrors<Record<string, any>>) => void;
     buttons: {
-        submitButton: React.ReactNode;
+        submitButton?: React.ReactNode;
+        closeButton?: React.ReactNode;
         renderButtonBefore?: () => React.ReactNode;
         renderButtonAfter?: () => React.ReactNode;
     };
 }
 
-type FormFieldType = 'text' | 'textArea' | 'number' | 'positive' | 'email' | 'password' | 'select' | 'date' | 'image';
+type FormFieldType = 'text' | 'richText' | 'number' | 'positive' | 'email' | 'password' | 'select' | 'date' | 'image';
 
 export interface FormField {
     name: string;
@@ -45,7 +46,7 @@ const convertObjectShape = (fields: FormField[]): ObjectShape => {
         // type
         switch (field.type) {
             case 'text':
-            case 'textArea':
+            case 'richText':
                 schemaItem = string();
                 break;
             case 'password':
@@ -96,7 +97,7 @@ const BaseForm: React.FC<Props> = ({ fields, initialValues, onError, onSubmit, b
                 return <BaseTextField {...field} control={control} />;
             case 'text':
                 return <BaseTextField {...field} control={control} />;
-            case 'textArea':
+            case 'richText':
                 return <BaseTextAreaField {...field} control={control} />;
             case 'number':
                 return <BaseTextField {...field} control={control} />;
@@ -128,6 +129,7 @@ const BaseForm: React.FC<Props> = ({ fields, initialValues, onError, onSubmit, b
             </div>
             <div className="w-full mt-6 flex items-center justify-end">
                 {buttons.renderButtonBefore?.()}
+                {buttons.closeButton}
                 {buttons.submitButton}
                 {buttons.renderButtonAfter?.()}
             </div>

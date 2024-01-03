@@ -14,11 +14,10 @@ const BaseTextAreaField: React.FC<Props> = ({ control, name, ...props }) => {
             name={name}
             render={({ field: { onChange, onBlur, value }, fieldState: { invalid, error } }) => {
                 return (
+                    // todo: text area...
                     <TextField
                         {...props}
                         variant="outlined"
-                        rows={2}
-                        maxRows={4}
                         onBlur={onBlur}
                         onChange={onChange}
                         value={value}

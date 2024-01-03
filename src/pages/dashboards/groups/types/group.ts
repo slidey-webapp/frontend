@@ -15,3 +15,5 @@ export interface GroupMemberDto extends AuditedTimeDto {
     accountID: number;
     role: GroupMemberRole;
 }
+
+export interface GroupCreateDto extends Pick<GroupDto, 'name' | 'description'> {}

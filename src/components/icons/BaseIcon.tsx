@@ -20,6 +20,7 @@ const IconsMap = {
     'expand-more': loadable(() => import('@mui/icons-material/ExpandMore')),
     'expand-less': loadable(() => import('@mui/icons-material/ExpandLess')),
     dot: loadable(() => import('@mui/icons-material/FiberManualRecord')),
+    save: loadable(() => import('@mui/icons-material/Save')),
 };
 
 type Size = 8 | 10 | 12 | 14 | 16 | 18 | 20 | 22 | 24;
