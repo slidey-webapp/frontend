@@ -1,13 +1,15 @@
 import React, { useRef } from 'react';
+import ButtonIconBase from '~/components/buttons/ButtonIconBase';
 import BaseGrid, { BaseGridRef } from '~/components/grid/BaseGrid';
 import GridToolbar from '~/components/grid/components/GridToolbar';
 import { AppContainer } from '~/components/layouts/AppContainer';
 import ModalBase, { ModalBaseRef } from '~/components/modals/ModalBase';
 import { useBaseGrid } from '~/hooks/useBaseGrid';
-import { baseDeleteApi, baseDeleteWithoutIdApi } from '~/libs/axios';
+import { baseDeleteWithoutIdApi } from '~/libs/axios';
 import NotifyUtil from '~/utils/NotifyUtil';
 import { GROUP_DELETE_API, GROUP_INDEX_API } from './api/group.api';
 import GroupForm from './components/GroupForm';
+import GroupSendInvitationForm from './components/GroupSendInvitationForm';
 import { groupGridColDef } from './config/colDef';
 import { GroupDto } from './types/group';
 
@@ -58,6 +60,20 @@ const GroupPage: React.FC<Props> = () => {
         gridController?.reloadData();
     };
 
+    const handleSendInvitation = async (data: GroupDto) => {
+        modalRef.current?.onOpen(
+            <GroupSendInvitationForm
+                rowData={data}
+                onClose={modalRef.current.onClose}
+                onSuccess={() => {
+                    NotifyUtil.success('Mời thành viên vào nhóm thành công');
+                }}
+            />,
+            'Mời thành viên vào nhóm',
+            '50%',
+        );
+    };
+
     return (
         <AppContainer>
             <BaseGrid
@@ -69,11 +85,25 @@ const GroupPage: React.FC<Props> = () => {
                     hasDeleteBtn: true,
                     onClickEditBtn: handleUpdate,
                     onClickDeleteBtn: handleDelete,
+                    renderLeftActions: (data: GroupDto) => {
+                        return (
+                            <>
+                                <ButtonIconBase
+                                    icon={'email'}
+                                    color={'warning'}
+                                    onClick={() => {
+                                        handleSendInvitation(data);
+                                    }}
+                                    tooltip="Mời vào nhóm"
+                                />
+                            </>
+                        );
+                    },
                 }}
                 defaultColDef={{
                     autoHeight: true,
                 }}
-                actionRowsWidth={100}
+                actionRowsWidth={150}
                 toolbar={{
                     rightToolbar: (
                         <GridToolbar

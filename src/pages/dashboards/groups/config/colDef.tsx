@@ -5,11 +5,6 @@ import DateTimeUtil from '~/utils/DateTimeUtil';
 
 export const groupGridColDef: BaseGridColDef[] = [
     {
-        headerName: 'Tên',
-        field: nameof.full<GroupDto>(x => x.name),
-        minWidth: 200,
-    },
-    {
         headerName: 'Mã',
         field: nameof.full<GroupDto>(x => x.code),
         cellStyle: {
@@ -18,6 +13,11 @@ export const groupGridColDef: BaseGridColDef[] = [
         },
         width: 150,
         maxWidth: 200,
+    },
+    {
+        headerName: 'Tên',
+        field: nameof.full<GroupDto>(x => x.name),
+        minWidth: 200,
     },
     {
         headerName: 'Mô tả',

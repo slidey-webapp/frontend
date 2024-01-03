@@ -1,5 +1,5 @@
 import { FormField } from '~/components/forms/BaseForm';
-import { GroupCreateDto } from '../types/group';
+import { GroupCreateDto, GroupInvitationDto } from '../types/group';
 
 export const groupFields: FormField[] = [
     {
@@ -14,6 +14,16 @@ export const groupFields: FormField[] = [
         classNameCol: 'col-span-12',
         label: 'Mô tả',
         type: 'richText',
+        required: true,
+    },
+];
+
+export const groupInvitationFields :FormField[] = [
+    {
+        name: nameof.full<GroupInvitationDto>(x => x.email),
+        classNameCol: 'col-span-12',
+        label: 'Email',
+        type: 'email',
         required: true,
     },
 ];

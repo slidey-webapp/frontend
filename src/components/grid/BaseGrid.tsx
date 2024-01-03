@@ -33,6 +33,8 @@ export interface BaseGridProps extends BaseGridResponse<any> {
         onClickEditBtn?: (data: any) => void;
         onClickDeleteBtn?: (data: any) => void;
         onClickDetailBtn?: (data: any) => void;
+        renderLeftActions?: (data: any) => JSX.Element;
+        renderRightActions?: (data: any) => JSX.Element;
     };
     actionRowsWidth?: number;
     treeData?: boolean;
@@ -94,10 +96,12 @@ const BaseGrid = React.forwardRef<BaseGridRef, BaseGridProps>((props, ref) => {
             },
             resizable: false,
             suppressMovable: true,
+            pinned: 'right',
             cellRenderer: (params: any) => {
                 const data = _.get(params, 'data');
                 return (
                     <div className="w-full h-full flex items-center justify-center">
+                        {actionRowsList?.renderLeftActions?.(data)}
                         {actionRowsList?.hasDetailBtn && (
                             <ButtonIconBase
                                 icon={'info'}
@@ -129,6 +133,7 @@ const BaseGrid = React.forwardRef<BaseGridRef, BaseGridProps>((props, ref) => {
                                 }}
                             />
                         )}
+                        {actionRowsList?.renderRightActions?.(data)}
                     </div>
                 );
             },
