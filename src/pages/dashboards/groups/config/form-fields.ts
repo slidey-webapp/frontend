@@ -1,5 +1,6 @@
 import { FormField } from '~/components/forms/BaseForm';
-import { GroupCreateDto, GroupInvitationDto } from '../types/group';
+import { ComboOptionConstant } from '~/configs/constants';
+import { GroupCreateDto, GroupInvitationDto, GroupMemberDto } from '../types/group';
 
 export const groupFields: FormField[] = [
     {
@@ -18,12 +19,36 @@ export const groupFields: FormField[] = [
     },
 ];
 
-export const groupInvitationFields :FormField[] = [
+export const groupInvitationFields: FormField[] = [
     {
         name: nameof.full<GroupInvitationDto>(x => x.email),
         classNameCol: 'col-span-12',
         label: 'Email',
         type: 'email',
         required: true,
+    },
+];
+
+export const groupMemberFields: FormField[] = [
+    {
+        name: nameof.full<GroupMemberDto>(x => x.fullname),
+        classNameCol: 'col-span-4',
+        label: 'Tên',
+        type: 'text',
+        disabled: true,
+    },
+    {
+        name: nameof.full<GroupMemberDto>(x => x.email),
+        classNameCol: 'col-span-4',
+        label: 'Email',
+        type: 'email',
+        disabled: true,
+    },
+    {
+        name: nameof.full<GroupMemberDto>(x => x.role),
+        classNameCol: 'col-span-4',
+        label: 'Vai trò',
+        type: 'select',
+        options: ComboOptionConstant.ROLE,
     },
 ];

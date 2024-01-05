@@ -1,17 +1,17 @@
 import React, { useRef } from 'react';
-import ButtonIconBase from '~/components/buttons/ButtonIconBase';
 import BaseGrid, { BaseGridRef } from '~/components/grid/BaseGrid';
 import GridToolbar from '~/components/grid/components/GridToolbar';
 import { AppContainer } from '~/components/layouts/AppContainer';
 import ModalBase, { ModalBaseRef } from '~/components/modals/ModalBase';
 import { useBaseGrid } from '~/hooks/useBaseGrid';
-import { baseDeleteWithoutIdApi } from '~/libs/axios';
+import { baseDeleteWithoutIdApi, requestApi } from '~/libs/axios';
 import NotifyUtil from '~/utils/NotifyUtil';
-import { GROUP_DELETE_API, GROUP_INDEX_API } from './api/group.api';
+import { GROUP_DELETE_API, GROUP_GET_MEMBERS_API, GROUP_INDEX_API } from './api/group.api';
 import GroupForm from './components/GroupForm';
+import GroupMemberForm from './components/GroupMemberForm';
 import GroupSendInvitationForm from './components/GroupSendInvitationForm';
 import { groupGridColDef } from './config/colDef';
-import { GroupDto } from './types/group';
+import { GroupDto, GroupMemberDto } from './types/group';
 
 export interface Props {}
 
@@ -60,6 +60,10 @@ const GroupPage: React.FC<Props> = () => {
         gridController?.reloadData();
     };
 
+    const handleDetail = async (data: GroupDto) => {
+        window.open('/dashboard/group/' + data.groupID, '_blank');
+    };
+
     const handleSendInvitation = async (data: GroupDto) => {
         modalRef.current?.onOpen(
             <GroupSendInvitationForm
@@ -74,6 +78,20 @@ const GroupPage: React.FC<Props> = () => {
         );
     };
 
+    const getGroupMembers = async (data: GroupDto) => {
+        const response = await requestApi<{
+            members: GroupMemberDto[];
+        }>('get', GROUP_GET_MEMBERS_API, { groupID: data.groupID });
+
+        const members = response.data?.result?.members || [];
+
+        modalRef.current?.onOpen(
+            <GroupMemberForm members={members} onClose={modalRef.current?.onClose} />,
+            `Thành viên trong nhóm ${data.name}`,
+            '50%',
+        );
+    };
+
     return (
         <AppContainer>
             <BaseGrid
@@ -83,22 +101,32 @@ const GroupPage: React.FC<Props> = () => {
                 actionRowsList={{
                     hasEditBtn: true,
                     hasDeleteBtn: true,
+                    hasDetailBtn: true,
+                    onClickDetailBtn: handleDetail,
                     onClickEditBtn: handleUpdate,
                     onClickDeleteBtn: handleDelete,
-                    renderLeftActions: (data: GroupDto) => {
-                        return (
-                            <>
-                                <ButtonIconBase
-                                    icon={'email'}
-                                    color={'warning'}
-                                    onClick={() => {
-                                        handleSendInvitation(data);
-                                    }}
-                                    tooltip="Mời vào nhóm"
-                                />
-                            </>
-                        );
-                    },
+                    // renderLeftActions: (data: GroupDto) => {
+                    //     return (
+                    //         <>
+                    //             <ButtonIconBase
+                    //                 icon={'group'}
+                    //                 color={'primary'}
+                    //                 onClick={() => {
+                    //                     getGroupMembers(data);
+                    //                 }}
+                    //                 tooltip="Xem thành viên"
+                    //             />
+                    //             <ButtonIconBase
+                    //                 icon={'email'}
+                    //                 color={'warning'}
+                    //                 onClick={() => {
+                    //                     handleSendInvitation(data);
+                    //                 }}
+                    //                 tooltip="Mời vào nhóm"
+                    //             />
+                    //         </>
+                    //     );
+                    // },
                 }}
                 defaultColDef={{
                     autoHeight: true,

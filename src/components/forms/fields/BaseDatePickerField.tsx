@@ -48,6 +48,7 @@ const BaseDatePickerField: React.FC<Props> = ({ control, name, ...props }) => {
                             }}
                             className="h-[53.13px]"
                             format="dd/MM/yyyy"
+                            {...props}
                         />
                         {error?.message && <FormHelperText>{error.message}</FormHelperText>}
                     </FormControl>

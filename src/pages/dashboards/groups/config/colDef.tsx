@@ -12,7 +12,6 @@ export const groupGridColDef: BaseGridColDef[] = [
             justifyContent: 'center',
         },
         width: 150,
-        maxWidth: 200,
     },
     {
         headerName: 'Tên',
@@ -23,7 +22,6 @@ export const groupGridColDef: BaseGridColDef[] = [
         headerName: 'Mô tả',
         field: nameof.full<GroupDto>(x => x.description),
         minWidth: 200,
-        maxWidth: 150,
     },
     {
         headerName: 'Thời gian tạo',

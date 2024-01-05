@@ -1,6 +1,6 @@
 import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
 import { ColDef, ColGroupDef, GetDataPath, ModuleRegistry, RowGroupingDisplayType } from '@ag-grid-community/core';
-import { AgGridReact } from '@ag-grid-community/react';
+import { AgGridReact, AgGridReactProps } from '@ag-grid-community/react';
 import { RowGroupingModule } from '@ag-grid-enterprise/row-grouping';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
@@ -49,7 +49,7 @@ export interface BaseGridProps extends BaseGridResponse<any> {
     };
 }
 
-interface GridConfig {}
+interface GridConfig extends AgGridReactProps {}
 
 export interface BaseGridRef extends AgGridReact {}
 

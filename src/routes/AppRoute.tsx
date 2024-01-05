@@ -9,6 +9,7 @@ const RegisterView = React.lazy(() => import('~/components/layouts/RegisterView'
 const DashboardLayout = React.lazy(() => import('~/components/layouts/dashboard/DashboardLayout'));
 const DashboardHomePage = React.lazy(() => import('~/pages/dashboards/home/DashboardHomePage'));
 const GroupPage = React.lazy(() => import('~/pages/dashboards/groups/GroupPage'));
+const GroupDetailPage = React.lazy(() => import('~/pages/dashboards/groups/GroupDetailPage'));
 // #endregion
 
 // #region example
@@ -92,19 +93,24 @@ export const routeList: RouteDefinition[] = [
             {
                 title: 'Quản lý nhóm',
                 path: 'group',
-                element: (
-                    <Suspense>
-                        <GroupPage />
-                    </Suspense>
-                ),
                 children: [
                     {
                         hide: true,
-                        title: 'Chi tiết quản lý nhóm',
-                        path: ':groupId',
+                        path: '',
+                        title: 'Quản lý nhóm',
                         element: (
                             <Suspense>
                                 <GroupPage />
+                            </Suspense>
+                        ),
+                    },
+                    {
+                        hide: true,
+                        title: 'Chi tiết quản lý nhóm',
+                        path: ':groupID',
+                        element: (
+                            <Suspense>
+                                <GroupDetailPage />
                             </Suspense>
                         ),
                     },

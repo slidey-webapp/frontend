@@ -16,7 +16,6 @@ const BaseTextAreaField: React.FC<Props> = ({ control, name, ...props }) => {
                 return (
                     // todo: text area...
                     <TextField
-                        {...props}
                         variant="outlined"
                         onBlur={onBlur}
                         onChange={onChange}
@@ -24,6 +23,7 @@ const BaseTextAreaField: React.FC<Props> = ({ control, name, ...props }) => {
                         fullWidth
                         error={invalid}
                         helperText={error?.message}
+                        {...props}
                     />
                 );
             }}

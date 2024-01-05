@@ -1,8 +1,9 @@
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import React from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { QueryClientProvider } from 'react-query';
 import { Provider } from 'react-redux';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { queryClient } from '~/libs/react-query';
@@ -11,7 +12,6 @@ import './App.scss';
 import store from './AppStore';
 import { AuthProvider } from './providers/AuthProvider';
 import AppRoute from './routes/AppRoute';
-import { GoogleOAuthProvider } from '@react-oauth/google';
 
 const ErrorFallback = () => {
     return (
@@ -28,11 +28,11 @@ const App = () => {
                 <GoogleOAuthProvider clientId={process.env.REACT_APP_OAUTH_GOOGLE_CLIENT_ID as string}>
                     <ErrorBoundary FallbackComponent={ErrorFallback}>
                         <QueryClientProvider client={queryClient}>
-                            <Router>
+                            <BrowserRouter>
                                 <AuthProvider>
                                     <AppRoute />
                                 </AuthProvider>
-                            </Router>
+                            </BrowserRouter>
                         </QueryClientProvider>
                     </ErrorBoundary>
                 </GoogleOAuthProvider>
