@@ -1,5 +1,5 @@
 import { PaletteOptions, alpha } from '@mui/material/styles';
-import { error, indigo, info, neutral, success, warning } from './colors';
+import { error, indigo, info, neutral, success, warning, secondary } from './colors';
 
 export const createPalette = (): PaletteOptions => {
     return {
@@ -12,9 +12,10 @@ export const createPalette = (): PaletteOptions => {
             selected: alpha(neutral[900] || '', 0.12),
         },
         divider: neutral[100],
+        mode: 'light',
         error,
         info,
-        mode: 'light',
+        secondary,
         // @ts-ignore
         neutral,
         primary: indigo,

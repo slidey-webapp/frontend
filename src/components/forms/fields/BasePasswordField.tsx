@@ -15,7 +15,6 @@ const BasePasswordField: React.FC<Props> = ({ control, name, ...props }) => {
             render={({ field: { onChange, onBlur, value }, fieldState: { invalid, error } }) => {
                 return (
                     <TextField
-                        {...props}
                         variant="outlined"
                         onBlur={onBlur}
                         onChange={onChange}
@@ -23,6 +22,7 @@ const BasePasswordField: React.FC<Props> = ({ control, name, ...props }) => {
                         fullWidth
                         error={invalid}
                         helperText={error?.message}
+                        {...props}
                     />
                 );
             }}

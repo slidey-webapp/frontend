@@ -20,7 +20,6 @@ const BaseSelectField: React.FC<Props> = ({ control, name, options = [], ...prop
                             {props.label}
                         </InputLabel>
                         <Select
-                            {...props}
                             labelId={id}
                             value={value}
                             onChange={onChange}
@@ -30,6 +29,7 @@ const BaseSelectField: React.FC<Props> = ({ control, name, options = [], ...prop
                                     lineHeight: '1.4375em',
                                 },
                             }}
+                            {...props}
                         >
                             {options.map(({ value, label }) => {
                                 return (

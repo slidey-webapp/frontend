@@ -23,7 +23,7 @@ interface Props<TData> {
 export function useBaseGrid<TData>(props: Props<TData>): BaseGridResponse<TData> {
     const [paginatedQuery, setPaginatedQuery] = useState<PaginatedListQuery>({
         offset: 0,
-        limit: props.pageSize || Number.MAX_VALUE,
+        limit: props.pageSize || 10,
     });
     const [paginatedList, setPaginatedList] = useState<PaginatedList<TData>>({
         totalCount: 0,

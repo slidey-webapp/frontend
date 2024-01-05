@@ -1,3 +1,6 @@
+import { GroupMemberRole } from '~/pages/dashboards/groups/types/group';
+import { ComboOption } from '~/types/shared';
+
 //action row
 export const CREATE_BUTTON_TOOLTIP = 'Tạo mới';
 export const EDIT_BUTTON_TOOLTIP = 'Sửa';
@@ -21,7 +24,7 @@ export class NotificationConstant {
     static SEND_MAIL_SUCCESS = 'Gửi mail thành công!';
     static SEND_MAIL_FAIL = 'Gửi mail thất bại!';
     static ERROR_MESSAGE_UTIL = 'Dữ liệu không hợp lệ';
-    static COMMON_MESSAGE = 'Có lỗi xảy ra!'
+    static COMMON_MESSAGE = 'Có lỗi xảy ra!';
 
     static NOT_EMPTY = 'Không được để trống!';
 }
@@ -29,4 +32,17 @@ export class NotificationConstant {
 export class DashboardLayoutConstant {
     static SIDE_NAV_WIDTH = 280;
     static TOP_NAV_HEIGHT = 64;
+}
+
+export class ComboOptionConstant {
+    static ROLE: ComboOption<GroupMemberRole>[] = [
+        {
+            value: 'COOWNER',
+            label: 'Đồng sở hữu',
+        },
+        {
+            value: 'MEMBER',
+            label: 'Thành viên',
+        },
+    ];
 }

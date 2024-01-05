@@ -1,4 +1,5 @@
 import { Breadcrumbs, Link, Typography } from '@mui/material';
+import React, { useImperativeHandle, useState } from 'react';
 import { matchRoutes } from 'react-router-dom';
 import { routeList } from '~/routes/AppRoute';
 import BaseIcon from '../icons/BaseIcon';
@@ -10,11 +11,16 @@ export type BreadcrumbType = {
 
 type Props = {};
 
-const Breadcrumb: React.FC<Props> = () => {
+export interface BreadcrumbRef {
+    getBreadcrumbs: () => BreadcrumbType[];
+    setBreadcrumbs: (brs: BreadcrumbType[]) => void;
+}
+
+const Breadcrumb = React.forwardRef<BreadcrumbRef, Props>((props, ref) => {
     // @ts-ignore
     const routesMatched = matchRoutes(routeList, location.pathname);
 
-    const breadcrumbs: BreadcrumbType[] = [
+    const defaultBreadcrumbs: BreadcrumbType[] = [
         {
             path: '/',
             title: <BaseIcon type="home" size={18} />,
@@ -27,6 +33,17 @@ const Breadcrumb: React.FC<Props> = () => {
             };
         }),
     ];
+
+    const [breadcrumbs, setBreadcrumbs] = useState<BreadcrumbType[]>(defaultBreadcrumbs);
+
+    useImperativeHandle(
+        ref,
+        () => ({
+            getBreadcrumbs: () => breadcrumbs,
+            setBreadcrumbs: brs => setBreadcrumbs(brs),
+        }),
+        [],
+    );
 
     return (
         <Breadcrumbs aria-label="breadcrumb">
@@ -47,6 +64,5 @@ const Breadcrumb: React.FC<Props> = () => {
             })}
         </Breadcrumbs>
     );
-};
-
+});
 export default Breadcrumb;
