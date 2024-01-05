@@ -85,7 +85,7 @@ const RegisterView: React.FC = () => {
                     ]}
                     buttons={{
                         submitButton: (
-                            <ButtonBase className="w-full h-10 flex items-center !mx-0" type="submit" title="Đăng ký" />
+                            <ButtonBase className="w-full h-10 flex items-center" type="submit" title="Đăng ký" />
                         ),
                     }}
                 />
@@ -108,7 +108,7 @@ const RegisterView: React.FC = () => {
                 />
                 <div className="flex items-center text-gray-400 mt-3 w-full justify-center text-13px">
                     Bạn đã có tài khoản?
-                    <Link to="/login" className="ml-1.5 text-blue-500 hover:underline">
+                    <Link to="/login" className="ml-1.5 text-[#05a] hover:underline">
                         Đăng nhập
                     </Link>
                 </div>

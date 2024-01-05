@@ -53,14 +53,14 @@ const ChangePassword: React.FC<Props> = ({ onClose }) => {
                 {
                     name: nameof.full<ChangePasswordParam>(x => x.newPassword),
                     classNameCol: 'col-span-12',
-                    label: 'Xác nhận mật khẩu',
+                    label: 'Mật khẩu mới',
                     type: 'password',
                     required: true,
                 },
                 {
                     name: nameof.full<ChangePasswordParam>(x => x.confirmNewPassword),
                     classNameCol: 'col-span-12',
-                    label: 'Nhập lại mật khẩu mới',
+                    label: 'Xác nhận mật khẩu mới',
                     type: 'password',
                     required: true,
                 },

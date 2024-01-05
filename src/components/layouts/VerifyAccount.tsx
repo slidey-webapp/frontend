@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { VERIFY_ACCOUNT_API } from '~/configs/global.api';
 import { requestApi } from '~/libs/axios';
 import { VerifyAccountParam } from '~/types/auth';
 import NotifyUtil from '~/utils/NotifyUtil';
 import Loading from '../loadings/Loading';
+import { useAppSelector, RootState } from '~/AppStore';
 
 export interface Props {}
 
 const VerifyAccount: React.FC<Props> = () => {
     const { accountID, token } = useParams<VerifyAccountParam>();
+    const { isAuthenticated } = useAppSelector((state: RootState) => state.auth);
     const [loading, setLoading] = useState<boolean>(true);
     const navigate = useNavigate();
 
@@ -32,6 +34,7 @@ const VerifyAccount: React.FC<Props> = () => {
         handleVerify({ accountID, token });
     }, [accountID, token]);
 
+    if (isAuthenticated) <Navigate to="/" />;
     if (loading) return <Loading />;
     return <></>;
 };

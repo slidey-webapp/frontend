@@ -3,7 +3,7 @@ import { useCallback, useRef } from 'react';
 import { useAppDispatch } from '~/AppStore';
 import ModalBase, { ModalBaseRef } from '~/components/modals/ModalBase';
 import { logoutAsync } from '~/store/authSlice';
-import ChangePassword from './ChangePassword';
+import ChangePassword from '../ChangePassword';
 
 interface Props {
     anchorEl?: null | Element | (() => Element) | PopoverVirtualElement | (() => PopoverVirtualElement);

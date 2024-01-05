@@ -14,6 +14,7 @@ const LoginView: React.FC = () => {
     const { isAuthenticated } = useAppSelector((state: RootState) => state.auth);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+    
     const overlayRef = useRef<OverlayRef>(null);
 
     const handleLogin = async (type: LoginType, params: LoginParam | { token: string }) => {
@@ -57,14 +58,18 @@ const LoginView: React.FC = () => {
                     ]}
                     buttons={{
                         submitButton: (
-                            <ButtonBase
-                                className="w-full h-10 flex items-center !mx-0"
-                                type="submit"
-                                title="Đăng nhập"
-                            />
+                            <ButtonBase className="w-full h-10 flex items-center" type="submit" title="Đăng nhập" />
                         ),
                     }}
                 />
+                <div className="w-full flex items-center mx-1 mt-2">
+                    <div
+                        className="text-[#05a] hover:underline w-fit cursor-pointer text-13px"
+                        onClick={() => navigate('/forgot-password')}
+                    >
+                        Quên mật khẩu?
+                    </div>
+                </div>
                 <Divider textAlign="center" className="!my-3 text-gray-400 text-13px">
                     Hoặc
                 </Divider>
@@ -84,7 +89,7 @@ const LoginView: React.FC = () => {
                 />
                 <div className="flex items-center text-gray-400 mt-3 w-full justify-center text-13px">
                     Bạn chưa có tài khoản?
-                    <Link to="/register" className="ml-1.5 text-blue-500 hover:underline">
+                    <Link to="/register" className="ml-1.5 text-[#05a] hover:underline">
                         Đăng ký
                     </Link>
                 </div>
