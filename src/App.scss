@@ -1,0 +1,33 @@
+#root {
+    width: 100vw;
+    height: 100vh;
+}
+
+* {
+    margin: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif,
+        'Apple Color Emoji', 'Segoe UI Emoji';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+.google-login-button {
+    iframe {
+        width: calc(100% + 20px) !important;
+        margin: unset !important;
+        left: -10px !important;
+    }
+}
