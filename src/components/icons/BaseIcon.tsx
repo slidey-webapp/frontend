@@ -25,6 +25,8 @@ const IconsMap = {
     email: loadable(() => import('@mui/icons-material/Email')),
     group: loadable(() => import('@mui/icons-material/Group')),
     remove: loadable(() => import('@mui/icons-material/Remove')),
+    'forward-to-inbox-outlined': loadable(() => import('@mui/icons-material/ForwardToInboxOutlined')),
+    'lock-reset': loadable(() => import('@mui/icons-material/LockReset')),
 };
 
 type Size = 8 | 10 | 12 | 14 | 16 | 18 | 20 | 22 | 24;

@@ -58,7 +58,6 @@ const ModalBase = forwardRef<ModalBaseRef, Props>((props, ref) => {
 
     return (
         <Dialog
-            draggable
             onClose={handleClose}
             open={state.open}
             sx={{

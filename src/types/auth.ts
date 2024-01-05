@@ -36,3 +36,14 @@ export type VerifyAccountParam = {
     accountID?: string;
     token?: string;
 };
+
+export type ResetPasswordParam = {
+    accountID?: string;
+    token?: string;
+};
+
+export interface ChangePasswordParam {
+    password: string;
+    newPassword: string;
+    confirmNewPassword: string;
+}

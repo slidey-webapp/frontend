@@ -4,6 +4,7 @@ import { BaseIconProps } from '~/components/icons/BaseIcon';
 
 const LoginView = React.lazy(() => import('~/components/layouts/LoginView'));
 const RegisterView = React.lazy(() => import('~/components/layouts/RegisterView'));
+const ForgotPassword = React.lazy(() => import('~/components/layouts/ForgotPassword'));
 
 // #region Dashboard
 const DashboardLayout = React.lazy(() => import('~/components/layouts/dashboard/DashboardLayout'));
@@ -57,6 +58,15 @@ export const routeList: RouteDefinition[] = [
         element: (
             <Suspense>
                 <RegisterView />
+            </Suspense>
+        ),
+    },
+    {
+        title: 'Đặt lại mật khẩu',
+        path: '/forgot-password',
+        element: (
+            <Suspense>
+                <ForgotPassword />
             </Suspense>
         ),
     },
