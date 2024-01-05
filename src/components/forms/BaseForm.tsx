@@ -1,9 +1,11 @@
 import React, { useImperativeHandle, useRef } from 'react';
 
 import { yupResolver } from '@hookform/resolvers/yup';
+import clsx from 'clsx';
 import { FieldErrors, useForm } from 'react-hook-form';
 import { MixedSchema, NumberSchema, ObjectSchema, ObjectShape, StringSchema, mixed, number, object, string } from 'yup';
 import { ComboOption, GridClassNameCol } from '~/types/shared';
+import Overlay, { OverlayRef } from '../loadings/Overlay';
 import BaseDatePickerField from './fields/BaseDatePickerField';
 import BaseImagePickerField from './fields/BaseImagePickerField';
 import BasePasswordField from './fields/BasePasswordField';
@@ -23,6 +25,7 @@ export interface Props {
         renderButtonBefore?: () => React.ReactNode;
         renderButtonAfter?: () => React.ReactNode;
     };
+    renderAdditionBeforeButton?: () => JSX.Element;
 }
 
 type FormFieldType = 'text' | 'richText' | 'number' | 'positive' | 'email' | 'password' | 'select' | 'date' | 'image';
@@ -90,11 +93,13 @@ export interface BaseFormRef {
     setValue: (name: string, value: any) => void;
     isValid: () => Promise<boolean>;
     resetValues: () => void;
+    mask: () => void;
+    unmask: () => void;
 }
 
 const BaseForm = React.forwardRef<BaseFormRef, Props>(
-    ({ fields, initialValues, className, onError, onSubmit, buttons }, ref) => {
-        const formRef = useRef<HTMLFormElement>(null);
+    ({ fields, initialValues, className, renderAdditionBeforeButton, onError, onSubmit, buttons }, ref) => {
+        const overlayRef = useRef<OverlayRef>(null);
 
         const schema = object().shape(convertObjectShape(fields));
 
@@ -135,6 +140,8 @@ const BaseForm = React.forwardRef<BaseFormRef, Props>(
                 setValue,
                 isValid,
                 resetValues: reset,
+                mask: () => overlayRef.current?.open(),
+                unmask: () => overlayRef.current?.close(),
             }),
             [],
         );
@@ -142,7 +149,7 @@ const BaseForm = React.forwardRef<BaseFormRef, Props>(
         const isValid = async () => await trigger();
 
         return (
-            <form className={className} ref={formRef} onSubmit={handleSubmit(onSubmit, onError)} noValidate>
+            <form className={clsx('relative', className)} onSubmit={handleSubmit(onSubmit, onError)} noValidate>
                 <div className="grid grid-cols-12 gap-4">
                     {fields.map(field => {
                         return (
@@ -152,6 +159,7 @@ const BaseForm = React.forwardRef<BaseFormRef, Props>(
                         );
                     })}
                 </div>
+                {renderAdditionBeforeButton?.()}
                 {buttons && (
                     <div className="w-full mt-6 flex items-center justify-end">
                         {buttons?.renderButtonBefore?.()}
@@ -160,6 +168,7 @@ const BaseForm = React.forwardRef<BaseFormRef, Props>(
                         {buttons?.renderButtonAfter?.()}
                     </div>
                 )}
+                <Overlay ref={overlayRef} />
             </form>
         );
     },

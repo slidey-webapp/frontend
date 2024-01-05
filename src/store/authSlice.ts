@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import Cookies from 'js-cookie';
 import { AppThunk } from '~/AppStore';
-import { CHECK_AUTH_API, GOOGLE_LOGIN_API, LOGIN_API, LOGOUT_API, VERIFY_ACCOUNT_API } from '~/configs/global.api';
+import { CHECK_AUTH_API, GOOGLE_LOGIN_API, LOGIN_API, LOGOUT_API } from '~/configs/global.api';
 import { requestApi } from '~/libs/axios';
-import { AuthUser, LoginParam, LoginType, VerifyAccountParam } from '~/types/auth';
+import { AuthUser, LoginParam, LoginType } from '~/types/auth';
 import NotifyUtil from '~/utils/NotifyUtil';
 
 interface AuthState {
@@ -97,12 +97,12 @@ export const loginAsync =
     };
 
 export const logoutAsync =
-    (logoutSuccessFullCallback: () => void): AppThunk =>
+    (logoutSuccessFullCallback: () => void, notify: boolean): AppThunk =>
     async dispatch => {
         dispatch(setLoading(true));
         const response = await requestApi('post', LOGOUT_API);
         if (response.status === 200) {
-            NotifyUtil.success('Đăng xuất thành công!');
+            notify && NotifyUtil.success('Đăng xuất thành công!');
             Cookies.remove('token');
             Cookies.remove('refresh-token');
             dispatch(setLogout());

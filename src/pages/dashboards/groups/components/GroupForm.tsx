@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { ButtonBase } from '~/components/buttons/ButtonBase';
-import BaseForm from '~/components/forms/BaseForm';
+import BaseForm, { BaseFormRef } from '~/components/forms/BaseForm';
 import { requestApi } from '~/libs/axios';
 import { BaseFormModalProps } from '~/types/shared';
 import NotifyUtil from '~/utils/NotifyUtil';
@@ -13,7 +13,10 @@ interface Props extends BaseFormModalProps {
 }
 
 const GroupForm: React.FC<Props> = ({ rowData, modalType, onClose, onSuccess }) => {
+    const formRef = useRef<BaseFormRef>(null);
+
     const handleSubmit = async (formValues: GroupCreateDto) => {
+        formRef.current?.mask();
         try {
             const url = modalType == 'create' ? GROUP_CREATE_API : GROUP_UPDATE_API + '/' + rowData?.groupID;
 
@@ -28,6 +31,7 @@ const GroupForm: React.FC<Props> = ({ rowData, modalType, onClose, onSuccess }) 
         } catch (err) {
             console.log('err: ', err);
         } finally {
+            formRef.current?.unmask();
             onClose();
         }
     };
@@ -35,6 +39,7 @@ const GroupForm: React.FC<Props> = ({ rowData, modalType, onClose, onSuccess }) 
     return (
         <>
             <BaseForm
+                ref={formRef}
                 onSubmit={handleSubmit}
                 fields={groupFields}
                 initialValues={rowData}
