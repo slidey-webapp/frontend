@@ -37,10 +37,6 @@ export class DashboardLayoutConstant {
 export class ComboOptionConstant {
     static ROLE: ComboOption<GroupMemberRole>[] = [
         {
-            value: 'OWNER',
-            label: 'Sở hữu',
-        },
-        {
             value: 'COOWNER',
             label: 'Đồng sở hữu',
         },

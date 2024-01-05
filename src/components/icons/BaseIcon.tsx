@@ -24,6 +24,7 @@ const IconsMap = {
     send: loadable(() => import('@mui/icons-material/Send')),
     email: loadable(() => import('@mui/icons-material/Email')),
     group: loadable(() => import('@mui/icons-material/Group')),
+    remove: loadable(() => import('@mui/icons-material/Remove')),
 };
 
 type Size = 8 | 10 | 12 | 14 | 16 | 18 | 20 | 22 | 24;

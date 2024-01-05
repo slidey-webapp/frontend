@@ -11,10 +11,11 @@ import {
     Typography,
 } from '@mui/material';
 import _ from 'lodash';
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { BreadcrumbRef } from '~/components/bread-crumb/BreadCrumb';
 import { ButtonBase } from '~/components/buttons/ButtonBase';
+import ButtonIconBase from '~/components/buttons/ButtonIconBase';
 import BaseForm, { BaseFormRef } from '~/components/forms/BaseForm';
 import { AppContainer } from '~/components/layouts/AppContainer';
 import Loading from '~/components/loadings/Loading';
@@ -22,10 +23,10 @@ import { ComboOptionConstant } from '~/configs/constants';
 import { requestApi } from '~/libs/axios';
 import { Id } from '~/types/shared';
 import NotifyUtil from '~/utils/NotifyUtil';
-import { GROUP_SEND_INVITATION_API, GROUP_UPDATE_MEMBER_ROLE_API } from './api/group.api';
+import { GROUP_REMOVE_MEMBER_API, GROUP_SEND_INVITATION_API, GROUP_UPDATE_MEMBER_ROLE_API } from './api/group.api';
 import { useGroupDetail } from './api/useGroupDetail';
 import { useGroupMembers } from './api/useGroupMembers';
-import { GroupMemberRole } from './types/group';
+import { GroupMemberDto, GroupMemberRole } from './types/group';
 
 interface Props {}
 
@@ -40,12 +41,18 @@ const GroupDetailPage: React.FC<Props> = () => {
     const [anchorElPopover, setAnchorElPopover] = React.useState<null | HTMLElement>(null);
     const openPopover = Boolean(anchorElPopover);
 
+    const [members, setMembers] = useState<GroupMemberDto[]>([]);
+
     const { data: responseGroup, isFetching: isFetchingGroup } = useGroupDetail(groupID as Id);
-    const { data: responseMembers, isFetching: isFetchingMembers } = useGroupMembers(groupID as Id);
+    const { refetch: refetchMembers } = useGroupMembers(groupID as Id, {
+        onSuccess: res => {
+            if (res.status !== 200) return;
+            setMembers(res.data.result?.members || []);
+        },
+    });
 
     const group = useMemo(() => responseGroup?.data?.result?.group, [isFetchingGroup]);
-    const members = useMemo(() => responseMembers?.data?.result?.members || [], [isFetchingMembers]);
-    const isFetching = useMemo(() => isFetchingGroup || isFetchingMembers, [isFetchingGroup, isFetchingMembers]);
+    const isFetching = useMemo(() => isFetchingGroup, [isFetchingGroup]);
 
     useEffect(() => {
         if (_.isEmpty(group) || breadcrumbRef.current == null) return;
@@ -78,7 +85,7 @@ const GroupDetailPage: React.FC<Props> = () => {
                 ...params,
                 role: event?.target?.value,
             });
-            
+
             if (response?.status === 200) return;
 
             NotifyUtil.error(response.data?.message || 'Có lỗi xảy ra');
@@ -108,6 +115,27 @@ const GroupDetailPage: React.FC<Props> = () => {
                     NotifyUtil.error(response.data?.message || 'Có lỗi xảy ra');
                 }
             }
+        } catch (err) {
+            console.log('err: ', err);
+        }
+    };
+
+    const handleRemoveMember = async (member: GroupMemberDto) => {
+        const confirm = await NotifyUtil.confirmDialog('Thông báo', `Xóa thành viên ${member.fullname} ?`);
+        if (!confirm.isConfirmed) return;
+
+        try {
+            const response = await requestApi('post', GROUP_REMOVE_MEMBER_API, {
+                groupID: member.groupID,
+                accountID: member.accountID,
+            });
+
+            if (response?.status === 200) {
+                await refetchMembers();
+                return;
+            }
+
+            NotifyUtil.error(response.data?.message || 'Có lỗi xảy ra');
         } catch (err) {
             console.log('err: ', err);
         }
@@ -153,6 +181,9 @@ const GroupDetailPage: React.FC<Props> = () => {
                             onClose={handleClosePopover}
                             open={openPopover}
                             PaperProps={{ sx: { width: 480 } }}
+                            sx={{
+                                zIndex: 1000,
+                            }}
                         >
                             <Box
                                 sx={{
@@ -164,7 +195,7 @@ const GroupDetailPage: React.FC<Props> = () => {
                                 <div className="w-full flex items-center justify-between mt-2">
                                     <BaseForm
                                         className="w-full"
-                                        onSubmit={formValues => {
+                                        onSubmit={() => {
                                             //
                                         }}
                                         ref={formRef}
@@ -214,27 +245,36 @@ const GroupDetailPage: React.FC<Props> = () => {
                                                         <div className="text-xs">{member.email}</div>
                                                     </div>
                                                 </div>
-                                                <div>
-                                                    <FormControl sx={{ minWidth: 150 }} size="small">
-                                                        <Select
-                                                            defaultValue={member.role}
-                                                            onChange={event =>
-                                                                handleRoleChange(event, {
-                                                                    accountID: member.accountID,
-                                                                    groupID: member.groupID,
-                                                                })
-                                                            }
-                                                        >
-                                                            {ComboOptionConstant.ROLE.map(({ value, label }) => {
-                                                                return (
-                                                                    <MenuItem key={value} value={value}>
-                                                                        {label}
-                                                                    </MenuItem>
-                                                                );
-                                                            })}
-                                                        </Select>
-                                                    </FormControl>
-                                                </div>
+                                                {member.role !== 'OWNER' && (
+                                                    <div>
+                                                        <FormControl sx={{ minWidth: 150 }} size="small">
+                                                            <Select
+                                                                defaultValue={member.role}
+                                                                onChange={event =>
+                                                                    handleRoleChange(event, {
+                                                                        accountID: member.accountID,
+                                                                        groupID: member.groupID,
+                                                                    })
+                                                                }
+                                                            >
+                                                                {ComboOptionConstant.ROLE.map(({ value, label }) => {
+                                                                    return (
+                                                                        <MenuItem key={value} value={value}>
+                                                                            {label}
+                                                                        </MenuItem>
+                                                                    );
+                                                                })}
+                                                            </Select>
+                                                        </FormControl>
+                                                        <ButtonIconBase
+                                                            className="!ml-2"
+                                                            icon="remove"
+                                                            color="error"
+                                                            tooltip="Xóa thành viên"
+                                                            onClick={() => handleRemoveMember(member)}
+                                                        />
+                                                    </div>
+                                                )}
                                             </div>
                                         );
                                     })}
