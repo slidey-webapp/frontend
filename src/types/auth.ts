@@ -5,17 +5,23 @@ export interface AuthUser {
     refreshToken: string;
 }
 
+export type AccountStatus = 'UNVERIFIED' | 'ACTIVE';
+export type AccountSource = 'UNVERIFIED' | 'ACTIVE';
+
 export interface Account {
     accountID: number;
     email: string;
-    status: 'UNVERIFIED' | 'ACTIVE';
+    status: AccountStatus;
+    source: AccountSource;
 }
 
 export interface Person {
     fullName: string;
 }
 
-export interface User extends Account, Person {}
+export interface User extends Account, Person {
+    hasPassword?: boolean;
+}
 
 export interface LoginParam {
     email: string;
@@ -46,4 +52,9 @@ export interface ChangePasswordParam {
     password: string;
     newPassword: string;
     confirmNewPassword: string;
+}
+
+export interface CreatePasswordParam {
+    password: string;
+    confirmPassword: string;
 }
