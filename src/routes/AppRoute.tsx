@@ -13,6 +13,8 @@ const GroupPage = React.lazy(() => import('~/pages/dashboards/groups/GroupPage')
 const GroupDetailPage = React.lazy(() => import('~/pages/dashboards/groups/GroupDetailPage'));
 // #endregion
 
+const JoinGroup = React.lazy(() => import('~/pages/dashboards/groups/JoinGroup'));
+
 // #region example
 const ExampleGrid = React.lazy(() => import('~/pages/examples/grids/ExampleGrid'));
 // #endregion
@@ -58,6 +60,16 @@ export const routeList: RouteDefinition[] = [
         element: (
             <Suspense>
                 <RegisterView />
+            </Suspense>
+        ),
+    },
+    {
+        title: 'Tham nhóm bằng liên kết',
+        hide: true,
+        path: '/group/join/:token',
+        element: (
+            <Suspense>
+                <JoinGroup />
             </Suspense>
         ),
     },

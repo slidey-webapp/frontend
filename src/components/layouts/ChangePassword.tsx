@@ -19,7 +19,7 @@ const ChangePassword: React.FC<Props> = ({ onClose }) => {
 
     const handleSubmit = async (formValues: ChangePasswordParam) => {
         if (formValues.confirmNewPassword !== formValues.newPassword) {
-            NotifyUtil.error('Mật khẩu mới nhập lại không đúng');
+            NotifyUtil.error('Mật khẩu mới nhập lại không khớp');
 
             return;
         }

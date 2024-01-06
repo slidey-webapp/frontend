@@ -27,6 +27,7 @@ const IconsMap = {
     remove: loadable(() => import('@mui/icons-material/Remove')),
     'forward-to-inbox-outlined': loadable(() => import('@mui/icons-material/ForwardToInboxOutlined')),
     'lock-reset': loadable(() => import('@mui/icons-material/LockReset')),
+    'do-disturb': loadable(() => import('@mui/icons-material/DoDisturb')),
 };
 
 type Size = 8 | 10 | 12 | 14 | 16 | 18 | 20 | 22 | 24;
