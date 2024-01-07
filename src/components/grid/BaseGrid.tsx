@@ -171,6 +171,7 @@ const BaseGrid = React.forwardRef<BaseGridRef, BaseGridProps>((props, ref) => {
                             ...props.defaultColDef,
                         }}
                         loadingOverlayComponent={() => <Loading />}
+                        // todo: not working
                         onGridReady={params => params.api.sizeColumnsToFit()}
                         treeData={props.treeData}
                         animateRows

@@ -8,16 +8,12 @@ const ForgotPassword = React.lazy(() => import('~/components/layouts/ForgotPassw
 
 // #region Dashboard
 const DashboardLayout = React.lazy(() => import('~/components/layouts/dashboard/DashboardLayout'));
-const DashboardHomePage = React.lazy(() => import('~/pages/dashboards/home/DashboardHomePage'));
-const GroupPage = React.lazy(() => import('~/pages/dashboards/groups/GroupPage'));
-const GroupDetailPage = React.lazy(() => import('~/pages/dashboards/groups/GroupDetailPage'));
+const DashboardHomePage = React.lazy(() => import('~/pages/home/DashboardHomePage'));
+const GroupPage = React.lazy(() => import('~/pages/groups/GroupPage'));
+const GroupDetailPage = React.lazy(() => import('~/pages/groups/GroupDetailPage'));
 // #endregion
 
-const JoinGroup = React.lazy(() => import('~/pages/dashboards/groups/JoinGroup'));
-
-// #region example
-const ExampleGrid = React.lazy(() => import('~/pages/examples/grids/ExampleGrid'));
-// #endregion
+const JoinGroup = React.lazy(() => import('~/pages/groups/JoinGroup'));
 
 export type RouteDefinition = Omit<RouteObject, 'children'> & {
     title: string;
@@ -40,8 +36,6 @@ export const routeList: RouteDefinition[] = [
         element: (
             <>
                 <Link to="/dashboard">Example admin page</Link>
-                <Link to="/dashboard/grid">Example grid</Link>
-                <Link to="/dashboard/form">Example form</Link>
             </>
         ),
     },
@@ -137,33 +131,6 @@ export const routeList: RouteDefinition[] = [
                         ),
                     },
                 ],
-                icon: 'list',
-            },
-            {
-                title: 'Example grid',
-                path: 'grid',
-                element: (
-                    <Suspense>
-                        <ExampleGrid />
-                    </Suspense>
-                ),
-                icon: 'list',
-            },
-            {
-                title: 'Example form',
-                path: 'form',
-                element: (
-                    <Suspense>
-                        {/* //todo: example form */}
-                        Example form
-                    </Suspense>
-                ),
-                icon: 'list',
-            },
-            {
-                title: 'Example external side menu',
-                path: 'external',
-                element: <Suspense>Example External</Suspense>,
                 icon: 'list',
             },
         ],

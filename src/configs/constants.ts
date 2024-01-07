@@ -1,4 +1,4 @@
-import { GroupMemberRole } from '~/pages/dashboards/groups/types/group';
+import { GroupMemberRole } from '~/pages/groups/types/group';
 import { ComboOption } from '~/types/shared';
 
 //action row

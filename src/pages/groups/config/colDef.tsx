@@ -31,7 +31,6 @@ export const groupGridColDef: BaseGridColDef[] = [
             justifyContent: 'center',
         },
         width: 150,
-        maxWidth: 150,
         cellRenderer: (params: any) => {
             const data = _.get(params, 'data') as GroupDto;
             const { createdAt } = data;
@@ -47,7 +46,6 @@ export const groupGridColDef: BaseGridColDef[] = [
             justifyContent: 'center',
         },
         width: 150,
-        maxWidth: 150,
         cellRenderer: (params: any) => {
             const data = _.get(params, 'data') as GroupDto;
             const { updatedAt } = data;
