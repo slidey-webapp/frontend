@@ -5,6 +5,7 @@ import { BaseIconProps } from '~/components/icons/BaseIcon';
 const LoginView = React.lazy(() => import('~/components/layouts/LoginView'));
 const RegisterView = React.lazy(() => import('~/components/layouts/RegisterView'));
 const ForgotPassword = React.lazy(() => import('~/components/layouts/ForgotPassword'));
+const JoinGroup = React.lazy(() => import('~/pages/groups/JoinGroup'));
 
 // #region Dashboard
 const DashboardLayout = React.lazy(() => import('~/components/layouts/dashboard/DashboardLayout'));
@@ -13,7 +14,11 @@ const GroupPage = React.lazy(() => import('~/pages/groups/GroupPage'));
 const GroupDetailPage = React.lazy(() => import('~/pages/groups/GroupDetailPage'));
 // #endregion
 
-const JoinGroup = React.lazy(() => import('~/pages/groups/JoinGroup'));
+// #region presentation
+const PresentationPage = React.lazy(() => import('~/pages/presentations/PresentationPage'));
+const PresentationDetailPage = React.lazy(() => import('~/pages/presentations/PresentationDetailPage'));
+// #endregion
+
 
 export type RouteDefinition = Omit<RouteObject, 'children'> & {
     title: string;
@@ -133,7 +138,33 @@ export const routeList: RouteDefinition[] = [
                 ],
                 icon: 'list',
             },
+            {
+                title: 'Bài thuyết trình của tôi',
+                path: 'presentation',
+                children: [
+                    {
+                        hide: true,
+                        path: '',
+                        title: 'Bài thuyết trình của tôi',
+                        element: (
+                            <Suspense>
+                                <PresentationPage />
+                            </Suspense>
+                        ),
+                    },
+                ],
+                icon: 'list',
+            },
         ],
+    },
+    {
+        title: 'Chi tiết bài thuyết trình',
+        path: '/presentation/:presentationID',
+        element: (
+            <Suspense>
+                <PresentationDetailPage />
+            </Suspense>
+        ),
     },
     {
         title: 'Not found',

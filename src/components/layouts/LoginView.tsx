@@ -62,7 +62,7 @@ const LoginView: React.FC = () => {
                         ),
                     }}
                 />
-                <div className="w-full flex items-center mx-1 mt-2">
+                <div className="w-full flex items-center mt-2">
                     <div
                         className="text-[#05a] hover:underline w-fit cursor-pointer text-13px"
                         onClick={() => navigate('/forgot-password')}

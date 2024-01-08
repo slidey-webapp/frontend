@@ -1,6 +1,6 @@
-import { AuditedDto, AuditedTimeDto } from '~/types/shared';
+import { FullAuditedDto, AuditedTimeDto } from '~/types/shared';
 
-export interface GroupDto extends AuditedDto {
+export interface GroupDto extends FullAuditedDto {
     groupID: number;
     name: string;
     code: string;

@@ -23,10 +23,10 @@ const GridToolbar: React.FC<GridToolbarProps> = props => {
             {hasCreateButton && (
                 <ButtonBase
                     onClick={() => props.onClickCreateButton?.()}
-                    className={'btn-create'}
                     color={'success'}
                     title="Tạo mới"
                     startIcon={'add'}
+                    className='!mx-1'
                 />
             )}
             {hasRefreshButton && (
@@ -34,6 +34,7 @@ const GridToolbar: React.FC<GridToolbarProps> = props => {
                     title={'Làm mới'}
                     startIcon={'refresh'}
                     onClick={() => props.onClickRefreshButton?.()}
+                    className='!mx-1'
                 />
             )}
         </div>

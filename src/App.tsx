@@ -1,3 +1,4 @@
+import { CssBaseline, ThemeProvider } from '@mui/material';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import React from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -8,6 +9,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { queryClient } from '~/libs/react-query';
 import '~/mocks/mock';
+import { createTheme } from '~/themes';
 import './App.scss';
 import store from './AppStore';
 import { AuthProvider } from './providers/AuthProvider';
@@ -22,6 +24,8 @@ const ErrorFallback = () => {
 };
 
 const App = () => {
+    const theme = createTheme();
+
     return (
         <React.Fragment>
             <Provider store={store}>
@@ -29,9 +33,12 @@ const App = () => {
                     <ErrorBoundary FallbackComponent={ErrorFallback}>
                         <QueryClientProvider client={queryClient}>
                             <BrowserRouter>
-                                <AuthProvider>
-                                    <AppRoute />
-                                </AuthProvider>
+                                <ThemeProvider theme={theme}>
+                                    <AuthProvider>
+                                        <CssBaseline />
+                                        <AppRoute />
+                                    </AuthProvider>
+                                </ThemeProvider>
                             </BrowserRouter>
                         </QueryClientProvider>
                     </ErrorBoundary>
