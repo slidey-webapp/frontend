@@ -6,3 +6,5 @@ export const PRESENTATION_UPDATE_API = APP_API_PATH + '/presentation/update';
 export const PRESENTATION_DELETE_API = APP_API_PATH + '/presentation/delete';
 export const PRESENTATION_DETAIL_API = APP_API_PATH + '/presentation/detail';
 
+export const PRESENTATION_CREATE_SLIDE_API = APP_API_PATH + '/presentation/slide';
+

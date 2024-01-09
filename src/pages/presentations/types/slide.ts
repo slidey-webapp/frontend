@@ -1,6 +1,6 @@
 import { FullAuditedTimeDto, Id } from '~/types/shared';
 
-export interface PresentationDto extends FullAuditedTimeDto {
+export interface SlideDto extends FullAuditedTimeDto {
     slideID: Id;
     presentationID: Id;
     slideOrder: number;
