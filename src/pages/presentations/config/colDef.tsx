@@ -1,12 +1,12 @@
 import _ from 'lodash';
 import { BaseGridColDef } from '~/components/grid/BaseGrid';
-import { GroupDto } from '../types/group';
 import DateTimeUtil from '~/utils/DateTimeUtil';
+import { PresentationDto } from '../types/presentation';
 
-export const groupGridColDef: BaseGridColDef[] = [
+export const presentationGridColDef: BaseGridColDef[] = [
     {
         headerName: 'Mã',
-        field: nameof.full<GroupDto>(x => x.code),
+        field: nameof.full<PresentationDto>(x => x.code),
         cellStyle: {
             display: 'flex',
             justifyContent: 'center',
@@ -15,24 +15,19 @@ export const groupGridColDef: BaseGridColDef[] = [
     },
     {
         headerName: 'Tên',
-        field: nameof.full<GroupDto>(x => x.name),
-        minWidth: 200,
-    },
-    {
-        headerName: 'Mô tả',
-        field: nameof.full<GroupDto>(x => x.description),
+        field: nameof.full<PresentationDto>(x => x.name),
         minWidth: 200,
     },
     {
         headerName: 'Thời gian tạo',
-        field: nameof.full<GroupDto>(x => x.createdAt),
+        field: nameof.full<PresentationDto>(x => x.createdAt),
         cellStyle: {
             display: 'flex',
             justifyContent: 'center',
         },
         width: 150,
         cellRenderer: (params: any) => {
-            const data = _.get(params, 'data') as GroupDto;
+            const data = _.get(params, 'data') as PresentationDto;
             const { createdAt } = data;
             const createdAtFormatted = DateTimeUtil.formatDateTime(createdAt, DateTimeUtil.VN_DATE_TIME_FORMAT);
             return <div className="h-full flex items-center justify-center">{createdAtFormatted}</div>;
@@ -40,14 +35,14 @@ export const groupGridColDef: BaseGridColDef[] = [
     },
     {
         headerName: 'Thời gian cập nhật gần nhất',
-        field: nameof.full<GroupDto>(x => x.updatedAt),
+        field: nameof.full<PresentationDto>(x => x.updatedAt),
         cellStyle: {
             display: 'flex',
             justifyContent: 'center',
         },
         width: 150,
         cellRenderer: (params: any) => {
-            const data = _.get(params, 'data') as GroupDto;
+            const data = _.get(params, 'data') as PresentationDto;
             const { updatedAt } = data;
             if (!updatedAt) return <></>;
             

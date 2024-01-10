@@ -66,8 +66,10 @@ const ChangePassword: React.FC<Props> = ({ onClose }) => {
                 },
             ]}
             buttons={{
-                closeButton: <ButtonBase title="Đóng" startIcon="close" color="secondary" onClick={onClose} />,
-                submitButton: <ButtonBase type="submit" title="Lưu" startIcon="save" />,
+                closeButton: (
+                    <ButtonBase title="Đóng" startIcon="close" color="secondary" onClick={onClose} className="!mx-1" />
+                ),
+                submitButton: <ButtonBase type="submit" title="Lưu" startIcon="save" className="!mx-1" />,
             }}
         />
     );

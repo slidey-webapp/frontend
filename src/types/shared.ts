@@ -21,14 +21,16 @@ export interface ComboOption<T = Id> {
 
 export interface AuditedTimeDto {
     createdAt: Date;
-    updatedAt: Date;
+    updatedAt?: Date;
 }
 
-export interface AuditedDto extends AuditedTimeDto {
-    createdBy: number;
+export interface FullAuditedTimeDto extends AuditedTimeDto {
+    deletedAt?: Date;
 }
-export interface FullAuditedDto extends AuditedDto {
-    deletedAt: Date;
+
+export interface FullAuditedDto extends AuditedTimeDto {
+    createdBy: Id;
+    updatedBy?: Id;
 }
 
 export interface BaseFormModalProps {
