@@ -5,6 +5,7 @@ import React, { CSSProperties } from 'react';
 const IconsMap = {
     info: loadable(() => import('@mui/icons-material/InfoOutlined')),
     edit: loadable(() => import('@mui/icons-material/BorderColor')),
+    'drive-file-rename-outlined': loadable(() => import('@mui/icons-material/DriveFileRenameOutlineOutlined')),
     delete: loadable(() => import('@mui/icons-material/Delete')),
     add: loadable(() => import('@mui/icons-material/Add')),
     refresh: loadable(() => import('@mui/icons-material/Refresh')),
@@ -27,6 +28,7 @@ const IconsMap = {
     remove: loadable(() => import('@mui/icons-material/Remove')),
     'forward-to-inbox-outlined': loadable(() => import('@mui/icons-material/ForwardToInboxOutlined')),
     'lock-reset': loadable(() => import('@mui/icons-material/LockReset')),
+    'do-disturb': loadable(() => import('@mui/icons-material/DoDisturb')),
 };
 
 type Size = 8 | 10 | 12 | 14 | 16 | 18 | 20 | 22 | 24;

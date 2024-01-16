@@ -30,7 +30,7 @@ export const ButtonBase: React.FC<Props> = ({
             variant={variant}
             color={color}
             size={size}
-            className={clsx('!mx-1', className)}
+            className={className}
             startIcon={startIcon && <BaseIcon type={startIcon} size={18}/>}
             endIcon={endIcon && <BaseIcon type={endIcon} size={18}/>}
             {...props}

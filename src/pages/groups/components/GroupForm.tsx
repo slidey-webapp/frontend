@@ -44,9 +44,19 @@ const GroupForm: React.FC<Props> = ({ rowData, modalType, onClose, onSuccess }) 
                 fields={groupFields}
                 initialValues={rowData}
                 buttons={{
-                    closeButton: <ButtonBase title="Đóng" startIcon="close" color="secondary" onClick={onClose} />,
+                    closeButton: (
+                        <ButtonBase
+                            title="Đóng"
+                            startIcon="close"
+                            color="secondary"
+                            onClick={onClose}
+                            className="!mx-1"
+                        />
+                    ),
                     submitButton:
-                        modalType === 'detail' ? undefined : <ButtonBase type="submit" title="Lưu" startIcon="save" />,
+                        modalType === 'detail' ? undefined : (
+                            <ButtonBase type="submit" title="Lưu" startIcon="save" className="!mx-1" />
+                        ),
                 }}
             />
         </>

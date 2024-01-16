@@ -1,34 +1,34 @@
 import React, { useRef } from 'react';
 import { useAppDispatch } from '~/AppStore';
-import { ButtonBase } from '~/components/buttons/ButtonBase';
-import BaseForm, { BaseFormRef } from '~/components/forms/BaseForm';
-import { CHANGE_PASSWORD_API } from '~/configs/global.api';
+import { CREATE_PASSWORD_API } from '~/configs/global.api';
 import { requestApi } from '~/libs/axios';
 import { logoutAsync } from '~/store/authSlice';
-import { ChangePasswordParam } from '~/types/auth';
+import { CreatePasswordParam } from '~/types/auth';
 import NotifyUtil from '~/utils/NotifyUtil';
+import { ButtonBase } from '../buttons/ButtonBase';
+import BaseForm, { BaseFormRef } from '../forms/BaseForm';
 
 interface Props {
     onClose: () => void;
 }
 
-const ChangePassword: React.FC<Props> = ({ onClose }) => {
+const CreatePassword: React.FC<Props> = ({ onClose }) => {
     const dispatch = useAppDispatch();
 
     const formRef = useRef<BaseFormRef>(null);
 
-    const handleSubmit = async (formValues: ChangePasswordParam) => {
-        if (formValues.confirmNewPassword !== formValues.newPassword) {
-            NotifyUtil.error('Mật khẩu mới nhập lại không khớp');
+    const handleSubmit = async (formValues: CreatePasswordParam) => {
+        if (formValues.confirmPassword !== formValues.password) {
+            NotifyUtil.error('Mật khẩu nhập lại không khớp');
 
             return;
         }
 
         formRef.current?.mask();
 
-        const response = await requestApi('post', CHANGE_PASSWORD_API, formValues);
+        const response = await requestApi('post', CREATE_PASSWORD_API, formValues);
         if (response.status === 200) {
-            NotifyUtil.success('Đổi mật khẩu thành công!');
+            NotifyUtil.success('Tạo mật khẩu thành công!');
             dispatch(logoutAsync(() => null, false));
             onClose();
         } else {
@@ -44,21 +44,14 @@ const ChangePassword: React.FC<Props> = ({ onClose }) => {
             onSubmit={handleSubmit}
             fields={[
                 {
-                    name: nameof.full<ChangePasswordParam>(x => x.password),
-                    classNameCol: 'col-span-12',
-                    label: 'Mật khẩu cũ',
-                    type: 'password',
-                    required: true,
-                },
-                {
-                    name: nameof.full<ChangePasswordParam>(x => x.newPassword),
+                    name: nameof.full<CreatePasswordParam>(x => x.password),
                     classNameCol: 'col-span-12',
                     label: 'Mật khẩu mới',
                     type: 'password',
                     required: true,
                 },
                 {
-                    name: nameof.full<ChangePasswordParam>(x => x.confirmNewPassword),
+                    name: nameof.full<CreatePasswordParam>(x => x.confirmPassword),
                     classNameCol: 'col-span-12',
                     label: 'Xác nhận mật khẩu mới',
                     type: 'password',
@@ -75,4 +68,4 @@ const ChangePassword: React.FC<Props> = ({ onClose }) => {
     );
 };
 
-export default ChangePassword;
+export default CreatePassword;

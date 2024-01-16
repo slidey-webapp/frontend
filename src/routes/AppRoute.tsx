@@ -5,17 +5,20 @@ import { BaseIconProps } from '~/components/icons/BaseIcon';
 const LoginView = React.lazy(() => import('~/components/layouts/LoginView'));
 const RegisterView = React.lazy(() => import('~/components/layouts/RegisterView'));
 const ForgotPassword = React.lazy(() => import('~/components/layouts/ForgotPassword'));
+const JoinGroup = React.lazy(() => import('~/pages/groups/JoinGroup'));
 
 // #region Dashboard
 const DashboardLayout = React.lazy(() => import('~/components/layouts/dashboard/DashboardLayout'));
-const DashboardHomePage = React.lazy(() => import('~/pages/dashboards/home/DashboardHomePage'));
-const GroupPage = React.lazy(() => import('~/pages/dashboards/groups/GroupPage'));
-const GroupDetailPage = React.lazy(() => import('~/pages/dashboards/groups/GroupDetailPage'));
+const DashboardHomePage = React.lazy(() => import('~/pages/home/DashboardHomePage'));
+const GroupPage = React.lazy(() => import('~/pages/groups/GroupPage'));
+const GroupDetailPage = React.lazy(() => import('~/pages/groups/GroupDetailPage'));
 // #endregion
 
-// #region example
-const ExampleGrid = React.lazy(() => import('~/pages/examples/grids/ExampleGrid'));
+// #region presentation
+const PresentationPage = React.lazy(() => import('~/pages/presentations/PresentationPage'));
+const PresentationDetailPage = React.lazy(() => import('~/pages/presentations/PresentationDetailPage'));
 // #endregion
+
 
 export type RouteDefinition = Omit<RouteObject, 'children'> & {
     title: string;
@@ -38,8 +41,6 @@ export const routeList: RouteDefinition[] = [
         element: (
             <>
                 <Link to="/dashboard">Example admin page</Link>
-                <Link to="/dashboard/grid">Example grid</Link>
-                <Link to="/dashboard/form">Example form</Link>
             </>
         ),
     },
@@ -58,6 +59,16 @@ export const routeList: RouteDefinition[] = [
         element: (
             <Suspense>
                 <RegisterView />
+            </Suspense>
+        ),
+    },
+    {
+        title: 'Tham nhóm bằng liên kết',
+        hide: true,
+        path: '/group/join/:token',
+        element: (
+            <Suspense>
+                <JoinGroup />
             </Suspense>
         ),
     },
@@ -128,33 +139,32 @@ export const routeList: RouteDefinition[] = [
                 icon: 'list',
             },
             {
-                title: 'Example grid',
-                path: 'grid',
-                element: (
-                    <Suspense>
-                        <ExampleGrid />
-                    </Suspense>
-                ),
-                icon: 'list',
-            },
-            {
-                title: 'Example form',
-                path: 'form',
-                element: (
-                    <Suspense>
-                        {/* //todo: example form */}
-                        Example form
-                    </Suspense>
-                ),
-                icon: 'list',
-            },
-            {
-                title: 'Example external side menu',
-                path: 'external',
-                element: <Suspense>Example External</Suspense>,
+                title: 'Bài thuyết trình của tôi',
+                path: 'presentation',
+                children: [
+                    {
+                        hide: true,
+                        path: '',
+                        title: 'Bài thuyết trình của tôi',
+                        element: (
+                            <Suspense>
+                                <PresentationPage />
+                            </Suspense>
+                        ),
+                    },
+                ],
                 icon: 'list',
             },
         ],
+    },
+    {
+        title: 'Chi tiết bài thuyết trình',
+        path: '/presentation/:presentationID',
+        element: (
+            <Suspense>
+                <PresentationDetailPage />
+            </Suspense>
+        ),
     },
     {
         title: 'Not found',
