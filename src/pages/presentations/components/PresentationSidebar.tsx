@@ -1,10 +1,11 @@
 import clsx from 'clsx';
 import _ from 'lodash';
-import React, { useContext } from 'react';
+import React from 'react';
 import { DragDropContext, Draggable, Droppable, OnDragEndResponder } from 'react-beautiful-dnd';
-import { IPresentationContext, PresentationContext } from '../PresentationDetailPage';
+import { usePresentationContext } from '../PresentationDetailPage';
 import { SlideDto } from '../types/slide';
 import NewSlidePattern from './NewSlidePattern';
+import PreviewHeadingSlide from './PreviewHeadingSlide';
 
 interface Props {}
 
@@ -17,7 +18,7 @@ const reorder = (list: SlideDto[], startIndex: number, endIndex: number) => {
 };
 
 const PresentationSidebar: React.FC<Props> = () => {
-    const { presentation, slides, onUpdatePresentation } = useContext<IPresentationContext>(PresentationContext);
+    const { presentation, currentSlideId, slides, onUpdatePresentation, setCurrentSlideId } = usePresentationContext();
 
     const onDragEnd: OnDragEndResponder = result => {
         // dropped outside the list
@@ -44,40 +45,44 @@ const PresentationSidebar: React.FC<Props> = () => {
                         {droppableProvided => {
                             return (
                                 <div {...droppableProvided.droppableProps} ref={droppableProvided.innerRef}>
-                                    {slides.map((slide, index) => (
-                                        <Draggable
-                                            key={slide.slideID}
-                                            draggableId={slide.slideID.toString()}
-                                            index={index}
-                                        >
-                                            {(provided, snapshot) => {
-                                                return (
-                                                    <div
-                                                        className="w-full h-18 flex items-center mb-4"
-                                                        key={index}
-                                                        ref={provided.innerRef}
-                                                        {...provided.draggableProps}
-                                                        {...provided.dragHandleProps}
-                                                    >
-                                                        <div className="w-8 h-full flex items-center justify-center">
-                                                            {!snapshot.isDragging && <span>{index + 1}</span>}
-                                                        </div>
+                                    {slides.map((slide, index) => {
+                                        const active = slide.slideID === currentSlideId;
+                                        return (
+                                            <Draggable
+                                                key={slide.slideID}
+                                                draggableId={slide.slideID.toString()}
+                                                index={index}
+                                            >
+                                                {(provided, snapshot) => {
+                                                    return (
                                                         <div
-                                                            className={clsx(
-                                                                'flex-1 h-full border-2 p-2 bg-white flex items-center justify-center border-neutral-100 rounded ',
-                                                                'cursor-pointer transition-all duration-200 ease-in-out hover:border-neutral-300',
-                                                                {
-                                                                    '!border-indigo-main': slide.slideID === 'item-2',
-                                                                },
-                                                            )}
+                                                            className="w-full h-18 flex items-center mb-4"
+                                                            key={index}
+                                                            ref={provided.innerRef}
+                                                            {...provided.draggableProps}
+                                                            {...provided.dragHandleProps}
                                                         >
-                                                            {slide.slideID}
+                                                            <div className="w-8 h-full flex items-center justify-center">
+                                                                {!snapshot.isDragging && <span>{index + 1}</span>}
+                                                            </div>
+                                                            <div
+                                                                className={clsx(
+                                                                    'flex-1 h-full border-2 p-2 bg-white flex items-center justify-center border-neutral-100 rounded ',
+                                                                    'cursor-pointer transition-all duration-200 ease-in-out hover:border-neutral-300',
+                                                                    {
+                                                                        '!border-indigo-main': active,
+                                                                    },
+                                                                )}
+                                                                onClick={() => setCurrentSlideId(slide.slideID)}
+                                                            >
+                                                                {slide.slideID}
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                );
-                                            }}
-                                        </Draggable>
-                                    ))}
+                                                    );
+                                                }}
+                                            </Draggable>
+                                        );
+                                    })}
                                     {droppableProvided.placeholder}
                                 </div>
                             );

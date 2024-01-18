@@ -6,7 +6,7 @@ import headingSrc from '~/images/slide/heading.svg';
 import multipleChoiceSrc from '~/images/slide/multiple-choice.svg';
 import paragraphSrc from '~/images/slide/paragraph.svg';
 import { requestApi } from '~/libs/axios';
-import { IPresentationContext, PresentationContext } from '../PresentationDetailPage';
+import { usePresentationContext } from '../PresentationDetailPage';
 import { PRESENTATION_CREATE_SLIDE_API } from '../api/presentation.api';
 import { SlideType } from '../types/slide';
 
@@ -80,7 +80,7 @@ const SlidePatternItem = ({
 };
 
 const NewSlidePattern: React.FC<Props> = () => {
-    const { presentationID, mask, unmask, refetchPresentation } = useContext<IPresentationContext>(PresentationContext);
+    const { presentationID, mask, unmask, refetchPresentation } = usePresentationContext();
 
     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
 

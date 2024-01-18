@@ -5,6 +5,11 @@ export interface SlideDto extends FullAuditedTimeDto {
     presentationID: Id;
     slideOrder: number;
     type: SlideType;
+
+    // #region heading
+    heading: string;
+    subHeading: string;
+    // #endregion
 }
 
 export type SlideType = 'HEADING' | 'PARAGRAPH' | 'MULTIPLE_CHOICE';

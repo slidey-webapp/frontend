@@ -1,11 +1,11 @@
 import _ from 'lodash';
-import React, { createContext, useMemo, useRef, useState } from 'react';
+import React, { createContext, useContext, useMemo, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Overlay, { OverlayRef } from '~/components/loadings/Overlay';
 import { requestApi } from '~/libs/axios';
 import { Id } from '~/types/shared';
 import { PRESENTATION_UPDATE_API } from './api/presentation.api';
-import { usePresentationDetail } from './api/usePresentationDetailDto';
+import { usePresentationDetail } from './api/usePresentationDetail';
 import PresentationHeader from './components/PresentationHeader';
 import PresentationMain from './components/PresentationMain';
 import { PresentationDto } from './types/presentation';
@@ -17,6 +17,8 @@ export interface IPresentationContext {
     presentationID: Id;
     presentation: PresentationDto;
     slides: SlideDto[];
+    currentSlideId: Id;
+    setCurrentSlideId: (id: Id) => void;
     mask: () => void;
     unmask: () => void;
     refetchPresentation: () => Promise<void>;
@@ -25,9 +27,12 @@ export interface IPresentationContext {
 
 export const PresentationContext = createContext<IPresentationContext>({} as IPresentationContext);
 
+export const usePresentationContext = () => useContext<IPresentationContext>(PresentationContext);
+
 interface State {
     presentation: PresentationDto;
     slides: SlideDto[];
+    currentSlideId: Id;
 }
 
 const PresentationDetailPage: React.FC<Props> = () => {
@@ -38,6 +43,7 @@ const PresentationDetailPage: React.FC<Props> = () => {
     const [state, setState] = useState<State>({
         presentation: {} as PresentationDto,
         slides: [],
+        currentSlideId: '',
     });
 
     const { isFetching: isFetchingPresentation, refetch: refetchPresentation } = usePresentationDetail(presentationID, {
@@ -51,6 +57,7 @@ const PresentationDetailPage: React.FC<Props> = () => {
             setState({
                 presentation,
                 slides,
+                currentSlideId: slides?.[0]?.slideID,
             });
         },
     });
@@ -81,6 +88,8 @@ const PresentationDetailPage: React.FC<Props> = () => {
                     presentationID: presentationID as Id,
                     presentation: state.presentation,
                     slides: state.slides,
+                    currentSlideId: state.currentSlideId,
+                    setCurrentSlideId: id => setState(pre => ({ ...pre, currentSlideId: id })),
                     mask: () => overlayRef.current?.open(),
                     unmask: () => overlayRef.current?.close(),
                     refetchPresentation: async () => {
