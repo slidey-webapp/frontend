@@ -2,8 +2,8 @@ import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';
 import { DragDropContext, Draggable, Droppable, OnDragEndResponder } from 'react-beautiful-dnd';
-import { usePresentationContext } from '../PresentationDetailPage';
-import { SlideDto } from '../types/slide';
+import { usePresentationContext } from '../../PresentationDetailPage';
+import { SlideDto } from '../../types/slide';
 import NewSlidePattern from './NewSlidePattern';
 
 interface Props {}

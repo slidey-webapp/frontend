@@ -1,5 +1,5 @@
 import React from 'react';
-import { SlideDto } from '../types/slide';
+import { SlideDto } from '../../types/slide';
 
 interface Props {
     slide: SlideDto;

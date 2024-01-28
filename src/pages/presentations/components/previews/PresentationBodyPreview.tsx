@@ -1,5 +1,5 @@
 import React from 'react';
-import { usePresentationContext } from '../PresentationDetailPage';
+import { usePresentationContext } from '../../PresentationDetailPage';
 import PreviewHeadingSlide from './PreviewHeadingSlide';
 
 interface Props {}

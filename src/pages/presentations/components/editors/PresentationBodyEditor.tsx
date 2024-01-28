@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import React, { useCallback } from 'react';
 import BaseIcon from '~/components/icons/BaseIcon';
 import { ComboOptionConstant } from '~/configs/constants';
-import { usePresentationContext } from '../PresentationDetailPage';
-import { SlideDto } from '../types/slide';
+import { usePresentationContext } from '../../PresentationDetailPage';
+import { SlideDto } from '../../types/slide';
 import EditorHeadingSlide from './EditorHeadingSlide';
 
 interface Props {}

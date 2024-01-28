@@ -1,8 +1,8 @@
 import { FormControl, FormLabel, TextField } from '@mui/material';
 import _ from 'lodash';
 import React from 'react';
-import { IPresentationContext } from '../PresentationDetailPage';
-import { SlideDto } from '../types/slide';
+import { IPresentationContext } from '../../PresentationDetailPage';
+import { SlideDto } from '../../types/slide';
 
 interface Props {
     slide: SlideDto;

@@ -6,9 +6,9 @@ import headingSrc from '~/images/slide/heading.svg';
 import multipleChoiceSrc from '~/images/slide/multiple-choice.svg';
 import paragraphSrc from '~/images/slide/paragraph.svg';
 import { requestApi } from '~/libs/axios';
-import { usePresentationContext } from '../PresentationDetailPage';
-import { PRESENTATION_CREATE_SLIDE_API } from '../api/presentation.api';
-import { SlideType } from '../types/slide';
+import { usePresentationContext } from '../../PresentationDetailPage';
+import { PRESENTATION_CREATE_SLIDE_API } from '../../api/presentation.api';
+import { SlideType } from '../../types/slide';
 
 export interface Props {}
 
