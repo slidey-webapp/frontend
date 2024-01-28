@@ -1,20 +1,35 @@
-import { FormControl, FormLabel, MenuItem, Select, TextField } from '@mui/material';
+import { FormControl, FormLabel, MenuItem, Select } from '@mui/material';
 import clsx from 'clsx';
-import React from 'react';
+import React, { useCallback } from 'react';
 import BaseIcon from '~/components/icons/BaseIcon';
 import { ComboOptionConstant } from '~/configs/constants';
 import { usePresentationContext } from '../PresentationDetailPage';
 import { SlideDto } from '../types/slide';
+import EditorHeadingSlide from './EditorHeadingSlide';
 
 interface Props {}
 
 const PresentationBodyEditor: React.FC<Props> = props => {
-    const { currentSlideId, slides } = usePresentationContext();
+    const { currentSlideId, slides, onUpdatePresentation } = usePresentationContext();
     const slide = slides.find(x => x.slideID === currentSlideId) || ({} as SlideDto);
+
+    const renderEditorType = useCallback(() => {
+        switch (slide?.type) {
+            case 'HEADING':
+                return <EditorHeadingSlide slide={slide} slides={slides} onUpdatePresentation={onUpdatePresentation} />;
+            case 'MULTIPLE_CHOICE':
+                return <div>MULTIPLE_CHOICE</div>;
+            case 'PARAGRAPH':
+                return <div>PARAGRAPH</div>;
+            case null:
+            default:
+                return null;
+        }
+    }, [currentSlideId, slide.type]);
 
     return (
         <>
-            <div className="w-80 h-full pr-4 py-4">
+            <div className="w-80 h-full pr-4 py-4" key={currentSlideId + 'panel'}>
                 <div className="w-full h-full flex flex-col bg-white rounded-lg">
                     <div className="w-full h-14 px-4 flex items-center justify-between border-b border-neutral-100">
                         <div>Nội dung</div>
@@ -53,46 +68,12 @@ const PresentationBodyEditor: React.FC<Props> = props => {
                                     </Select>
                                 </FormControl>
                             </div>
-                            <div className="p-4 border-b border-neutral-100">
-                                <FormControl fullWidth>
-                                    <FormLabel
-                                        style={{
-                                            marginBottom: 10,
-                                            fontWeight: 600,
-                                        }}
-                                    >
-                                        Tiêu đề
-                                    </FormLabel>
-                                    <TextField
-                                        variant="outlined"
-                                        size="small"
-                                        placeholder="Heading"
-                                        defaultValue={slide.heading}
-                                    />
-                                </FormControl>
-                                <div className="my-2" />
-                                <FormControl fullWidth>
-                                    <FormLabel
-                                        style={{
-                                            marginBottom: 10,
-                                            fontWeight: 600,
-                                        }}
-                                    >
-                                        Tiêu đề phụ
-                                    </FormLabel>
-                                    <TextField
-                                        variant="outlined"
-                                        defaultValue={slide.subHeading}
-                                        placeholder="Subheading"
-                                        size="small"
-                                    />
-                                </FormControl>
-                            </div>
+                            <div className="p-4 border-b border-neutral-100">{renderEditorType()}</div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div className="w-30 pr-4 py-4">
+            <div className="w-30 pr-4 py-4" key={currentSlideId + 'tab-list'}>
                 <div className="rounded-lg bg-white p-1 flex flex-col gap-1 text-neutral-600">
                     <div
                         className={clsx(

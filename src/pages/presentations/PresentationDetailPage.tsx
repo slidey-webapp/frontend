@@ -22,7 +22,7 @@ export interface IPresentationContext {
     mask: () => void;
     unmask: () => void;
     refetchPresentation: () => Promise<void>;
-    onUpdatePresentation: (params: { name: string; slides: SlideDto[] }) => Promise<void>;
+    onUpdatePresentation: (params: { name?: string; slides: SlideDto[] }) => Promise<void>;
 }
 
 export const PresentationContext = createContext<IPresentationContext>({} as IPresentationContext);
@@ -54,15 +54,17 @@ const PresentationDetailPage: React.FC<Props> = () => {
             const slides = _.cloneDeep(presentation.slides) || [];
             delete presentation.slides;
 
-            setState({
+            setState(pre => ({
                 presentation,
                 slides,
-                currentSlideId: slides?.[0]?.slideID,
-            });
+                currentSlideId: pre.currentSlideId || slides?.[0]?.slideID,
+            }));
         },
     });
 
-    const handleUpdatePresentation = async (params: { name: string; slides: SlideDto[] }) => {
+    const handleUpdatePresentation = async (params: { name?: string; slides: SlideDto[] }) => {
+        if (!params.name) _.set(params, 'name', state.presentation.name || '');
+
         const response = await requestApi('post', PRESENTATION_UPDATE_API, {
             presentationID,
             ...params,

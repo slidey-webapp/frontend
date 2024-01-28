@@ -5,7 +5,6 @@ import { DragDropContext, Draggable, Droppable, OnDragEndResponder } from 'react
 import { usePresentationContext } from '../PresentationDetailPage';
 import { SlideDto } from '../types/slide';
 import NewSlidePattern from './NewSlidePattern';
-import PreviewHeadingSlide from './PreviewHeadingSlide';
 
 interface Props {}
 
@@ -21,7 +20,6 @@ const PresentationSidebar: React.FC<Props> = () => {
     const { presentation, currentSlideId, slides, onUpdatePresentation, setCurrentSlideId } = usePresentationContext();
 
     const onDragEnd: OnDragEndResponder = result => {
-        // dropped outside the list
         if (!result.destination) {
             return;
         }
@@ -89,15 +87,6 @@ const PresentationSidebar: React.FC<Props> = () => {
                         }}
                     </Droppable>
                 </DragDropContext>
-                {/* {Array(10)
-                    .fill(0)
-                    .map((x, index) => {
-                        const active = index === 2;
-
-                        return (
-                            
-                        );
-                    })} */}
             </div>
         </div>
     );
