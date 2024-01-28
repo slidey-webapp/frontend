@@ -1,4 +1,5 @@
 import { GroupMemberRole } from '~/pages/groups/types/group';
+import { SlideType } from '~/pages/presentations/types/slide';
 import { ComboOption } from '~/types/shared';
 
 //action row
@@ -43,6 +44,21 @@ export class ComboOptionConstant {
         {
             value: 'MEMBER',
             label: 'Thành viên',
+        },
+    ];
+
+    static SLIDE_TYPE:  ComboOption<SlideType>[] = [
+        {
+            value: 'HEADING',
+            label: 'Heading',
+        },
+        {
+            value: 'PARAGRAPH',
+            label: 'Paragraph',
+        },
+        {
+            value: 'MULTIPLE_CHOICE',
+            label: 'Multiple choice',
         },
     ];
 }

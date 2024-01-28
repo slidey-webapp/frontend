@@ -1,0 +1,54 @@
+.react-contextmenu {
+    filter: drop-shadow(rgba(0, 0, 0, 0.02) 0px 4px 4px) drop-shadow(rgba(0, 0, 0, 0.3) 0px 0px 1px)
+        drop-shadow(rgba(0, 0, 0, 0.05) 0px 1px 1px) drop-shadow(rgba(0, 0, 0, 0.02) 0px 14px 32px);
+    padding: 8px 16px;
+    background-color: #fff;
+    border-radius: 8px;
+    width: 250px;
+    outline: none;
+    opacity: 0;
+    pointer-events: none;
+    text-align: left;
+    transition: opacity 250ms ease !important;
+}
+
+.react-contextmenu.react-contextmenu--visible {
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 9999;
+}
+
+.react-contextmenu-item {
+    color: #101834;
+    font-size: 14px;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    transition: 0.3s all ease-in-out;
+}
+
+.react-contextmenu-item.react-contextmenu-item--active,
+.react-contextmenu-item.react-contextmenu-item--selected {
+    background-color: #eff5ff;
+}
+
+.react-contextmenu-item.react-contextmenu-submenu {
+    padding: 0;
+}
+
+.react-contextmenu-item.react-contextmenu-submenu > .react-contextmenu-item {
+}
+
+.react-contextmenu-item.react-contextmenu-submenu > .react-contextmenu-item:after {
+    content: '▶';
+    display: inline-block;
+    position: absolute;
+    right: 7px;
+}
+
+.example-multiple-targets::after {
+    content: attr(data-count);
+    display: block;
+}

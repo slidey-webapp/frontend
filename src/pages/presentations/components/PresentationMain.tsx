@@ -1,6 +1,7 @@
 import React from 'react';
-import PresentationBody from './PresentationBody';
-import PresentationSidebar from './PresentationSidebar';
+import PresentationBodyEditor from './editors/PresentationBodyEditor';
+import PresentationBodyPreview from './previews/PresentationBodyPreview';
+import PresentationSidebar from './sidebars/PresentationSidebar';
 
 interface Props {}
 
@@ -15,7 +16,10 @@ const PresentationMain: React.FC<Props> = props => {
             }}
         >
             <PresentationSidebar />
-            <PresentationBody />
+            <div className="flex-1 h-full bg-neutral-100 flex">
+                <PresentationBodyPreview />
+                <PresentationBodyEditor />
+            </div>
         </div>
     );
 };

@@ -40,11 +40,12 @@
         "clsx": "1.1.1",
         "draft-js": "0.11.7",
         "echarts": "5.4.3",
+        "size-sensor": "1.0.1",
         "js-cookie": "3.0.5",
         "lodash": "4.17.21",
         "moment": "2.29.4",
         "react": "18.2.0",
-        "react-beautiful-dnd": "^13.1.1",
+        "react-beautiful-dnd": "13.1.1",
         "react-dom": "18.2.0",
         "react-error-boundary": "3.1.4",
         "react-hook-form": "7.47.0",
@@ -60,7 +61,8 @@
         "tailwindcss": "3.3.3",
         "typescript": "4.9.5",
         "web-vitals": "2.1.4",
-        "yup": "1.3.2"
+        "yup": "1.3.2",
+        "react-contextmenu": "2.14.0"
     },
     "scripts": {
         "start": "craco start",
@@ -87,7 +89,7 @@
         "@babel/preset-react": "7.22.15",
         "@tanstack/react-query-devtools": "4.16.1",
         "@types/loadable__component": "5.13.4",
-        "@types/react-beautiful-dnd": "^13.1.8",
+        "@types/react-beautiful-dnd": "13.1.8",
         "@types/ts-nameof": "4.2.3",
         "@typescript-eslint/eslint-plugin": "5.62.0",
         "@typescript-eslint/parser": "5.62.0",

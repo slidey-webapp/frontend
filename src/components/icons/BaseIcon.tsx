@@ -7,6 +7,7 @@ const IconsMap = {
     edit: loadable(() => import('@mui/icons-material/BorderColor')),
     'drive-file-rename-outlined': loadable(() => import('@mui/icons-material/DriveFileRenameOutlineOutlined')),
     delete: loadable(() => import('@mui/icons-material/Delete')),
+    'delete-outlined': loadable(() => import('@mui/icons-material/DeleteOutline')),
     add: loadable(() => import('@mui/icons-material/Add')),
     refresh: loadable(() => import('@mui/icons-material/Refresh')),
     list: loadable(() => import('@mui/icons-material/List')),
@@ -29,6 +30,8 @@ const IconsMap = {
     'forward-to-inbox-outlined': loadable(() => import('@mui/icons-material/ForwardToInboxOutlined')),
     'lock-reset': loadable(() => import('@mui/icons-material/LockReset')),
     'do-disturb': loadable(() => import('@mui/icons-material/DoDisturb')),
+    'color-lens-outlined': loadable(() => import('@mui/icons-material/ColorLensOutlined')),
+    'duplicate': loadable(() => import('@mui/icons-material/ContentCopy')),
 };
 
 type Size = 8 | 10 | 12 | 14 | 16 | 18 | 20 | 22 | 24;
