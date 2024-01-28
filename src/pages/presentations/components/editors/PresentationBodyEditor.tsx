@@ -6,6 +6,7 @@ import { ComboOptionConstant } from '~/configs/constants';
 import { usePresentationContext } from '../../PresentationDetailPage';
 import { SlideDto } from '../../types/slide';
 import EditorHeadingSlide from './EditorHeadingSlide';
+import EditorParagraphSlide from './EditorParagraphSlide';
 
 interface Props {}
 
@@ -17,10 +18,10 @@ const PresentationBodyEditor: React.FC<Props> = props => {
         switch (slide?.type) {
             case 'HEADING':
                 return <EditorHeadingSlide slide={slide} slides={slides} onUpdatePresentation={onUpdatePresentation} />;
+            case 'PARAGRAPH':
+                return <EditorParagraphSlide slide={slide} slides={slides} onUpdatePresentation={onUpdatePresentation} />;
             case 'MULTIPLE_CHOICE':
                 return <div>MULTIPLE_CHOICE</div>;
-            case 'PARAGRAPH':
-                return <div>PARAGRAPH</div>;
             case null:
             default:
                 return null;
