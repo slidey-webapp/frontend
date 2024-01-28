@@ -4,10 +4,11 @@ import React, { useCallback } from 'react';
 import BaseIcon from '~/components/icons/BaseIcon';
 import { ComboOptionConstant } from '~/configs/constants';
 import { usePresentationContext } from '../../PresentationDetailPage';
-import { SlideDto } from '../../types/slide';
+import { SlideDto, SlideType } from '../../types/slide';
 import EditorHeadingSlide from './EditorHeadingSlide';
 import EditorParagraphSlide from './EditorParagraphSlide';
 import EditorMultipleChoiceSlide from './EditorMultipleChoice';
+import _ from 'lodash';
 
 interface Props {}
 
@@ -20,14 +21,39 @@ const PresentationBodyEditor: React.FC<Props> = props => {
             case 'HEADING':
                 return <EditorHeadingSlide slide={slide} slides={slides} onUpdatePresentation={onUpdatePresentation} />;
             case 'PARAGRAPH':
-                return <EditorParagraphSlide slide={slide} slides={slides} onUpdatePresentation={onUpdatePresentation} />;
+                return (
+                    <EditorParagraphSlide slide={slide} slides={slides} onUpdatePresentation={onUpdatePresentation} />
+                );
             case 'MULTIPLE_CHOICE':
-                return <EditorMultipleChoiceSlide slide={slide} slides={slides} onUpdatePresentation={onUpdatePresentation} />
+                return (
+                    <EditorMultipleChoiceSlide
+                        slide={slide}
+                        slides={slides}
+                        onUpdatePresentation={onUpdatePresentation}
+                    />
+                );
             case null:
             default:
                 return null;
         }
     }, [currentSlideId, slide.type]);
+
+    const handleChangeSlideType = (type: string) => {
+        const newSlide = _.cloneDeep(slide);
+        const currentSlideIndex = slides.findIndex(x => x.slideID === currentSlideId);
+        slides[currentSlideIndex] = {
+            ...newSlide,
+            type: type as SlideType,
+            question: newSlide.heading || newSlide.question,
+            heading: newSlide.heading || newSlide.question,
+            paragraph: newSlide.subHeading,
+            subHeading: newSlide.paragraph,
+        };
+
+        onUpdatePresentation({
+            slides: slides,
+        });
+    };
 
     return (
         <>
@@ -59,6 +85,7 @@ const PresentationBodyEditor: React.FC<Props> = props => {
                                             },
                                         }}
                                         {...props}
+                                        onChange={event => handleChangeSlideType(event.target.value)}
                                     >
                                         {ComboOptionConstant.SLIDE_TYPE.map(({ value, label }) => {
                                             return (
