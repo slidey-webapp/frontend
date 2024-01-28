@@ -5,6 +5,8 @@ module.exports = {
         extend: {
             fontSize: {
                 '13px': '13px',
+                '10px': '10px',
+                '8px': '8px',
             },
             animation: {
                 'loading-ripple': 'ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite',

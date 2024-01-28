@@ -5,6 +5,9 @@ import { DragDropContext, Draggable, Droppable, OnDragEndResponder } from 'react
 import { usePresentationContext } from '../../PresentationDetailPage';
 import { SlideDto } from '../../types/slide';
 import NewSlidePattern from './NewSlidePattern';
+import OverviewHeadingSlide from './OverviewHeadingSlide';
+import OverviewMultipleChoiceSlide from './OverviewMultipleChoiceSlide';
+import OverviewParagraphSlide from './OverviewParagraphSlide';
 
 interface Props {}
 
@@ -20,9 +23,7 @@ const PresentationSidebar: React.FC<Props> = () => {
     const { presentation, currentSlideId, slides, onUpdatePresentation, setCurrentSlideId } = usePresentationContext();
 
     const onDragEnd: OnDragEndResponder = result => {
-        if (!result.destination) {
-            return;
-        }
+        if (!result.destination || result.destination?.index === result.source.index) return;
 
         const newSlides = reorder(slides, result.source.index, result.destination.index);
 
@@ -30,6 +31,20 @@ const PresentationSidebar: React.FC<Props> = () => {
             name: presentation.name,
             slides: newSlides,
         });
+    };
+
+    const renderOverviewSlide = (slide: SlideDto) => {
+        switch (slide?.type) {
+            case 'HEADING':
+                return <OverviewHeadingSlide slide={slide} key={slide.slideID} />;
+            case 'PARAGRAPH':
+                return <OverviewParagraphSlide slide={slide} key={slide.slideID} />;
+            case 'MULTIPLE_CHOICE':
+                return <OverviewMultipleChoiceSlide slide={slide} key={slide.slideID} />;
+            case null:
+            default:
+                return null;
+        }
     };
 
     return (
@@ -73,7 +88,7 @@ const PresentationSidebar: React.FC<Props> = () => {
                                                                 )}
                                                                 onClick={() => setCurrentSlideId(slide.slideID)}
                                                             >
-                                                                {slide.slideID}
+                                                                {renderOverviewSlide(slide)}
                                                             </div>
                                                         </div>
                                                     );

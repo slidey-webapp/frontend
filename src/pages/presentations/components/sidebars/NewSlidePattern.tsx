@@ -1,6 +1,6 @@
 import { Popover } from '@mui/material';
 import clsx from 'clsx';
-import React, { useContext } from 'react';
+import React from 'react';
 import { ButtonBase } from '~/components/buttons/ButtonBase';
 import headingSrc from '~/images/slide/heading.svg';
 import multipleChoiceSrc from '~/images/slide/multiple-choice.svg';
@@ -8,7 +8,7 @@ import paragraphSrc from '~/images/slide/paragraph.svg';
 import { requestApi } from '~/libs/axios';
 import { usePresentationContext } from '../../PresentationDetailPage';
 import { PRESENTATION_CREATE_SLIDE_API } from '../../api/presentation.api';
-import { SlideType } from '../../types/slide';
+import { SlideDto, SlideType } from '../../types/slide';
 
 export interface Props {}
 
@@ -80,7 +80,7 @@ const SlidePatternItem = ({
 };
 
 const NewSlidePattern: React.FC<Props> = () => {
-    const { presentationID, mask, unmask, refetchPresentation } = usePresentationContext();
+    const { presentationID, mask, unmask, refetchPresentation, setCurrentSlideId } = usePresentationContext();
 
     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
 
@@ -97,11 +97,15 @@ const NewSlidePattern: React.FC<Props> = () => {
 
     const handleCreateSlide = async (type: SlideType) => {
         mask();
-        const response = await requestApi('post', PRESENTATION_CREATE_SLIDE_API, {
+        const response = await requestApi<SlideDto>('post', PRESENTATION_CREATE_SLIDE_API, {
             presentationID,
             type,
         });
-        if (response.status === 200) await refetchPresentation();
+        if (response.status === 200) {
+            const slideId = response.data?.result?.slideID;
+            slideId && setCurrentSlideId(slideId);
+            await refetchPresentation();
+        }
         unmask();
     };
 
