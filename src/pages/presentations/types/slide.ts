@@ -11,9 +11,20 @@ export interface SlideDto extends FullAuditedTimeDto {
     subHeading: string;
     // #endregion
 
-     // #region heading
-     paragraph: string;
-     // #endregion
+    // #region paragraph
+    paragraph: string;
+    // #endregion
+
+    // #region multiple choice
+    question: string;
+    options: MultipleChoiceSlideOption[];
+    // #endregion
+}
+
+export interface MultipleChoiceSlideOption {
+    slideID: Id;
+    optionID: Id;
+    option: string;
 }
 
 export type SlideType = 'HEADING' | 'PARAGRAPH' | 'MULTIPLE_CHOICE';

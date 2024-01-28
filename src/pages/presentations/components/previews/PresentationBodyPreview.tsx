@@ -2,6 +2,7 @@ import React from 'react';
 import { usePresentationContext } from '../../PresentationDetailPage';
 import PreviewHeadingSlide from './PreviewHeadingSlide';
 import PreviewParagraphSlide from './PreviewParagraphSlide';
+import PreviewMultipleChoiceSlide from './PreviewMultipleChoiceSlide';
 
 interface Props {}
 
@@ -15,7 +16,7 @@ const PresentationBodyPreview: React.FC<Props> = () => {
             case 'HEADING':
                 return <PreviewHeadingSlide slide={slide} />;
             case 'MULTIPLE_CHOICE':
-                return <div>MULTIPLE_CHOICE</div>;
+                return <PreviewMultipleChoiceSlide slide={slide} />;
             case 'PARAGRAPH':
                 return <PreviewParagraphSlide slide={slide} />;
             case null:

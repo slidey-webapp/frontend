@@ -7,6 +7,7 @@ import { usePresentationContext } from '../../PresentationDetailPage';
 import { SlideDto } from '../../types/slide';
 import EditorHeadingSlide from './EditorHeadingSlide';
 import EditorParagraphSlide from './EditorParagraphSlide';
+import EditorMultipleChoiceSlide from './EditorMultipleChoice';
 
 interface Props {}
 
@@ -21,7 +22,7 @@ const PresentationBodyEditor: React.FC<Props> = props => {
             case 'PARAGRAPH':
                 return <EditorParagraphSlide slide={slide} slides={slides} onUpdatePresentation={onUpdatePresentation} />;
             case 'MULTIPLE_CHOICE':
-                return <div>MULTIPLE_CHOICE</div>;
+                return <EditorMultipleChoiceSlide slide={slide} slides={slides} onUpdatePresentation={onUpdatePresentation} />
             case null:
             default:
                 return null;
