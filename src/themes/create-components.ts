@@ -123,6 +123,8 @@ export const createComponents = (config: { palette: any }): Components<Omit<Them
                 input: {
                     '&::placeholder': {
                         opacity: 1,
+                        color: palette.neutral[300],
+                        fontWeight: 400
                     },
                 },
             },
@@ -133,9 +135,6 @@ export const createComponents = (config: { palette: any }): Components<Omit<Them
                     fontSize: 14,
                     fontWeight: 500,
                     lineHeight: '24px',
-                    '&::placeholder': {
-                        color: palette.text.secondary,
-                    },
                 },
             },
         },
