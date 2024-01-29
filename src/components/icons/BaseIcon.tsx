@@ -32,6 +32,7 @@ const IconsMap = {
     'do-disturb': loadable(() => import('@mui/icons-material/DoDisturb')),
     'color-lens-outlined': loadable(() => import('@mui/icons-material/ColorLensOutlined')),
     'duplicate': loadable(() => import('@mui/icons-material/ContentCopy')),
+    'arrow-back': loadable(() => import('@mui/icons-material/ArrowBack')),
 };
 
 type Size = 8 | 10 | 12 | 14 | 16 | 18 | 20 | 22 | 24;

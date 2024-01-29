@@ -6,6 +6,7 @@ const LoginView = React.lazy(() => import('~/components/layouts/LoginView'));
 const RegisterView = React.lazy(() => import('~/components/layouts/RegisterView'));
 const ForgotPassword = React.lazy(() => import('~/components/layouts/ForgotPassword'));
 const JoinGroup = React.lazy(() => import('~/pages/groups/JoinGroup'));
+const JoinPresentation = React.lazy(() => import('~/pages/presentations/JoinPresentation'));
 
 // #region Dashboard
 const DashboardLayout = React.lazy(() => import('~/components/layouts/dashboard/DashboardLayout'));
@@ -69,6 +70,16 @@ export const routeList: RouteDefinition[] = [
         element: (
             <Suspense>
                 <JoinGroup />
+            </Suspense>
+        ),
+    },
+    {
+        title: 'Tham bài thuyết trình bằng liên kết',
+        hide: true,
+        path: '/presentation/collab/join/:token',
+        element: (
+            <Suspense>
+                <JoinPresentation />
             </Suspense>
         ),
     },
