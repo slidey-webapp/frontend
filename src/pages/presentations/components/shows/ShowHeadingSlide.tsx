@@ -1,26 +1,26 @@
 import React from 'react';
 import { SlideDto } from '../../types/slide';
-import { PreviewFontSizeConstant } from '~/configs/constants';
+import { ShowFontSizeConstant } from '~/configs/constants';
 
 interface Props {
     slide: SlideDto;
 }
 
-const PreviewHeadingSlide: React.FC<Props> = ({ slide }) => {
+const ShowHeadingSlide: React.FC<Props> = ({ slide }) => {
     if (slide.type !== 'HEADING') return null;
     return (
         <div className="w-full h-full flex flex-col items-center justify-center">
             <div
                 className="font-semibold mb-2 text-center"
                 style={{
-                    fontSize: PreviewFontSizeConstant.HEADING,
+                    fontSize: ShowFontSizeConstant.HEADING,
                 }}
             >
                 {slide.heading}
             </div>
             <div
                 style={{
-                    fontSize: PreviewFontSizeConstant.SUB_HEADING,
+                    fontSize: ShowFontSizeConstant.SUB_HEADING,
                 }}
             >
                 {slide.subHeading}
@@ -29,4 +29,4 @@ const PreviewHeadingSlide: React.FC<Props> = ({ slide }) => {
     );
 };
 
-export default PreviewHeadingSlide;
+export default ShowHeadingSlide;

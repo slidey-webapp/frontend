@@ -18,6 +18,7 @@ const GroupDetailPage = React.lazy(() => import('~/pages/groups/GroupDetailPage'
 // #region presentation
 const PresentationPage = React.lazy(() => import('~/pages/presentations/PresentationPage'));
 const PresentationDetailPage = React.lazy(() => import('~/pages/presentations/PresentationDetailPage'));
+const PresentationHostShow = React.lazy(() => import('~/pages/presentations/PresentationHostShow'));
 // #endregion
 
 
@@ -170,10 +171,19 @@ export const routeList: RouteDefinition[] = [
     },
     {
         title: 'Chi tiết bài thuyết trình',
-        path: '/presentation/:presentationID',
+        path: '/presentation/edit/:presentationID',
         element: (
             <Suspense>
                 <PresentationDetailPage />
+            </Suspense>
+        ),
+    },
+    {
+        title: 'Trình chiếu bài thuyết trình',
+        path: '/presentation/show/:presentationID',
+        element: (
+            <Suspense>
+                <PresentationHostShow />
             </Suspense>
         ),
     },

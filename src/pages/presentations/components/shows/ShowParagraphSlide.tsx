@@ -1,12 +1,12 @@
 import React from 'react';
+import { ShowFontSizeConstant } from '~/configs/constants';
 import { SlideDto } from '../../types/slide';
-import { PreviewFontSizeConstant } from '~/configs/constants';
 
 interface Props {
     slide: SlideDto;
 }
 
-const PreviewParagraphSlide: React.FC<Props> = ({ slide }) => {
+const ShowParagraphSlide: React.FC<Props> = ({ slide }) => {
     if (slide.type !== 'PARAGRAPH') return null;
 
     const paragraph = slide.paragraph?.replace(/\n/g, '<br>');
@@ -16,7 +16,7 @@ const PreviewParagraphSlide: React.FC<Props> = ({ slide }) => {
             <div
                 className="font-semibold mb-2 text-center"
                 style={{
-                    fontSize: PreviewFontSizeConstant.HEADING,
+                    fontSize: ShowFontSizeConstant.HEADING,
                 }}
             >
                 {slide.heading}
@@ -24,7 +24,7 @@ const PreviewParagraphSlide: React.FC<Props> = ({ slide }) => {
             <div
                 className="text-center"
                 style={{
-                    fontSize: PreviewFontSizeConstant.PARAGRAPH,
+                    fontSize: ShowFontSizeConstant.PARAGRAPH,
                 }}
                 dangerouslySetInnerHTML={{
                     __html: paragraph,
@@ -34,4 +34,4 @@ const PreviewParagraphSlide: React.FC<Props> = ({ slide }) => {
     );
 };
 
-export default PreviewParagraphSlide;
+export default ShowParagraphSlide;

@@ -15,8 +15,14 @@ import { CollaborationDto } from '../types/collaboration';
 interface Props {}
 
 const PresentationHeader: React.FC<Props> = () => {
-    const { presentation, presentationID, collaborations, onUpdatePresentation, refetchCollaborations } =
-        usePresentationContext();
+    const {
+        presentation,
+        presentationID,
+        collaborations,
+        onUpdatePresentation,
+        refetchCollaborations,
+        onShowPresentation,
+    } = usePresentationContext();
     const navigate = useNavigate();
 
     const formRef = useRef<BaseFormRef>(null);
@@ -110,141 +116,158 @@ const PresentationHeader: React.FC<Props> = () => {
                     </div>
                 </div>
                 <div className="flex-1 flex items-center justify-end">
-                    {' '}
-                    <AvatarGroup
-                        max={3}
-                        onClick={handleAvatarGroupClicked}
-                        style={{ cursor: 'pointer' }}
-                        sx={{
-                            '& .MuiAvatar-root': { width: 32, height: 32 },
-                        }}
-                    >
-                        {collaborations.map(collab => {
-                            return (
+                    <div>
+                        <AvatarGroup
+                            max={3}
+                            onClick={handleAvatarGroupClicked}
+                            style={{ cursor: 'pointer' }}
+                            sx={{
+                                '& .MuiAvatar-root': { width: 32, height: 32 },
+                            }}
+                        >
+                            {collaborations.map(collab => {
+                                return (
+                                    <Avatar
+                                        key={collab.collaborationID}
+                                        sx={{
+                                            width: 32,
+                                            height: 32,
+                                        }}
+                                    >
+                                        {collab.fullname.toString().trim()?.[0]}
+                                    </Avatar>
+                                );
+                            })}
+                            {collaborations.length === 0 && (
                                 <Avatar
-                                    key={collab.collaborationID}
+                                    key={'add'}
                                     sx={{
                                         width: 32,
                                         height: 32,
                                     }}
                                 >
-                                    {collab.fullname.toString().trim()?.[0]}
+                                    <BaseIcon type="add" />
                                 </Avatar>
-                            );
-                        })}
-                        {collaborations.length === 0 && (
-                            <Avatar
-                                key={'add'}
+                            )}
+                        </AvatarGroup>
+                        <Popover
+                            anchorEl={anchorElPopover}
+                            anchorOrigin={{
+                                horizontal: 'left',
+                                vertical: 'bottom',
+                            }}
+                            onClose={handleClosePopover}
+                            open={openPopover}
+                            PaperProps={{ sx: { width: 350 } }}
+                            sx={{
+                                zIndex: 1000,
+                            }}
+                        >
+                            <Box
                                 sx={{
-                                    width: 32,
-                                    height: 32,
+                                    py: 1.5,
+                                    px: 2,
                                 }}
                             >
-                                <BaseIcon type="add" />
-                            </Avatar>
-                        )}
-                    </AvatarGroup>
-                    <Popover
-                        anchorEl={anchorElPopover}
-                        anchorOrigin={{
-                            horizontal: 'left',
-                            vertical: 'bottom',
-                        }}
-                        onClose={handleClosePopover}
-                        open={openPopover}
-                        PaperProps={{ sx: { width: 350 } }}
-                        sx={{
-                            zIndex: 1000,
-                        }}
-                    >
-                        <Box
-                            sx={{
-                                py: 1.5,
-                                px: 2,
-                            }}
-                        >
-                            <Typography variant="overline">Người cộng tác</Typography>
-                            <div className="w-full flex items-center justify-between mt-2">
-                                <BaseForm
-                                    className="w-full"
-                                    onSubmit={() => {
-                                        //
-                                    }}
-                                    ref={formRef}
-                                    fields={[
-                                        {
-                                            name: 'email',
-                                            classNameCol: 'col-span-12',
-                                            label: 'Nhập email',
-                                            type: 'email',
-                                            required: true,
-                                        },
-                                    ]}
-                                />
-                            </div>
-                        </Box>
-                        <Divider />
-                        <Box
-                            sx={{
-                                py: 1.5,
-                                px: 2,
-                            }}
-                        >
-                            <div className="w-full flex flex-col">
-                                {collaborations.map(collab => {
-                                    return (
-                                        <div
-                                            key={collab.collaborationID}
-                                            className="flex-1  flex items-center justify-between"
-                                            style={{
-                                                height: 56,
-                                                minHeight: 56,
-                                            }}
-                                        >
-                                            <div className="flex items-center">
-                                                <div className="mr-3">
-                                                    <Avatar
-                                                        sx={{
-                                                            width: 32,
-                                                            height: 32,
-                                                        }}
-                                                    >
-                                                        {collab.fullname.toString().trim()?.[0]}
-                                                    </Avatar>
+                                <Typography variant="overline">Người cộng tác</Typography>
+                                <div className="w-full flex items-center justify-between mt-2">
+                                    <BaseForm
+                                        className="w-full"
+                                        onSubmit={() => {
+                                            //
+                                        }}
+                                        ref={formRef}
+                                        fields={[
+                                            {
+                                                name: 'email',
+                                                classNameCol: 'col-span-12',
+                                                label: 'Nhập email',
+                                                type: 'email',
+                                                required: true,
+                                            },
+                                        ]}
+                                    />
+                                </div>
+                            </Box>
+                            <Divider />
+                            <Box
+                                sx={{
+                                    py: 1.5,
+                                    px: 2,
+                                }}
+                            >
+                                <div className="w-full flex flex-col">
+                                    {collaborations.map(collab => {
+                                        return (
+                                            <div
+                                                key={collab.collaborationID}
+                                                className="flex-1  flex items-center justify-between"
+                                                style={{
+                                                    height: 56,
+                                                    minHeight: 56,
+                                                }}
+                                            >
+                                                <div className="flex items-center">
+                                                    <div className="mr-3">
+                                                        <Avatar
+                                                            sx={{
+                                                                width: 32,
+                                                                height: 32,
+                                                            }}
+                                                        >
+                                                            {collab.fullname.toString().trim()?.[0]}
+                                                        </Avatar>
+                                                    </div>
+                                                    <div className="flex-1 flex flex-col h-full justify-between">
+                                                        <div className="">{collab.fullname}</div>
+                                                        <div className="text-xs">{collab.email}</div>
+                                                    </div>
                                                 </div>
-                                                <div className="flex-1 flex flex-col h-full justify-between">
-                                                    <div className="">{collab.fullname}</div>
-                                                    <div className="text-xs">{collab.email}</div>
-                                                </div>
+                                                <ButtonIconBase
+                                                    className="!ml-2"
+                                                    icon="remove"
+                                                    color="error"
+                                                    tooltip="Xóa cộng tác viên"
+                                                    onClick={() => handleRemoveCollab(collab)}
+                                                />
                                             </div>
-                                            <ButtonIconBase
-                                                className="!ml-2"
-                                                icon="remove"
-                                                color="error"
-                                                tooltip="Xóa cộng tác viên"
-                                                onClick={() => handleRemoveCollab(collab)}
-                                            />
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        </Box>
-                        <Divider />
-                        <Box
-                            sx={{
-                                py: 1.5,
-                                px: 2,
-                            }}
-                        >
-                            <ButtonBase
-                                endIcon={'send'}
-                                color={'primary'}
-                                onClick={handleSendInvitation}
-                                title="Mời cộng tác"
-                                className="w-full h-10 flex items-center !m-0"
-                            />
-                        </Box>
-                    </Popover>
+                                        );
+                                    })}
+                                </div>
+                            </Box>
+                            <Divider />
+                            <Box
+                                sx={{
+                                    py: 1.5,
+                                    px: 2,
+                                }}
+                            >
+                                <ButtonBase
+                                    endIcon={'send'}
+                                    color={'primary'}
+                                    onClick={handleSendInvitation}
+                                    title="Mời cộng tác"
+                                    className="w-full h-10 flex items-center !m-0"
+                                />
+                            </Box>
+                        </Popover>
+                    </div>
+
+                    <Divider
+                        orientation="vertical"
+                        sx={{
+                            margin: '0 12px',
+                            height: '24px',
+                        }}
+                    />
+                    <div>
+                        <ButtonBase
+                            title={'Trình chiếu'}
+                            startIcon={'play-arrow'}
+                            onClick={onShowPresentation}
+                            className="!m-0"
+                        />
+                    </div>
                 </div>
             </div>
         </div>

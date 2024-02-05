@@ -47,7 +47,7 @@ export class ComboOptionConstant {
         },
     ];
 
-    static SLIDE_TYPE:  ComboOption<SlideType>[] = [
+    static SLIDE_TYPE: ComboOption<SlideType>[] = [
         {
             value: 'HEADING',
             label: 'Heading',
@@ -61,4 +61,21 @@ export class ComboOptionConstant {
             label: 'Multiple choice',
         },
     ];
+}
+
+export class PreviewFontSizeConstant {
+    static HEADING = '2.25cqw';
+    static SUB_HEADING = '1cqw';
+    static PARAGRAPH = '1cqw';
+}
+
+export class ShowFontSizeConstant {
+    static HEADING = '72px';
+    static SUB_HEADING = '24px';
+    static PARAGRAPH = '24px';
+}
+
+export class PreviewSizeConstant {
+    static WIDTH = 1920;
+    static HEIGHT = 1080;
 }
