@@ -5,7 +5,7 @@ interface Props {}
 const PresentationHotKeysOverview: React.FC<Props> = () => {
     return (
         <div className="w-full h-full">
-            <div className="w-full h-full flex flex-col gap-y-4">
+            <div className="w-full h-full grid grid-cols-2 gap-4">
                 {[
                     {
                         keyCode: '→',
@@ -35,7 +35,7 @@ const PresentationHotKeysOverview: React.FC<Props> = () => {
                     },
                 ].map((item, index) => {
                     return (
-                        <div className="w-full flex items-center" key={item.keyCode}>
+                        <div className="col-span-1 flex items-center" key={item.keyCode}>
                             <div
                                 className="flex items-center justify-center bg-black text-white font-semibold rounded"
                                 style={{

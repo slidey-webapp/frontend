@@ -15,7 +15,12 @@ const ShowMultipleChoiceSlide: React.FC<Props> = ({ slide }) => {
     const chartRef = useRef<ReactEChartsRef>(null);
 
     const renderChart = () => {
-        const dataXAxis = slide.options.map(x => x.option);
+        const dataXAxis = slide.options.map(x => ({
+            value: x.option,
+            textStyle: {
+                fontSize: 24,
+            },
+        }));
         const dataSeries = slide.options.map((opt, index) => {
             return {
                 // todo: add result...
@@ -34,9 +39,12 @@ const ShowMultipleChoiceSlide: React.FC<Props> = ({ slide }) => {
                 textStyle: {
                     fontFamily: 'lato, helvetica, arial, verdana, sans-serif, "FontAwesome"',
                     color: '#ffff',
+                    fontSize: 24,
                 },
                 backgroundColor: 'rgb(64,64,64)',
                 borderWidth: 0,
+                verticalAlign: 'middle',
+                align: 'center',
             },
             xAxis: {
                 data: dataXAxis,

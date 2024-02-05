@@ -183,12 +183,7 @@ const PresentationHostShow: React.FC<Props> = () => {
                 onHotKeysOverview: handleHotKeysOverview,
             }}
         >
-            <div
-                className="w-full h-full bg-black"
-                onKeyDown={event => {
-                    console.log(event.key);
-                }}
-            >
+            <div className="w-full h-full bg-black">
                 <FullScreen
                     ref={fullScreenRef}
                     onChange={state =>
