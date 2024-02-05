@@ -40,6 +40,8 @@ const IconsMap = {
     'question-answer': loadable(() => import('@mui/icons-material/QuestionAnswer')),
     'comment': loadable(() => import('@mui/icons-material/Comment')),
     'play-arrow': loadable(() => import('@mui/icons-material/PlayArrow')),
+    'keyboard-alt-outlined': loadable(() => import('@mui/icons-material/KeyboardAltOutlined')),
+    'keyboard': loadable(() => import('@mui/icons-material/Keyboard')),
 };
 
 type Size = 8 | 10 | 12 | 14 | 16 | 18 | 20 | 22 | 24;

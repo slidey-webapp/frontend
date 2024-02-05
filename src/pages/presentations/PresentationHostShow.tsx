@@ -1,11 +1,13 @@
 import _ from 'lodash';
-import React, { createContext, useContext, useRef, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import FullScreen, { FullScreenRef } from '~/components/full-screen/FullScreen';
 import Loading from '~/components/loadings/Loading';
+import ModalBase, { ModalBaseRef } from '~/components/modals/ModalBase';
 import { PreviewSizeConstant } from '~/configs/constants';
 import { Id } from '~/types/shared';
 import { usePresentationDetail } from './api/usePresentationDetail';
+import PresentationHotKeysOverview from './components/PresentationHotKeysOverview';
 import PresentationShowBody from './components/shows/PresentationShowBody';
 import PresentationShowFooter from './components/shows/PresentationShowFooter';
 import { PresentationDto } from './types/presentation';
@@ -22,6 +24,7 @@ export interface IPresentationShowContext {
     onFullScreen: () => void;
     onExitFullScreen: () => void;
     onSlideChange: (type: 'previous' | 'next') => void;
+    onHotKeysOverview: () => void;
 }
 
 export const PresentationShowContext = createContext<IPresentationShowContext>({} as IPresentationShowContext);
@@ -41,8 +44,11 @@ interface State {
 
 const PresentationHostShow: React.FC<Props> = () => {
     const fullScreenRef = useRef<FullScreenRef>(null);
+    const modalRef = useRef<ModalBaseRef>(null);
 
     const { presentationID } = useParams<{ presentationID: string }>();
+
+    const navigate = useNavigate();
 
     const [state, setState] = useState<State>({
         presentation: {} as PresentationDto,
@@ -52,6 +58,41 @@ const PresentationHostShow: React.FC<Props> = () => {
         isFirstSlide: true,
         isLastSlide: true,
     });
+
+    useEffect(() => {
+        const keyDownHandler = (event: any) => {
+            const keyCode = event.key;
+
+            switch (keyCode) {
+                case 'Escape':
+                    navigate(-1);
+                    return;
+                case 'ArrowRight':
+                    handleSlideChange('next');
+                    return;
+                case 'ArrowLeft':
+                    handleSlideChange('previous');
+                    return;
+                case 'f':
+                case 'F':
+                    state.isFullScreen ? fullScreenRef.current?.exit() : fullScreenRef.current?.open();
+                    return;
+                case 'k':
+                case 'K':
+                    handleHotKeysOverview();
+                    return;
+                case null:
+                default:
+                    return;
+            }
+        };
+
+        document.addEventListener<'keydown'>('keydown', keyDownHandler);
+
+        return () => {
+            document.removeEventListener<'keydown'>('keydown', keyDownHandler);
+        };
+    }, [state]);
 
     const { isFetching: isFetchingPresentation, refetch: refetchPresentation } = usePresentationDetail(presentationID, {
         onSuccess: res => {
@@ -82,6 +123,12 @@ const PresentationHostShow: React.FC<Props> = () => {
     const handleSlideChange = (action: 'previous' | 'next') => {
         const currentSlideIndex = state.slides.findIndex(x => x.slideID === state.currentSlideId);
 
+        const isCurrentFirstSlide = currentSlideIndex === 0;
+        const isCurrentLastSlide = currentSlideIndex === state.slides.length - 1;
+
+        if (isCurrentFirstSlide && action === 'previous') return;
+        if (isCurrentLastSlide && action === 'next') return;
+
         const newCurrentSlideIndex = action === 'previous' ? currentSlideIndex - 1 : currentSlideIndex + 1;
         const newCurrentSlide = state.slides[newCurrentSlideIndex];
 
@@ -96,6 +143,15 @@ const PresentationHostShow: React.FC<Props> = () => {
         }));
 
         return;
+    };
+
+    const handleHotKeysOverview = () => {
+        if (modalRef.current?.state === true) {
+            modalRef.current?.onClose();
+            return;
+        }
+
+        modalRef.current?.onOpen(<PresentationHotKeysOverview />, 'Tất cả các phím tắt', '50%');
     };
 
     const calculateScale = (): number => {
@@ -124,9 +180,15 @@ const PresentationHostShow: React.FC<Props> = () => {
                 onFullScreen: async () => await fullScreenRef.current?.open(),
                 onExitFullScreen: async () => await fullScreenRef.current?.exit(),
                 onSlideChange: handleSlideChange,
+                onHotKeysOverview: handleHotKeysOverview,
             }}
         >
-            <div className="w-full h-full bg-black">
+            <div
+                className="w-full h-full bg-black"
+                onKeyDown={event => {
+                    console.log(event.key);
+                }}
+            >
                 <FullScreen
                     ref={fullScreenRef}
                     onChange={state =>
@@ -144,7 +206,7 @@ const PresentationHostShow: React.FC<Props> = () => {
                                 height: PreviewSizeConstant.HEIGHT,
                                 width: PreviewSizeConstant.WIDTH,
                                 transform: `scale(${calculateScale()})`,
-                                aspectRatio: '16 / 9'
+                                aspectRatio: '16 / 9',
                             }}
                         >
                             <div className="w-full h-full flex flex-col">
@@ -153,6 +215,7 @@ const PresentationHostShow: React.FC<Props> = () => {
                             </div>
                         </div>
                     </div>
+                    <ModalBase ref={modalRef} />
                 </FullScreen>
             </div>
         </PresentationShowContext.Provider>

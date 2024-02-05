@@ -15,6 +15,7 @@ const PresentationShowFooter: React.FC<Props> = () => {
         onFullScreen,
         onExitFullScreen,
         onSlideChange,
+        onHotKeysOverview,
     } = usePresentationShowContext();
 
     const currentSlideIndex = slides.findIndex(x => x.slideID === currentSlideId);
@@ -84,6 +85,19 @@ const PresentationShowFooter: React.FC<Props> = () => {
                                     onClick={onFullScreen}
                                 />
                             )}
+                            <ButtonIconBase
+                                icon={'keyboard-alt-outlined'}
+                                tooltip="Xem tất cả phím tắt"
+                                color={'inherit'}
+                                size="large"
+                                style={{
+                                    margin: 0,
+                                    width: 48,
+                                    height: 48,
+                                    fontSize: 20,
+                                }}
+                                onClick={onHotKeysOverview}
+                            />
                         </div>
                     </div>
                     <div className="flex-1 flex justify-end items-center">
