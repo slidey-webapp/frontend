@@ -12,6 +12,7 @@ interface Props extends Partial<DialogProps> {}
 export interface ModalBaseRef {
     onOpen: (Component: JSX.Element, title: string | React.ReactNode, percentWidth?: Percentage) => void;
     onClose: () => void;
+    state: boolean;
 }
 
 interface State {
@@ -47,14 +48,11 @@ const ModalBase = forwardRef<ModalBaseRef, Props>((props, ref) => {
 
     const handleClose = () => setState(prevState => ({ ...prevState, open: false }));
 
-    useImperativeHandle(
-        ref,
-        () => ({
-            onOpen: handleOpen,
-            onClose: handleClose,
-        }),
-        [],
-    );
+    useImperativeHandle(ref, () => ({
+        onOpen: handleOpen,
+        onClose: handleClose,
+        state: state.open,
+    }));
 
     return (
         <Dialog

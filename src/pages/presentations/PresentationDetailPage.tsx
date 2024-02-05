@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import React, { createContext, useContext, useMemo, useRef, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Overlay, { OverlayRef } from '~/components/loadings/Overlay';
 import { requestApi } from '~/libs/axios';
 import { Id } from '~/types/shared';
@@ -27,6 +27,7 @@ export interface IPresentationContext {
     refetchPresentation: () => Promise<void>;
     refetchCollaborations: () => Promise<void>;
     onUpdatePresentation: (params: { name?: string; slides?: SlideDto[] }) => Promise<void>;
+    onShowPresentation: () => void;
 }
 
 export const PresentationContext = createContext<IPresentationContext>({} as IPresentationContext);
@@ -42,6 +43,8 @@ interface State {
 
 const PresentationDetailPage: React.FC<Props> = () => {
     const { presentationID } = useParams<{ presentationID: string }>();
+
+    const navigate = useNavigate();
 
     const overlayRef = useRef<OverlayRef>(null);
 
@@ -126,6 +129,7 @@ const PresentationDetailPage: React.FC<Props> = () => {
                         await refetchCollaborations();
                     },
                     onUpdatePresentation: handleUpdatePresentation,
+                    onShowPresentation: () => navigate('/presentation/show/' + presentationID),
                 }}
             >
                 <PresentationHeader />

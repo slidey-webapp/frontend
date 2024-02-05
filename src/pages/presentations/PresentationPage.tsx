@@ -51,7 +51,7 @@ const PresentationPage: React.FC<Props> = () => {
         gridController?.reloadData();
     };
 
-    const handleDetail = async (data: PresentationDto) => navigate('/presentation/' + data.presentationID);
+    const handleDetail = async (data: PresentationDto) => navigate('/presentation/edit/' + data.presentationID);
 
     return (
         <AppContainer>

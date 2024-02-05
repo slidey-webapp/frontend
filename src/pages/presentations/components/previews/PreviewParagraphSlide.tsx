@@ -1,5 +1,6 @@
 import React from 'react';
 import { SlideDto } from '../../types/slide';
+import { PreviewFontSizeConstant } from '~/configs/constants';
 
 interface Props {
     slide: SlideDto;
@@ -13,9 +14,9 @@ const PreviewParagraphSlide: React.FC<Props> = ({ slide }) => {
     return (
         <div className="w-full h-full flex flex-col items-center justify-center">
             <div
-                className="font-semibold mb-2"
+                className="font-semibold mb-2 text-center"
                 style={{
-                    fontSize: '3cqw',
+                    fontSize: PreviewFontSizeConstant.HEADING,
                 }}
             >
                 {slide.heading}
@@ -23,7 +24,7 @@ const PreviewParagraphSlide: React.FC<Props> = ({ slide }) => {
             <div
                 className="text-center"
                 style={{
-                    fontSize: '1.25cqw',
+                    fontSize: PreviewFontSizeConstant.PARAGRAPH,
                 }}
                 dangerouslySetInnerHTML={{
                     __html: paragraph,
