@@ -40,6 +40,7 @@ export const ButtonIconBase: React.FC<Props> = ({
     variant = 'text',
     size = 'medium',
     icon,
+    style,
     ...props
 }) => {
     const element = (
@@ -51,6 +52,7 @@ export const ButtonIconBase: React.FC<Props> = ({
                 borderRadius: '100%',
                 margin: 2,
                 ...sizes[size],
+                ...style,
             }}
             size={size}
             {...props}

@@ -6,6 +6,7 @@ const LoginView = React.lazy(() => import('~/components/layouts/LoginView'));
 const RegisterView = React.lazy(() => import('~/components/layouts/RegisterView'));
 const ForgotPassword = React.lazy(() => import('~/components/layouts/ForgotPassword'));
 const JoinGroup = React.lazy(() => import('~/pages/groups/JoinGroup'));
+const JoinPresentation = React.lazy(() => import('~/pages/presentations/JoinPresentation'));
 
 // #region Dashboard
 const DashboardLayout = React.lazy(() => import('~/components/layouts/dashboard/DashboardLayout'));
@@ -17,6 +18,7 @@ const GroupDetailPage = React.lazy(() => import('~/pages/groups/GroupDetailPage'
 // #region presentation
 const PresentationPage = React.lazy(() => import('~/pages/presentations/PresentationPage'));
 const PresentationDetailPage = React.lazy(() => import('~/pages/presentations/PresentationDetailPage'));
+const PresentationHostShow = React.lazy(() => import('~/pages/presentations/PresentationHostShow'));
 // #endregion
 
 
@@ -69,6 +71,16 @@ export const routeList: RouteDefinition[] = [
         element: (
             <Suspense>
                 <JoinGroup />
+            </Suspense>
+        ),
+    },
+    {
+        title: 'Tham bài thuyết trình bằng liên kết',
+        hide: true,
+        path: '/presentation/collab/join/:token',
+        element: (
+            <Suspense>
+                <JoinPresentation />
             </Suspense>
         ),
     },
@@ -159,10 +171,19 @@ export const routeList: RouteDefinition[] = [
     },
     {
         title: 'Chi tiết bài thuyết trình',
-        path: '/presentation/:presentationID',
+        path: '/presentation/edit/:presentationID',
         element: (
             <Suspense>
                 <PresentationDetailPage />
+            </Suspense>
+        ),
+    },
+    {
+        title: 'Trình chiếu bài thuyết trình',
+        path: '/presentation/show/:presentationID',
+        element: (
+            <Suspense>
+                <PresentationHostShow />
             </Suspense>
         ),
     },

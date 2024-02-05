@@ -1,5 +1,6 @@
 import React from 'react';
 import { SlideDto } from '../../types/slide';
+import { PreviewFontSizeConstant } from '~/configs/constants';
 
 interface Props {
     slide: SlideDto;
@@ -10,16 +11,16 @@ const PreviewHeadingSlide: React.FC<Props> = ({ slide }) => {
     return (
         <div className="w-full h-full flex flex-col items-center justify-center">
             <div
-                className="font-semibold mb-2"
+                className="font-semibold mb-2 text-center"
                 style={{
-                    fontSize: '3cqw',
+                    fontSize: PreviewFontSizeConstant.HEADING,
                 }}
             >
                 {slide.heading}
             </div>
             <div
                 style={{
-                    fontSize: '1.25cqw',
+                    fontSize: PreviewFontSizeConstant.SUB_HEADING,
                 }}
             >
                 {slide.subHeading}

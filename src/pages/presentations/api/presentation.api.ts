@@ -8,3 +8,7 @@ export const PRESENTATION_DETAIL_API = APP_API_PATH + '/presentation/detail';
 
 export const PRESENTATION_CREATE_SLIDE_API = APP_API_PATH + '/presentation/slide';
 
+export const COLLABORATION_JOIN_API = APP_API_PATH + '/presentation/collab/join';
+export const COLLABORATION_INVITATION_API = APP_API_PATH + '/presentation/collab/send-invitation';
+export const COLLABORATION_DELETE_API = APP_API_PATH + '/presentation/collab/delete';
+export const COLLABORATION_INDEX_API = APP_API_PATH + '/presentation/collab';

@@ -1,13 +1,15 @@
 import _ from 'lodash';
 import React, { createContext, useContext, useMemo, useRef, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Overlay, { OverlayRef } from '~/components/loadings/Overlay';
 import { requestApi } from '~/libs/axios';
 import { Id } from '~/types/shared';
 import { PRESENTATION_UPDATE_API } from './api/presentation.api';
+import { useCollaborationsQuery } from './api/useCollaborationsQuery';
 import { usePresentationDetail } from './api/usePresentationDetail';
 import PresentationHeader from './components/PresentationHeader';
 import PresentationMain from './components/PresentationMain';
+import { CollaborationDto } from './types/collaboration';
 import { PresentationDto } from './types/presentation';
 import { SlideDto } from './types/slide';
 
@@ -18,11 +20,14 @@ export interface IPresentationContext {
     presentation: PresentationDto;
     slides: SlideDto[];
     currentSlideId: Id;
+    collaborations: CollaborationDto[];
     setCurrentSlideId: (id: Id) => void;
     mask: () => void;
     unmask: () => void;
     refetchPresentation: () => Promise<void>;
-    onUpdatePresentation: (params: { name?: string; slides: SlideDto[] }) => Promise<void>;
+    refetchCollaborations: () => Promise<void>;
+    onUpdatePresentation: (params: { name?: string; slides?: SlideDto[] }) => Promise<void>;
+    onShowPresentation: () => void;
 }
 
 export const PresentationContext = createContext<IPresentationContext>({} as IPresentationContext);
@@ -33,10 +38,13 @@ interface State {
     presentation: PresentationDto;
     slides: SlideDto[];
     currentSlideId: Id;
+    collaborations: CollaborationDto[];
 }
 
 const PresentationDetailPage: React.FC<Props> = () => {
     const { presentationID } = useParams<{ presentationID: string }>();
+
+    const navigate = useNavigate();
 
     const overlayRef = useRef<OverlayRef>(null);
 
@@ -44,6 +52,7 @@ const PresentationDetailPage: React.FC<Props> = () => {
         presentation: {} as PresentationDto,
         slides: [],
         currentSlideId: '',
+        collaborations: [],
     });
 
     const { isFetching: isFetchingPresentation, refetch: refetchPresentation } = usePresentationDetail(presentationID, {
@@ -55,6 +64,7 @@ const PresentationDetailPage: React.FC<Props> = () => {
             delete presentation.slides;
 
             setState(pre => ({
+                ...pre,
                 presentation,
                 slides,
                 currentSlideId: pre.currentSlideId || slides?.[0]?.slideID,
@@ -62,8 +72,22 @@ const PresentationDetailPage: React.FC<Props> = () => {
         },
     });
 
-    const handleUpdatePresentation = async (params: { name?: string; slides: SlideDto[] }) => {
+    const { isFetching: isFetchingCollaborations, refetch: refetchCollaborations } = useCollaborationsQuery(
+        { presentationID: presentationID as Id },
+        {
+            onSuccess: res => {
+                if (res.status !== 200) return;
+                setState(pre => ({
+                    ...pre,
+                    collaborations: res.data.result?.items || [],
+                }));
+            },
+        },
+    );
+
+    const handleUpdatePresentation = async (params: { name?: string; slides?: SlideDto[] }) => {
         if (!params.name) _.set(params, 'name', state.presentation.name || '');
+        if (!params.slides) _.set(params, 'slides', state.slides || []);
 
         const response = await requestApi('post', PRESENTATION_UPDATE_API, {
             presentationID,
@@ -73,7 +97,10 @@ const PresentationDetailPage: React.FC<Props> = () => {
         if (response.status === 200) await refetchPresentation();
     };
 
-    const isLoading = useMemo(() => isFetchingPresentation, [isFetchingPresentation]);
+    const isLoading = useMemo(
+        () => isFetchingPresentation || isFetchingCollaborations,
+        [isFetchingPresentation || isFetchingCollaborations],
+    );
 
     // todo: add skeleton loading here
     if (isLoading) return <div>Skeleton loding...</div>;
@@ -91,13 +118,18 @@ const PresentationDetailPage: React.FC<Props> = () => {
                     presentation: state.presentation,
                     slides: state.slides,
                     currentSlideId: state.currentSlideId,
+                    collaborations: state.collaborations,
                     setCurrentSlideId: id => setState(pre => ({ ...pre, currentSlideId: id })),
                     mask: () => overlayRef.current?.open(),
                     unmask: () => overlayRef.current?.close(),
                     refetchPresentation: async () => {
                         await refetchPresentation();
                     },
+                    refetchCollaborations: async () => {
+                        await refetchCollaborations();
+                    },
                     onUpdatePresentation: handleUpdatePresentation,
+                    onShowPresentation: () => navigate('/presentation/show/' + presentationID),
                 }}
             >
                 <PresentationHeader />
