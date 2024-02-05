@@ -1,6 +1,7 @@
+import { motion } from 'framer-motion';
 import React from 'react';
-import { SlideDto } from '../../types/slide';
 import { ShowFontSizeConstant } from '~/configs/constants';
+import { SlideDto } from '../../types/slide';
 
 interface Props {
     slide: SlideDto;
@@ -16,14 +17,39 @@ const ShowHeadingSlide: React.FC<Props> = ({ slide }) => {
                     fontSize: ShowFontSizeConstant.HEADING,
                 }}
             >
-                {slide.heading}
+                {slide.heading.split(' ').map((el, i) => (
+                    <motion.span
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{
+                            duration: 1,
+                            delay: i / 10,
+                        }}
+                        key={i}
+                    >
+                        {el}{' '}
+                    </motion.span>
+                ))}
             </div>
+
             <div
                 style={{
                     fontSize: ShowFontSizeConstant.SUB_HEADING,
                 }}
             >
-                {slide.subHeading}
+                {slide.subHeading.split(' ').map((el, i) => (
+                    <motion.span
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{
+                            duration: 0.05,
+                            delay: i / 20,
+                        }}
+                        key={i}
+                    >
+                        {el}{' '}
+                    </motion.span>
+                ))}
             </div>
         </div>
     );

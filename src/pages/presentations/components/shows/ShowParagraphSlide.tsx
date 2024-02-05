@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import React from 'react';
 import { ShowFontSizeConstant } from '~/configs/constants';
 import { SlideDto } from '../../types/slide';
@@ -19,17 +20,41 @@ const ShowParagraphSlide: React.FC<Props> = ({ slide }) => {
                     fontSize: ShowFontSizeConstant.HEADING,
                 }}
             >
-                {slide.heading}
+                {slide.heading.split(' ').map((el, i) => (
+                    <motion.span
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{
+                            duration: 1,
+                            delay: i / 10,
+                        }}
+                        key={i}
+                    >
+                        {el}{' '}
+                    </motion.span>
+                ))}
             </div>
             <div
                 className="text-center"
                 style={{
                     fontSize: ShowFontSizeConstant.PARAGRAPH,
                 }}
-                dangerouslySetInnerHTML={{
-                    __html: paragraph,
-                }}
-            />
+            >
+                {paragraph.split('<br>').map((el, i) => (
+                    <motion.span
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{
+                            duration: 0.1,
+                            delay: i / 10,
+                        }}
+                        key={i}
+                    >
+                        {el}
+                        <br />
+                    </motion.span>
+                ))}
+            </div>
         </div>
     );
 };

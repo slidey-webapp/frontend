@@ -1,6 +1,8 @@
 import { EChartsOption } from 'echarts';
+import { motion } from 'framer-motion';
 import React, { useRef } from 'react';
 import { ReactECharts, ReactEChartsRef } from '~/components/charts/ReactECharts';
+import { COLORS, ShowFontSizeConstant } from '~/configs/constants';
 import { SlideDto } from '../../types/slide';
 
 interface Props {
@@ -14,7 +16,15 @@ const ShowMultipleChoiceSlide: React.FC<Props> = ({ slide }) => {
 
     const renderChart = () => {
         const dataXAxis = slide.options.map(x => x.option);
-        const dataSeries = slide.options.map(() => 0);
+        const dataSeries = slide.options.map((opt, index) => {
+            return {
+                // todo: add result...
+                value: index,
+                itemStyle: {
+                    color: COLORS[index],
+                },
+            };
+        });
 
         const options: EChartsOption = {
             legend: {
@@ -42,10 +52,34 @@ const ShowMultipleChoiceSlide: React.FC<Props> = ({ slide }) => {
             ],
         };
 
-        return <ReactECharts ref={chartRef} option={options} style={{ height: 300 }} />;
+        return <ReactECharts ref={chartRef} option={options} style={{ height: 650 }} />;
     };
 
-    return <div className="w-full h-full flex flex-col items-center justify-center">{renderChart()}</div>;
+    return (
+        <div className="w-full h-full flex flex-col items-center justify-center">
+            <div
+                className="font-semibold mb-2 w-full text-left"
+                style={{
+                    fontSize: ShowFontSizeConstant.HEADING,
+                }}
+            >
+                {slide.question.split(' ').map((el, i) => (
+                    <motion.span
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{
+                            duration: 1,
+                            delay: i / 10,
+                        }}
+                        key={i}
+                    >
+                        {el}{' '}
+                    </motion.span>
+                ))}
+            </div>
+            <div className="w-full flex-1">{renderChart()}</div>
+        </div>
+    );
 };
 
 export default ShowMultipleChoiceSlide;

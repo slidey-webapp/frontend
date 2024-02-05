@@ -79,3 +79,5 @@ export class PreviewSizeConstant {
     static WIDTH = 1920;
     static HEIGHT = 1080;
 }
+
+export const COLORS = ['#2a64b0', '#eb3630', '#f78b1f', '#3eb14a', '#a11600'];
