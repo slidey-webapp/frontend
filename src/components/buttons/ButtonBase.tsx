@@ -11,6 +11,8 @@ type IconProps = {
 type Props = Omit<ButtonProps, 'startIcon' | 'endIcon'> &
     IconProps & {
         tooltip?: string;
+    } & {
+        iconProps?: Partial<BaseIconProps>;
     };
 
 export const ButtonBase: React.FC<Props> = ({
@@ -21,6 +23,7 @@ export const ButtonBase: React.FC<Props> = ({
     color = 'primary',
     size = 'small',
     className,
+    iconProps,
     ...props
 }) => {
     const element = (
@@ -31,8 +34,8 @@ export const ButtonBase: React.FC<Props> = ({
             color={color}
             size={size}
             className={className}
-            startIcon={startIcon && <BaseIcon type={startIcon} size={18}/>}
-            endIcon={endIcon && <BaseIcon type={endIcon} size={18}/>}
+            startIcon={startIcon && <BaseIcon type={startIcon} size={18} {...iconProps} />}
+            endIcon={endIcon && <BaseIcon type={endIcon} size={18} {...iconProps} />}
             {...props}
         >
             {props.title && <span>{props.title}</span>}

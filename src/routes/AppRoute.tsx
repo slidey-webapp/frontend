@@ -180,7 +180,7 @@ export const routeList: RouteDefinition[] = [
     },
     {
         title: 'Trình chiếu bài thuyết trình',
-        path: '/presentation/show/:presentationID',
+        path: '/presentation/show/:sessionID',
         element: (
             <Suspense>
                 <PresentationHostShow />

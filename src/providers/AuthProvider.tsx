@@ -13,6 +13,8 @@ const ForgotPassword = React.lazy(() => import('~/components/layouts/ForgotPassw
 const VerifyAccount = React.lazy(() => import('~/components/layouts/VerifyAccount'));
 const ResetPassword = React.lazy(() => import('~/components/layouts/ResetPassword'));
 
+const PresentationJoinSession = React.lazy(() => import('~/pages/presentations/PresentationJoinSession'));
+
 type Props = {
     children: React.ReactNode;
 };
@@ -49,6 +51,12 @@ const authRouteList = [
                 <ResetPassword />
             </Suspense>
         ),
+    },
+    {
+        path: 'join/:code',
+        element:  <Suspense>
+        <PresentationJoinSession />
+    </Suspense>
     },
     {
         path: '/*',

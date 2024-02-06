@@ -81,3 +81,18 @@ export class PreviewSizeConstant {
 }
 
 export const COLORS = ['#2a64b0', '#eb3630', '#f78b1f', '#3eb14a', '#a11600'];
+
+export class SocketEvent {
+    static CONNECTION = 'connection';
+    static AUTHENTICATION = 'authentication';
+    static JOIN_SESSION = 'join_session';
+    static MESSAGE = 'message';
+    static QUESTION = 'question';
+    static UPVOTE_QUESTION = 'upvote_question';
+    static ANSWER_QUESTION = 'answer_question';
+    static SUBMIT_SLIDE_RESULT = 'submit_slide_result';
+    static CHANGE_SLIDE = 'change_slide';
+    static END_SESSION = 'end_session';
+    static START_PRESENTING = 'start_presenting';
+    static HOST_JOIN_SESSION = 'host_join_session';
+}

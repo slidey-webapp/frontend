@@ -1,26 +1,33 @@
 import _ from 'lodash';
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { RootState, useAppSelector } from '~/AppStore';
 import FullScreen, { FullScreenRef } from '~/components/full-screen/FullScreen';
 import Loading from '~/components/loadings/Loading';
 import ModalBase, { ModalBaseRef } from '~/components/modals/ModalBase';
-import { PreviewSizeConstant } from '~/configs/constants';
+import { PreviewSizeConstant, SocketEvent } from '~/configs/constants';
+import { requestApi } from '~/libs/axios';
+import { useSocketContext } from '~/providers/SocketProvider';
 import { Id } from '~/types/shared';
-import { usePresentationDetail } from './api/usePresentationDetail';
+import { SESSION_END_API } from './api/presentation.api';
+import { useSessionDetail } from './api/useSessionDetail';
 import PresentationHotKeysOverview from './components/PresentationHotKeysOverview';
 import PresentationShowBody from './components/shows/PresentationShowBody';
 import PresentationShowFooter from './components/shows/PresentationShowFooter';
 import { PresentationDto } from './types/presentation';
+import { SessionDto } from './types/session';
 import { SlideDto } from './types/slide';
 
 export interface IPresentationShowContext {
-    presentationID: Id;
+    sessionId: Id;
+    session: SessionDto;
     presentation: PresentationDto;
     slides: SlideDto[];
     currentSlideId: Id;
     isFullScreen: boolean;
     isFirstSlide: boolean;
     isLastSlide: boolean;
+    setState: React.Dispatch<React.SetStateAction<State>>;
     onFullScreen: () => void;
     onExitFullScreen: () => void;
     onSlideChange: (type: 'previous' | 'next') => void;
@@ -35,6 +42,7 @@ interface Props {}
 
 interface State {
     presentation: PresentationDto;
+    session: SessionDto;
     slides: SlideDto[];
     currentSlideId: Id;
     isFullScreen: boolean;
@@ -46,12 +54,16 @@ const PresentationHostShow: React.FC<Props> = () => {
     const fullScreenRef = useRef<FullScreenRef>(null);
     const modalRef = useRef<ModalBaseRef>(null);
 
-    const { presentationID } = useParams<{ presentationID: string }>();
+    const authUser = useAppSelector((state: RootState) => state.auth.authUser);
+    const { socket } = useSocketContext();
+
+    const { sessionID } = useParams<{ sessionID: string }>();
 
     const navigate = useNavigate();
 
     const [state, setState] = useState<State>({
         presentation: {} as PresentationDto,
+        session: {} as SessionDto,
         slides: [],
         currentSlideId: '',
         isFullScreen: false,
@@ -60,11 +72,12 @@ const PresentationHostShow: React.FC<Props> = () => {
     });
 
     useEffect(() => {
-        const keyDownHandler = (event: any) => {
+        const keyDownHandler = async (event: any) => {
             const keyCode = event.key;
 
             switch (keyCode) {
                 case 'Escape':
+                    await handleEndSession();
                     navigate(-1);
                     return;
                 case 'ArrowRight':
@@ -94,11 +107,40 @@ const PresentationHostShow: React.FC<Props> = () => {
         };
     }, [state]);
 
-    const { isFetching: isFetchingPresentation, refetch: refetchPresentation } = usePresentationDetail(presentationID, {
+    const handleEndSession = async () => {
+        await requestApi('post', SESSION_END_API, {
+            sessionID,
+        }).then(() => {
+            setState(pre => ({
+                ...pre,
+                session: {
+                    ...pre.session,
+                    status: 'ENDED',
+                },
+            }));
+        });
+    };
+
+    useEffect(() => {
+        !socket.connected && socket.connect();
+        socket.emit(SocketEvent.HOST_JOIN_SESSION, {
+            sessionID,
+            accountID: authUser?.user.accountID,
+            token: authUser?.token,
+        });
+
+        return () => {
+            socket.disconnect();
+        };
+    }, []);
+
+    const { isFetching: isFetchingSession } = useSessionDetail(sessionID, {
         onSuccess: res => {
             if (res.status !== 200 || _.isEmpty(res.data?.result)) return;
 
-            const presentation = _.cloneDeep(res.data.result);
+            const presentation = _.cloneDeep(res.data.result.presentation);
+            const session = _.cloneDeep(res.data.result.session);
+
             const slides = _.cloneDeep(presentation.slides) || [];
             delete presentation.slides;
 
@@ -112,6 +154,7 @@ const PresentationHostShow: React.FC<Props> = () => {
             setState(pre => ({
                 ...pre,
                 presentation,
+                session,
                 slides,
                 isFirstSlide,
                 isLastSlide,
@@ -166,13 +209,14 @@ const PresentationHostShow: React.FC<Props> = () => {
             : windowHeight / PreviewSizeConstant.HEIGHT;
     };
 
-    if (isFetchingPresentation) return <Loading />;
+    if (isFetchingSession) return <Loading />;
     return (
         <PresentationShowContext.Provider
             value={{
+                sessionId: sessionID as Id,
                 currentSlideId: state.currentSlideId,
                 presentation: state.presentation,
-                presentationID: presentationID as Id,
+                session: state.session,
                 slides: state.slides,
                 isFullScreen: state.isFullScreen,
                 isFirstSlide: state.isFirstSlide,
@@ -181,6 +225,7 @@ const PresentationHostShow: React.FC<Props> = () => {
                 onExitFullScreen: async () => await fullScreenRef.current?.exit(),
                 onSlideChange: handleSlideChange,
                 onHotKeysOverview: handleHotKeysOverview,
+                setState,
             }}
         >
             <div className="w-full h-full bg-black">
