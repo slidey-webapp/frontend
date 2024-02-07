@@ -4,7 +4,6 @@ import React, { useRef } from 'react';
 import { ReactECharts, ReactEChartsRef } from '~/components/charts/ReactECharts';
 import { COLORS, ShowFontSizeConstant } from '~/configs/constants';
 import { SlideDto } from '../../types/slide';
-
 interface Props {
     slide: SlideDto;
 }
@@ -12,26 +11,27 @@ interface Props {
 const ShowMultipleChoiceSlide: React.FC<Props> = ({ slide }) => {
     if (slide.type !== 'MULTIPLE_CHOICE') return null;
 
+    const { question, options } = slide;
+
     const chartRef = useRef<ReactEChartsRef>(null);
 
     const renderChart = () => {
-        const dataXAxis = slide.options.map(x => ({
+        const dataXAxis = options.map(x => ({
             value: x.option,
             textStyle: {
                 fontSize: 24,
             },
         }));
-        const dataSeries = slide.options.map((opt, index) => {
+        const dataSeries = options.map((opt, index) => {
             return {
-                // todo: add result...
-                value: index,
+                value: opt.chosenAmount ?? 0,
                 itemStyle: {
                     color: COLORS[index],
                 },
             };
         });
 
-        const options: EChartsOption = {
+        const eChartsOption: EChartsOption = {
             legend: {
                 bottom: 0,
             },
@@ -60,7 +60,9 @@ const ShowMultipleChoiceSlide: React.FC<Props> = ({ slide }) => {
             ],
         };
 
-        return <ReactECharts ref={chartRef} option={options} style={{ height: 650 }} />;
+        chartRef.current && chartRef.current?.reRender(eChartsOption)
+
+        return <ReactECharts ref={chartRef} option={eChartsOption} style={{ height: 650 }} />;
     };
 
     return (
@@ -71,7 +73,7 @@ const ShowMultipleChoiceSlide: React.FC<Props> = ({ slide }) => {
                     fontSize: ShowFontSizeConstant.HEADING,
                 }}
             >
-                {slide.question.split(' ').map((el, i) => (
+                {question.split(' ').map((el, i) => (
                     <motion.span
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}

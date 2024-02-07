@@ -12,3 +12,13 @@ export const COLLABORATION_JOIN_API = APP_API_PATH + '/presentation/collab/join'
 export const COLLABORATION_INVITATION_API = APP_API_PATH + '/presentation/collab/send-invitation';
 export const COLLABORATION_DELETE_API = APP_API_PATH + '/presentation/collab/delete';
 export const COLLABORATION_INDEX_API = APP_API_PATH + '/presentation/collab';
+
+// session
+
+export const SESSION_INITIAL_API = APP_API_PATH + '/session/init';
+export const SESSION_START_API = APP_API_PATH + '/session/start';
+export const SESSION_END_API = APP_API_PATH + '/session/end';
+export const SESSION_JOIN_API = APP_API_PATH + '/session/join';
+export const SESSION_DETAIL_API = APP_API_PATH + '/session/detail';
+export const SESSION_SLIDE_CHANGED_API = APP_API_PATH + '/session/slide/change-slide';
+export const SESSION_SLIDE_MULTIPLE_CHOICE_SUBMIT_API =  APP_API_PATH + '/session/submit-answer';

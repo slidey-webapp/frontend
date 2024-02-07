@@ -13,6 +13,7 @@ import { createTheme } from '~/themes';
 import './App.scss';
 import store from './AppStore';
 import { AuthProvider } from './providers/AuthProvider';
+import SocketProvider from './providers/SocketProvider';
 import AppRoute from './routes/AppRoute';
 
 const ErrorFallback = () => {
@@ -33,12 +34,14 @@ const App = () => {
                     <ErrorBoundary FallbackComponent={ErrorFallback}>
                         <QueryClientProvider client={queryClient}>
                             <BrowserRouter>
-                                <ThemeProvider theme={theme}>
-                                    <AuthProvider>
-                                        <CssBaseline />
-                                        <AppRoute />
-                                    </AuthProvider>
-                                </ThemeProvider>
+                                <SocketProvider>
+                                    <ThemeProvider theme={theme}>
+                                        <AuthProvider>
+                                            <CssBaseline />
+                                            <AppRoute />
+                                        </AuthProvider>
+                                    </ThemeProvider>
+                                </SocketProvider>
                             </BrowserRouter>
                         </QueryClientProvider>
                     </ErrorBoundary>
