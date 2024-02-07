@@ -5,6 +5,5 @@ export interface PresentationDto extends FullAuditedDto {
     code:string;
     name:string;
     currentSlideID: Id;
-    // todo: not working with session
-    sessionID: Id;
+    sessionID?: Id;
 }

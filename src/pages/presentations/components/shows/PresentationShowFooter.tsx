@@ -12,16 +12,17 @@ const PresentationShowFooter: React.FC<Props> = () => {
         isFullScreen,
         slides,
         currentSlideId,
+        session,
         onFullScreen,
         onExitFullScreen,
         onSlideChange,
         onHotKeysOverview,
     } = usePresentationShowContext();
 
-    const currentSlideIndex = slides.findIndex(x => x.slideID === currentSlideId);
+    const renderActionButton = () => {
+        if (session.status === 'STARTING') return null;
 
-    return (
-        <div className="w-full h-24 flex flex-col">
+        return (
             <div className="flex-1 px-4 text-black  flex items-center justify-center ">
                 <div className="w-full h-full flex items-center justify-between">
                     <div className="flex-1 flex justify-start ">
@@ -143,6 +144,15 @@ const PresentationShowFooter: React.FC<Props> = () => {
                     </div>
                 </div>
             </div>
+        );
+    };
+
+    const renderProgressBar = () => {
+        if (session.status === 'STARTING') return null;
+
+        const currentSlideIndex = slides.findIndex(x => x.slideID === currentSlideId);
+
+        return (
             <div className="w-full h-1 bg-transparent mb-[1px]">
                 <motion.div
                     style={{
@@ -153,6 +163,13 @@ const PresentationShowFooter: React.FC<Props> = () => {
                     transition={{ duration: 1 }}
                 />
             </div>
+        );
+    };
+
+    return (
+        <div className="w-full h-24 flex flex-col">
+            {renderActionButton()}
+            {renderProgressBar()}
         </div>
     );
 };

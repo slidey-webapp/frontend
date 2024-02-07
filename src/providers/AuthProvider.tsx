@@ -54,9 +54,19 @@ const authRouteList = [
     },
     {
         path: 'join/:code',
-        element:  <Suspense>
-        <PresentationJoinSession />
-    </Suspense>
+        element: (
+            <Suspense>
+                <PresentationJoinSession />
+            </Suspense>
+        ),
+    },
+    {
+        path: 'join',
+        element: (
+            <Suspense>
+                <PresentationJoinSession />
+            </Suspense>
+        ),
     },
     {
         path: '/*',

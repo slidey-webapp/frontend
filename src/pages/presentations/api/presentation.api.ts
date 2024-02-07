@@ -21,3 +21,4 @@ export const SESSION_END_API = APP_API_PATH + '/session/end';
 export const SESSION_JOIN_API = APP_API_PATH + '/session/join';
 export const SESSION_DETAIL_API = APP_API_PATH + '/session/detail';
 export const SESSION_SLIDE_CHANGED_API = APP_API_PATH + '/session/slide/change-slide';
+export const SESSION_SLIDE_MULTIPLE_CHOICE_SUBMIT_API =  APP_API_PATH + '/session/submit-answer';

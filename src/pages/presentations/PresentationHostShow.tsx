@@ -9,20 +9,22 @@ import { PreviewSizeConstant, SocketEvent } from '~/configs/constants';
 import { requestApi } from '~/libs/axios';
 import { useSocketContext } from '~/providers/SocketProvider';
 import { Id } from '~/types/shared';
-import { SESSION_END_API } from './api/presentation.api';
+import { SESSION_END_API, SESSION_SLIDE_CHANGED_API } from './api/presentation.api';
 import { useSessionDetail } from './api/useSessionDetail';
 import PresentationHotKeysOverview from './components/PresentationHotKeysOverview';
 import PresentationShowBody from './components/shows/PresentationShowBody';
 import PresentationShowFooter from './components/shows/PresentationShowFooter';
+import { ParticipantDto } from './types/participant';
 import { PresentationDto } from './types/presentation';
 import { SessionDto } from './types/session';
-import { SlideDto } from './types/slide';
+import { MultipleChoiceSlideOption, SlideDto } from './types/slide';
 
 export interface IPresentationShowContext {
     sessionId: Id;
     session: SessionDto;
     presentation: PresentationDto;
     slides: SlideDto[];
+    participants: ParticipantDto[];
     currentSlideId: Id;
     isFullScreen: boolean;
     isFirstSlide: boolean;
@@ -44,6 +46,7 @@ interface State {
     presentation: PresentationDto;
     session: SessionDto;
     slides: SlideDto[];
+    participants: ParticipantDto[];
     currentSlideId: Id;
     isFullScreen: boolean;
     isFirstSlide: boolean;
@@ -65,6 +68,7 @@ const PresentationHostShow: React.FC<Props> = () => {
         presentation: {} as PresentationDto,
         session: {} as SessionDto,
         slides: [],
+        participants: [],
         currentSlideId: '',
         isFullScreen: false,
         isFirstSlide: true,
@@ -129,6 +133,46 @@ const PresentationHostShow: React.FC<Props> = () => {
             token: authUser?.token,
         });
 
+        socket.on(SocketEvent.START_PRESENTING, ({ slide }: { sessionID: Id; slide: SlideDto }) => {
+            setState(pre => ({
+                ...pre,
+                session: {
+                    ...pre.session,
+                    status: 'STARTED',
+                },
+            }));
+        });
+
+        socket.on(SocketEvent.JOIN_SESSION, ({ participant }: { sessionID: Id; participant: ParticipantDto }) => {
+            setState(pre => ({
+                ...pre,
+                participants: pre.participants.some(x => x.participantID === participant.participantID)
+                    ? pre.participants
+                    : [...pre.participants, participant],
+            }));
+        });
+
+        socket.on(
+            SocketEvent.SUBMIT_SLIDE_RESULT,
+            ({ option }: { sessionID: Id; option: MultipleChoiceSlideOption }) => {
+                setState(pre => ({
+                    ...pre,
+                    slides: pre.slides.map(sl => {
+                        if (sl.type !== 'MULTIPLE_CHOICE' || sl.slideID !== option.slideID) return sl;
+
+                        sl.options = sl.options.map(opt => {
+                            if (opt.optionID !== option.optionID) return opt;
+
+                            opt.chosenAmount = (opt.chosenAmount ?? 0) + 1;
+                            return opt;
+                        });
+
+                        return sl;
+                    }),
+                }));
+            },
+        );
+
         return () => {
             socket.disconnect();
         };
@@ -163,7 +207,7 @@ const PresentationHostShow: React.FC<Props> = () => {
         },
     });
 
-    const handleSlideChange = (action: 'previous' | 'next') => {
+    const handleSlideChange = async (action: 'previous' | 'next') => {
         const currentSlideIndex = state.slides.findIndex(x => x.slideID === state.currentSlideId);
 
         const isCurrentFirstSlide = currentSlideIndex === 0;
@@ -174,6 +218,11 @@ const PresentationHostShow: React.FC<Props> = () => {
 
         const newCurrentSlideIndex = action === 'previous' ? currentSlideIndex - 1 : currentSlideIndex + 1;
         const newCurrentSlide = state.slides[newCurrentSlideIndex];
+
+        await requestApi('post', SESSION_SLIDE_CHANGED_API, {
+            slideID: newCurrentSlide?.slideID,
+            sessionID,
+        });
 
         const isFirstSlide = newCurrentSlideIndex === 0;
         const isLastSlide = newCurrentSlideIndex === state.slides.length - 1;
@@ -218,6 +267,7 @@ const PresentationHostShow: React.FC<Props> = () => {
                 presentation: state.presentation,
                 session: state.session,
                 slides: state.slides,
+                participants: state.participants,
                 isFullScreen: state.isFullScreen,
                 isFirstSlide: state.isFirstSlide,
                 isLastSlide: state.isLastSlide,

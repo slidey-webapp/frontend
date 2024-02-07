@@ -1,15 +1,11 @@
 import { Tooltip } from '@mui/material';
 import clsx from 'clsx';
 import QRCode from 'qrcode.react';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { ButtonBase } from '~/components/buttons/ButtonBase';
-import { SocketEvent } from '~/configs/constants';
 import { requestApi } from '~/libs/axios';
-import { useSocketContext } from '~/providers/SocketProvider';
-import { Id } from '~/types/shared';
 import { usePresentationShowContext } from '../../PresentationHostShow';
 import { SESSION_START_API } from '../../api/presentation.api';
-import { ParticipantDto } from '../../types/participant';
 
 interface Props {
     code: string;
@@ -18,26 +14,7 @@ interface Props {
 const PresentationShowWaiting: React.FC<Props> = ({ code }) => {
     const joiningUrl = window.location.origin + '/join/' + code;
 
-    const { sessionId, setState } = usePresentationShowContext();
-    const [participants, setParticipants] = useState<ParticipantDto[]>([]);
-
-    const { socket } = useSocketContext();
-
-    useEffect(() => {
-        !socket.connected && socket.connect();
-
-        socket.on(SocketEvent.JOIN_SESSION, ({ participant }: { sessionID: Id; participant: ParticipantDto }) => {
-            setParticipants(preParticipants => {
-                if (preParticipants.some(x => x.participantID === participant.participantID)) return preParticipants;
-
-                return [...preParticipants, participant];
-            });
-        });
-
-        return () => {
-            socket.disconnect();
-        };
-    }, []);
+    const { sessionId, setState, participants } = usePresentationShowContext();
 
     const handleStartSession = async () => {
         await requestApi('post', SESSION_START_API, {
