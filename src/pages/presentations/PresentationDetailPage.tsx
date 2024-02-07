@@ -4,15 +4,15 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Overlay, { OverlayRef } from '~/components/loadings/Overlay';
 import { requestApi } from '~/libs/axios';
 import { Id } from '~/types/shared';
-import { PRESENTATION_UPDATE_API } from './api/presentation.api';
+import { PRESENTATION_UPDATE_API, SESSION_INITIAL_API } from './api/presentation.api';
 import { useCollaborationsQuery } from './api/useCollaborationsQuery';
 import { usePresentationDetail } from './api/usePresentationDetail';
 import PresentationHeader from './components/PresentationHeader';
 import PresentationMain from './components/PresentationMain';
 import { CollaborationDto } from './types/collaboration';
 import { PresentationDto } from './types/presentation';
+import { SessionDto } from './types/session';
 import { SlideDto } from './types/slide';
-
 interface Props {}
 
 export interface IPresentationContext {
@@ -97,13 +97,30 @@ const PresentationDetailPage: React.FC<Props> = () => {
         if (response.status === 200) await refetchPresentation();
     };
 
+    const handleShowPresentation = async () => {
+        overlayRef.current?.open();
+        const response = await requestApi<{
+            session: SessionDto;
+            presentation: PresentationDto;
+        }>('post', SESSION_INITIAL_API, {
+            presentationID,
+            // todo: groupID
+        });
+        overlayRef.current?.close();
+
+        if (response.status !== 200) return;
+
+        const sessionId = response.data.result?.session?.sessionID;
+        navigate('/presentation/show/' + sessionId);
+    };
+
     const isLoading = useMemo(
         () => isFetchingPresentation || isFetchingCollaborations,
         [isFetchingPresentation || isFetchingCollaborations],
     );
 
     // todo: add skeleton loading here
-    if (isLoading) return <div>Skeleton loding...</div>;
+    if (isLoading) return <div>Skeleton loading...</div>;
     return (
         <div
             className="w-screen h-screen relative overflow-hidden flex flex-col select-none"
@@ -129,7 +146,7 @@ const PresentationDetailPage: React.FC<Props> = () => {
                         await refetchCollaborations();
                     },
                     onUpdatePresentation: handleUpdatePresentation,
-                    onShowPresentation: () => navigate('/presentation/show/' + presentationID),
+                    onShowPresentation: handleShowPresentation,
                 }}
             >
                 <PresentationHeader />

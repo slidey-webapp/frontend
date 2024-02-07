@@ -1,5 +1,6 @@
 import React from 'react';
 import { usePresentationShowContext } from '../../PresentationHostShow';
+import PresentationShowWaiting from './PresentationShowWaiting';
 import ShowHeadingSlide from './ShowHeadingSlide';
 import ShowMultipleChoiceSlide from './ShowMultipleChoiceSlide';
 import ShowParagraphSlide from './ShowParagraphSlide';
@@ -7,9 +8,11 @@ import ShowParagraphSlide from './ShowParagraphSlide';
 interface Props {}
 
 const PresentationShowBody: React.FC<Props> = () => {
-    const { currentSlideId, slides } = usePresentationShowContext();
+    const { currentSlideId, slides, session } = usePresentationShowContext();
 
     const renderSlide = () => {
+        if (session.status === 'STARTING') return <PresentationShowWaiting code={session.code} />;
+
         const slide = slides.find(x => x.slideID === currentSlideId);
 
         switch (slide?.type) {
@@ -27,7 +30,7 @@ const PresentationShowBody: React.FC<Props> = () => {
 
     return (
         <div className="w-full flex-1 p-4">
-            <div className="w-full h-full p-20">
+            <div className="w-full h-full px-20 py-5">
                 <div>{renderSlide()}</div>
             </div>
         </div>

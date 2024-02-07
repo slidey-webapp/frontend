@@ -25,6 +25,9 @@ export interface MultipleChoiceSlideOption {
     slideID: Id;
     optionID: Id;
     option: string;
+
+    // display only
+    chosenAmount?: number;
 }
 
 export type SlideType = 'HEADING' | 'PARAGRAPH' | 'MULTIPLE_CHOICE';
