@@ -21,6 +21,10 @@ const PresentationDetailPage = React.lazy(() => import('~/pages/presentations/Pr
 const PresentationHostShow = React.lazy(() => import('~/pages/presentations/PresentationHostShow'));
 // #endregion
 
+// #region presentation
+const SessionDashboardPage = React.lazy(() => import('~/pages/sessions/SessionDashboardPage'));
+
+// #endregion
 
 export type RouteDefinition = Omit<RouteObject, 'children'> & {
     title: string;
@@ -167,6 +171,17 @@ export const routeList: RouteDefinition[] = [
                 ],
                 icon: 'list',
             },
+            {
+                title: 'Phiên trình chiếu của tôi',
+                path: 'present-session',
+                element: (
+                    <Suspense>
+                        <SessionDashboardPage />
+                    </Suspense>
+                ),
+
+                icon: 'list',
+            },
         ],
     },
     {
@@ -187,6 +202,7 @@ export const routeList: RouteDefinition[] = [
             </Suspense>
         ),
     },
+
     {
         title: 'Not found',
         path: '/*',
