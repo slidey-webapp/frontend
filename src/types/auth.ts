@@ -16,7 +16,7 @@ export interface Account {
 }
 
 export interface Person {
-    fullName: string;
+    fullname: string;
 }
 
 export interface User extends Account, Person {

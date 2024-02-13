@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
 import { Link, Navigate, RouteObject, useRoutes } from 'react-router-dom';
 import { BaseIconProps } from '~/components/icons/BaseIcon';
+import SessionDetailPage from '~/pages/sessions/SessionDetailPage';
 
 const LoginView = React.lazy(() => import('~/components/layouts/LoginView'));
 const RegisterView = React.lazy(() => import('~/components/layouts/RegisterView'));
@@ -174,13 +175,30 @@ export const routeList: RouteDefinition[] = [
             {
                 title: 'Phiên trình chiếu của tôi',
                 path: 'present-session',
-                element: (
-                    <Suspense>
-                        <SessionDashboardPage />
-                    </Suspense>
-                ),
 
                 icon: 'list',
+                children: [
+                    {
+                        title: 'Phiên trình chiếu của tôi',
+                        path: '',
+                        hide: true,
+                        element: (
+                            <Suspense>
+                                <SessionDashboardPage />
+                            </Suspense>
+                        ),
+                    },
+                    {
+                        title: 'Chi tiết phiên trình chiếu',
+                        path: ':sessionID',
+                        hide: true,
+                        element: (
+                            <Suspense>
+                                <SessionDetailPage />
+                            </Suspense>
+                        ),
+                    },
+                ],
             },
         ],
     },

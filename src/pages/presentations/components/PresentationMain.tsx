@@ -3,9 +3,11 @@ import PresentationBodyEditor from './editors/PresentationBodyEditor';
 import PresentationBodyPreview from './previews/PresentationBodyPreview';
 import PresentationSidebar from './sidebars/PresentationSidebar';
 
-interface Props {}
+interface Props {
+    isReadonly?: boolean;
+}
 
-const PresentationMain: React.FC<Props> = props => {
+const PresentationMain: React.FC<Props> = ({ isReadonly }) => {
     return (
         <div
             className="w-full flex"
@@ -15,10 +17,10 @@ const PresentationMain: React.FC<Props> = props => {
                 maxHeight: 'calc(100% - 56px)',
             }}
         >
-            <PresentationSidebar />
+            <PresentationSidebar isReadonly={isReadonly} />
             <div className="flex-1 h-full bg-neutral-100 flex">
                 <PresentationBodyPreview />
-                <PresentationBodyEditor />
+                {!isReadonly && <PresentationBodyEditor />}
             </div>
         </div>
     );

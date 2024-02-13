@@ -15,7 +15,9 @@ import OverviewHeadingSlide from './OverviewHeadingSlide';
 import OverviewMultipleChoiceSlide from './OverviewMultipleChoiceSlide';
 import OverviewParagraphSlide from './OverviewParagraphSlide';
 
-interface Props {}
+interface Props {
+    isReadonly?: boolean;
+}
 
 const reorder = (list: SlideDto[], startIndex: number, endIndex: number) => {
     const slides = _.cloneDeep(list);
@@ -25,7 +27,7 @@ const reorder = (list: SlideDto[], startIndex: number, endIndex: number) => {
     return slides.map((slide, index) => ({ ...slide, slideOrder: index + 1 }));
 };
 
-const PresentationSidebar: React.FC<Props> = () => {
+const PresentationSidebar: React.FC<Props> = ({ isReadonly }) => {
     const { presentation, currentSlideId, presentationID, slides, onUpdatePresentation, setCurrentSlideId } =
         usePresentationContext();
 
@@ -114,9 +116,12 @@ const PresentationSidebar: React.FC<Props> = () => {
 
     return (
         <div className="w-44 h-full overflow-hidden flex flex-col">
-            <div className="w-full h-14 flex items-center px-4">
-                <NewSlidePattern />
-            </div>
+            {!isReadonly && (
+                <div className="w-full h-14 flex items-center px-4">
+                    <NewSlidePattern />
+                </div>
+            )}
+
             <div className="flex-1 w-full overflow-x-hidden overflow-y-auto pr-4">
                 <DragDropContext onDragEnd={onDragEnd}>
                     <Droppable droppableId="droppable">
