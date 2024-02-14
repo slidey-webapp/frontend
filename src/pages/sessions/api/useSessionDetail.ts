@@ -19,6 +19,7 @@ export const getSessionDetail = async (
             session: SessionDto;
             presentation: PresentationDto & { slides?: SlideDto[] };
             host: User;
+            totalMessage: number;
         }>
     >
 > => {

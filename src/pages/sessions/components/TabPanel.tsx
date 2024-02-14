@@ -1,4 +1,3 @@
-import { Box, Typography } from '@mui/material';
 import React from 'react';
 
 interface TabPanelProps {
@@ -20,7 +19,7 @@ function TabPanel(props: TabPanelProps) {
             className={className}
             {...other}
         >
-            {value === index && children}
+            {children}
         </div>
     );
 }

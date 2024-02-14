@@ -57,6 +57,7 @@ const SessionDetailPage: React.FC<Props> = () => {
     const session = useMemo(() => responseSession?.data?.result?.session, [isFetchingSession]);
     const presentation = useMemo(() => responseSession?.data?.result?.presentation, [isFetchingSession]);
     const host = useMemo(() => responseSession?.data?.result?.host, [isFetchingSession]);
+    const totalMessage = useMemo(() => responseSession?.data?.result?.totalMessage || 0, [isFetchingSession]);
     const isFetching = useMemo(() => isFetchingSession, [isFetchingSession]);
 
     useEffect(() => {
@@ -108,7 +109,7 @@ const SessionDetailPage: React.FC<Props> = () => {
                         {...a11yProps(0)}
                     />
                     <Tab label={`Slides (${presentation.slides?.length || 0})`} {...a11yProps(1)} />
-                    <Tab label="Tin nhắn" {...a11yProps(2)} />
+                    <Tab label={`Tin nhắn (${totalMessage})`} {...a11yProps(2)} />
                     <Tab label={`Câu hỏi (${questionGridController.paginatedList.totalCount})`} {...a11yProps(2)} />
                 </Tabs>
                 <TabPanel value={SESSION_DETAIL_TAB.PARTICIPANT} index={tab} className="w-full flex-1">
@@ -121,7 +122,7 @@ const SessionDetailPage: React.FC<Props> = () => {
                     <PresentationViewer presentation={presentation} />
                 </TabPanel>
                 <TabPanel value={SESSION_DETAIL_TAB.MESSAGE} index={tab} className="w-full flex-1">
-                    <MessageList />
+                    <MessageList sessionID={session.sessionID} isVisible={SESSION_DETAIL_TAB.MESSAGE === tab} />
                 </TabPanel>
             </div>
         </AppContainer>
