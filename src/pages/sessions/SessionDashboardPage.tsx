@@ -1,5 +1,4 @@
 import React, { useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 import BaseGrid, { BaseGridRef } from '~/components/grid/BaseGrid';
 import GridToolbar from '~/components/grid/components/GridToolbar';
 import { AppContainer } from '~/components/layouts/AppContainer';
@@ -16,15 +15,13 @@ const SessionDashboardPage: React.FC<Props> = () => {
     const gridRef = useRef<BaseGridRef>(null);
     const modalRef = useRef<ModalBaseRef>(null);
 
-    const navigate = useNavigate();
-
     const gridController = useBaseGrid<SessionDto>({
         url: SESSION_INDEX_API,
         gridRef: gridRef,
     });
 
-    const handleDetail = async (data: SessionDto) => navigate('/session/edit/' + data.sessionID);
-
+    const handleDetail = async (data: SessionDto) =>
+        window.open('/dashboard/present-session/' + data.sessionID, '_blank');
     return (
         <AppContainer>
             <BaseGrid

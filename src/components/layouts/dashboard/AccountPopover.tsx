@@ -49,9 +49,9 @@ const AccountPopover: React.FC<Props> = ({ anchorEl, onClose, open }) => {
                         px: 2,
                     }}
                 >
-                    <Typography variant="overline">Account</Typography>
+                    <Typography variant="overline">Tài khoản</Typography>
                     <Typography color="text.secondary" variant="body2">
-                        Khoa tran
+                        {authUser?.user.fullname}
                     </Typography>
                 </Box>
                 <Divider />
