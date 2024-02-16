@@ -68,7 +68,7 @@ const PresentationPage: React.FC<Props> = () => {
                 defaultColDef={{
                     autoHeight: true,
                 }}
-                actionRowsWidth={80}
+                actionRowsWidth={100}
                 toolbar={{
                     rightToolbar: (
                         <GridToolbar

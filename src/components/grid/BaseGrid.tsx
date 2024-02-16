@@ -65,6 +65,7 @@ const BaseGrid = React.forwardRef<BaseGridRef, BaseGridProps>((props, ref) => {
                       width: 50,
                       maxWidth: 50,
                       minWidth: 50,
+                      resizable: false,
                       cellStyle: {
                           display: 'flex',
                           alignItems: 'center',
@@ -89,6 +90,7 @@ const BaseGrid = React.forwardRef<BaseGridRef, BaseGridProps>((props, ref) => {
             headerName: 'Hành động',
             width: props.actionRowsWidth ?? 100,
             maxWidth: props.actionRowsWidth ?? 100,
+            minWidth: props.actionRowsWidth ?? 100,
             cellStyle: {
                 display: 'flex',
                 alignItems: 'center',
@@ -171,14 +173,20 @@ const BaseGrid = React.forwardRef<BaseGridRef, BaseGridProps>((props, ref) => {
                             ...props.defaultColDef,
                         }}
                         loadingOverlayComponent={() => <Loading />}
-                        // todo: not working
-                        onGridReady={params => params.api.sizeColumnsToFit()}
                         treeData={props.treeData}
                         animateRows
                         getDataPath={props.getDataPath}
                         groupDefaultExpanded={props.groupDefaultExpanded}
                         detailCellRenderer
                         groupDisplayType={props.groupDisplayType}
+                        onGridSizeChanged={event => {
+                            event?.api?.sizeColumnsToFit?.();
+                        }}
+                        onColumnResized={event => {
+                            if (!event.finished || event.source === 'uiColumnDragged') return;
+
+                            event?.api?.sizeColumnsToFit?.();
+                        }}
                         {...props.gridConfig}
                     />
                     {pagination && (
