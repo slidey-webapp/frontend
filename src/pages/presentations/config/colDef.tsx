@@ -11,7 +11,10 @@ export const presentationGridColDef: BaseGridColDef[] = [
             display: 'flex',
             justifyContent: 'center',
         },
-        width: 150,
+        width: 80,
+        minWidth: 80,
+        maxWidth: 80,
+        resizable: false,
     },
     {
         headerName: 'Tên',
@@ -26,6 +29,9 @@ export const presentationGridColDef: BaseGridColDef[] = [
             justifyContent: 'center',
         },
         width: 150,
+        minWidth: 150,
+        maxWidth: 150,
+        resizable: false,
         cellRenderer: (params: any) => {
             const data = _.get(params, 'data') as PresentationDto;
             const { createdAt } = data;
@@ -41,11 +47,14 @@ export const presentationGridColDef: BaseGridColDef[] = [
             justifyContent: 'center',
         },
         width: 150,
+        minWidth: 150,
+        maxWidth: 150,
+        resizable: false,
         cellRenderer: (params: any) => {
             const data = _.get(params, 'data') as PresentationDto;
             const { updatedAt } = data;
             if (!updatedAt) return <></>;
-            
+
             const updatedAtFormatted = DateTimeUtil.formatDateTime(updatedAt, DateTimeUtil.VN_DATE_TIME_FORMAT);
             return <div className="h-full flex items-center justify-center">{updatedAtFormatted}</div>;
         },

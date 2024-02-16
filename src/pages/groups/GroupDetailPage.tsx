@@ -23,11 +23,7 @@ import { ComboOptionConstant } from '~/configs/constants';
 import { requestApi } from '~/libs/axios';
 import { Id } from '~/types/shared';
 import NotifyUtil from '~/utils/NotifyUtil';
-import {
-    GROUP_REMOVE_MEMBER_API,
-    GROUP_SEND_INVITATION_API,
-    GROUP_UPDATE_MEMBER_ROLE_API,
-} from './api/group.api';
+import { GROUP_REMOVE_MEMBER_API, GROUP_SEND_INVITATION_API, GROUP_UPDATE_MEMBER_ROLE_API } from './api/group.api';
 import { useGroupDetail } from './api/useGroupDetail';
 import { useGroupMembers } from './api/useGroupMembers';
 import { GroupMemberDto, GroupMemberRole } from './types/group';
@@ -153,7 +149,7 @@ const GroupDetailPage: React.FC<Props> = () => {
                     <div className="flex-1">
                         <div>Thông tin owner here...</div>
                     </div>
-                    <div className="flex-1 lex justify-end">
+                    <div className="flex-1 flex justify-end">
                         <AvatarGroup
                             max={3}
                             onClick={handleAvatarGroupClicked}
