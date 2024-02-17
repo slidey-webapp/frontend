@@ -1,7 +1,11 @@
+import { Badge } from '@mui/material';
 import { motion } from 'framer-motion';
-import React from 'react';
+import React, { useRef } from 'react';
 import ButtonIconBase from '~/components/buttons/ButtonIconBase';
+import ModalBase, { ModalBaseRef } from '~/components/modals/ModalBase';
 import { usePresentationShowContext } from '../../PresentationHostShow';
+import PresentationMessageList from './PresentationMessageList';
+import PresentationQuestionList from './PresentationQuestionList';
 
 interface Props {}
 
@@ -13,11 +17,15 @@ const PresentationShowFooter: React.FC<Props> = () => {
         slides,
         currentSlideId,
         session,
+        messages,
+        questions,
         onFullScreen,
         onExitFullScreen,
         onSlideChange,
         onHotKeysOverview,
     } = usePresentationShowContext();
+
+    const modalRef = useRef<ModalBaseRef>(null);
 
     const renderActionButton = () => {
         if (session.status === 'STARTING') return null;
@@ -103,43 +111,44 @@ const PresentationShowFooter: React.FC<Props> = () => {
                     </div>
                     <div className="flex-1 flex justify-end items-center">
                         <div className="mx-1 bg-[#ededf099] rounded-full">
-                            <ButtonIconBase
-                                icon={'thumb-up-alt'}
-                                color={'inherit'}
-                                size="large"
-                                style={{
-                                    margin: 0,
-                                    width: 48,
-                                    height: 48,
-                                    fontSize: 20,
-                                }}
-                            />
+                            <Badge badgeContent={messages.length} color="error" showZero={false} max={99}>
+                                <ButtonIconBase
+                                    icon={'message-outlined'}
+                                    color={'inherit'}
+                                    size="large"
+                                    style={{
+                                        margin: 0,
+                                        width: 48,
+                                        height: 48,
+                                        fontSize: 20,
+                                    }}
+                                    onClick={() => {
+                                        modalRef.current?.onOpen(<PresentationMessageList />, 'Tất cả tin nhắn', '50%');
+                                    }}
+                                />
+                            </Badge>
                         </div>
                         <div className="mx-1 bg-[#ededf099] rounded-full">
-                            <ButtonIconBase
-                                icon={'comment'}
-                                color={'inherit'}
-                                size="large"
-                                style={{
-                                    margin: 0,
-                                    width: 48,
-                                    height: 48,
-                                    fontSize: 20,
-                                }}
-                            />
-                        </div>
-                        <div className="mx-1 bg-[#ededf099] rounded-full">
-                            <ButtonIconBase
-                                icon={'question-answer'}
-                                color={'inherit'}
-                                size="large"
-                                style={{
-                                    margin: 0,
-                                    width: 48,
-                                    height: 48,
-                                    fontSize: 20,
-                                }}
-                            />
+                            <Badge badgeContent={questions.length} color="error" showZero={false} max={99}>
+                                <ButtonIconBase
+                                    icon={'question-answer'}
+                                    color={'inherit'}
+                                    size="large"
+                                    style={{
+                                        margin: 0,
+                                        width: 48,
+                                        height: 48,
+                                        fontSize: 20,
+                                    }}
+                                    onClick={() => {
+                                        modalRef.current?.onOpen(
+                                            <PresentationQuestionList sessionID={session.sessionID} />,
+                                            'Tất cả câu hỏi',
+                                            '50%',
+                                        );
+                                    }}
+                                />
+                            </Badge>
                         </div>
                     </div>
                 </div>
@@ -170,6 +179,7 @@ const PresentationShowFooter: React.FC<Props> = () => {
         <div className="w-full h-24 flex flex-col">
             {renderActionButton()}
             {renderProgressBar()}
+            <ModalBase ref={modalRef} />
         </div>
     );
 };

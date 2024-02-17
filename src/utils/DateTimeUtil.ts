@@ -1,4 +1,4 @@
-import moment from 'moment';
+import moment, { Moment } from 'moment';
 
 export default class DateTimeUtil {
     static VN_DATE_FORMAT = 'DD/MM/YYYY';
@@ -9,4 +9,6 @@ export default class DateTimeUtil {
     static formatDateTime = (date: Date | string, format: string = DateTimeUtil.VN_DATE_FORMAT): string => {
         return moment(date, DateTimeUtil.DATE_TIME_FORMAT).format(format);
     };
+
+    static convertDateFromUtcDate = (date: string | Date | Moment) => moment.utc(date).toDate();
 }
