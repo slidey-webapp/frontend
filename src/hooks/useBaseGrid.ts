@@ -62,8 +62,8 @@ export function useBaseGrid<TData>(props: Props<TData>): BaseGridResponse<TData>
         if (response.status === 200 && response.data?.result) {
             setPaginatedList(response.data?.result);
         }
-        props.gridRef?.current?.api.sizeColumnsToFit();
-        props.gridRef?.current?.api.hideOverlay();
+        props.gridRef?.current?.api?.sizeColumnsToFit();
+        props.gridRef?.current?.api?.hideOverlay();
     };
 
     return {

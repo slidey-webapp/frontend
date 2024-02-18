@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
 import { Link, Navigate, RouteObject, useRoutes } from 'react-router-dom';
 import { BaseIconProps } from '~/components/icons/BaseIcon';
+import SessionDetailPage from '~/pages/sessions/SessionDetailPage';
 
 const LoginView = React.lazy(() => import('~/components/layouts/LoginView'));
 const RegisterView = React.lazy(() => import('~/components/layouts/RegisterView'));
@@ -19,11 +20,18 @@ const GroupDetailPage = React.lazy(() => import('~/pages/groups/GroupDetailPage'
 const PresentationPage = React.lazy(() => import('~/pages/presentations/PresentationPage'));
 const PresentationDetailPage = React.lazy(() => import('~/pages/presentations/PresentationDetailPage'));
 const PresentationHostShow = React.lazy(() => import('~/pages/presentations/PresentationHostShow'));
+const PresentationJoinSession = React.lazy(() => import('~/pages/presentations/PresentationJoinSession'));
 // #endregion
 
+// #region presentation
+const SessionDashboardPage = React.lazy(() => import('~/pages/sessions/SessionDashboardPage'));
+
+// #endregion
 
 export type RouteDefinition = Omit<RouteObject, 'children'> & {
     title: string;
+    hideTitle?: boolean;
+    hideBreadcrumb?: boolean;
     disabled?: boolean;
     external?: boolean;
     path: string;
@@ -94,7 +102,8 @@ export const routeList: RouteDefinition[] = [
         ),
     },
     {
-        title: 'Dashboard',
+        title: 'Tổng quan',
+        hideTitle: true,
         path: '/dashboard',
         element: (
             <Suspense>
@@ -120,8 +129,9 @@ export const routeList: RouteDefinition[] = [
                         <DashboardHomePage />
                     </Suspense>
                 ),
-                icon: 'home',
+                icon: 'dashboard-outlined',
                 divider: true,
+                hideBreadcrumb: true,
             },
             {
                 title: 'Quản lý nhóm',
@@ -148,7 +158,7 @@ export const routeList: RouteDefinition[] = [
                         ),
                     },
                 ],
-                icon: 'list',
+                icon: 'groups-outlined',
             },
             {
                 title: 'Bài thuyết trình của tôi',
@@ -165,7 +175,34 @@ export const routeList: RouteDefinition[] = [
                         ),
                     },
                 ],
-                icon: 'list',
+                icon: 'presentation-outlined',
+            },
+            {
+                title: 'Phiên trình chiếu của tôi',
+                path: 'present-session',
+                icon: 'slide-outlined',
+                children: [
+                    {
+                        title: 'Phiên trình chiếu của tôi',
+                        path: '',
+                        hide: true,
+                        element: (
+                            <Suspense>
+                                <SessionDashboardPage />
+                            </Suspense>
+                        ),
+                    },
+                    {
+                        title: 'Chi tiết phiên trình chiếu',
+                        path: ':sessionID',
+                        hide: true,
+                        element: (
+                            <Suspense>
+                                <SessionDetailPage />
+                            </Suspense>
+                        ),
+                    },
+                ],
             },
         ],
     },
@@ -184,6 +221,25 @@ export const routeList: RouteDefinition[] = [
         element: (
             <Suspense>
                 <PresentationHostShow />
+            </Suspense>
+        ),
+    },
+
+    {
+        title: 'Tham gia phiên trình chiếu',
+        path: 'join/:code',
+        element: (
+            <Suspense>
+                <PresentationJoinSession />
+            </Suspense>
+        ),
+    },
+    {
+        title: 'Tham gia phiên trình chiếu',
+        path: 'join',
+        element: (
+            <Suspense>
+                <PresentationJoinSession />
             </Suspense>
         ),
     },

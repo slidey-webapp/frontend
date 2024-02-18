@@ -30,6 +30,14 @@ const PresentationHotKeysOverview: React.FC<Props> = () => {
                         text: 'Toàn màn hình',
                     },
                     {
+                        keyCode: 'M',
+                        text: 'Xem tất cả tin nhắn',
+                    },
+                    {
+                        keyCode: 'Q',
+                        text: 'Xem tất cả câu hỏi',
+                    },
+                    {
                         keyCode: 'K',
                         text: 'Xem tất cả phím tắt',
                     },

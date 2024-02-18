@@ -1,4 +1,5 @@
-import { Dialog, DialogProps, IconButton, Typography } from '@mui/material';
+import { Dialog, IconButton, Typography } from '@mui/material';
+import clsx from 'clsx';
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import BaseIcon from '../icons/BaseIcon';
 
@@ -7,7 +8,9 @@ type PositiveInt = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 type ValidNumber = Zero | PositiveInt;
 export type Percentage = `${ValidNumber}%` | `${PositiveInt}${ValidNumber}%` | '100%';
 
-interface Props extends Partial<DialogProps> {}
+interface Props {
+    className?: string;
+}
 
 export interface ModalBaseRef {
     onOpen: (Component: JSX.Element, title: string | React.ReactNode, percentWidth?: Percentage) => void;
@@ -63,6 +66,7 @@ const ModalBase = forwardRef<ModalBaseRef, Props>((props, ref) => {
                 maxWidth: '100vw',
                 borderRadius: 0,
                 bgcolor: 'transparent',
+                overflow: 'hidden'
             }}
             PaperProps={{
                 sx: {
@@ -74,7 +78,7 @@ const ModalBase = forwardRef<ModalBaseRef, Props>((props, ref) => {
         >
             <Typography
                 variant="h6"
-                sx={{ pt: 2, px: 3 }}
+                sx={{ py: 2, px: 3 }}
                 display="flex"
                 alignItems={'center'}
                 justifyContent={'space-between'}
@@ -86,7 +90,7 @@ const ModalBase = forwardRef<ModalBaseRef, Props>((props, ref) => {
                     </IconButton>
                 </div>
             </Typography>
-            <div className="p-6">{state.children}</div>
+            <div className={clsx('p-6 pt-2 overflow-auto', props.className)}>{state.children}</div>
         </Dialog>
     );
 });

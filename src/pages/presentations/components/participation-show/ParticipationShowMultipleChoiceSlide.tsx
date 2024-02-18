@@ -10,8 +10,8 @@ import { MultipleChoiceSlideOption, SlideDto } from '../../types/slide';
 
 interface Props {
     slide: SlideDto;
-    sessionID: Id;
-    participantID: Id;
+    sessionID?: Id;
+    participantID?: Id;
 }
 
 const ParticipationShowMultipleChoiceSlide: React.FC<Props> = ({ slide, participantID, sessionID }) => {

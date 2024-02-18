@@ -3,6 +3,7 @@ import { GoogleLogin } from '@react-oauth/google';
 import React, { useRef } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { RootState, useAppDispatch, useAppSelector } from '~/AppStore';
+import logo from '~/images/logo.png';
 import { loginAsync } from '~/store/authSlice';
 import { LoginParam, LoginType } from '~/types/auth';
 import NotifyUtil from '~/utils/NotifyUtil';
@@ -14,7 +15,7 @@ const LoginView: React.FC = () => {
     const { isAuthenticated } = useAppSelector((state: RootState) => state.auth);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    
+
     const overlayRef = useRef<OverlayRef>(null);
 
     const handleLogin = async (type: LoginType, params: LoginParam | { token: string }) => {
@@ -35,7 +36,15 @@ const LoginView: React.FC = () => {
 
     if (isAuthenticated) return <Navigate to={'/'} />;
     return (
-        <div className="w-full h-screen relative flex items-center justify-center" key="login">
+        <div className="w-full h-screen relative flex flex-col items-center justify-center" key="login">
+            <img
+                src={logo}
+                alt="logo"
+                style={{
+                    transform: 'scale(0.6)',
+                }}
+                className=""
+            />
             <div className="w-[440px] bg-white rounded-md shadow p-5 flex flex-col">
                 <div className="text-orange-400 font-bold text-xl mb-5">Đăng nhập</div>
                 <BaseForm

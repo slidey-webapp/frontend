@@ -37,11 +37,17 @@ const IconsMap = {
     'full-screen': loadable(() => import('@mui/icons-material/Fullscreen')),
     'full-screen-exit': loadable(() => import('@mui/icons-material/FullscreenExit')),
     'thumb-up-alt': loadable(() => import('@mui/icons-material/ThumbUpAlt')),
+    'thumb-up-alt-outlined': loadable(() => import('@mui/icons-material/ThumbUpAltOutlined')),
     'question-answer': loadable(() => import('@mui/icons-material/QuestionAnswer')),
     'comment': loadable(() => import('@mui/icons-material/Comment')),
     'play-arrow': loadable(() => import('@mui/icons-material/PlayArrow')),
     'keyboard-alt-outlined': loadable(() => import('@mui/icons-material/KeyboardAltOutlined')),
     'keyboard': loadable(() => import('@mui/icons-material/Keyboard')),
+    'message-outlined': loadable(() => import('@mui/icons-material/MessageOutlined')),
+    'groups-outlined': loadable(() => import('@mui/icons-material/GroupsOutlined')),
+    'presentation-outlined': loadable(() => import('@mui/icons-material/CoPresentOutlined')),
+    'slide-outlined': loadable(() => import('@mui/icons-material/SlideshowOutlined')),
+    'dashboard-outlined': loadable(() => import('@mui/icons-material/DashboardOutlined')),
 };
 
 type Size = 8 | 10 | 12 | 14 | 16 | 18 | 20 | 22 | 24;
