@@ -19,7 +19,7 @@ import {
 import { useSessionDetail } from './api/useSessionDetail';
 import PresentationHotKeysOverview from './components/PresentationHotKeysOverview';
 import PresentationShowBody from './components/shows/PresentationShowBody';
-import PresentationShowFooter from './components/shows/PresentationShowFooter';
+import PresentationShowFooter, { PresentShowFooterRef } from './components/shows/PresentationShowFooter';
 import { MessageDto } from './types/message';
 import { ParticipantDto } from './types/participant';
 import { PresentationDto } from './types/presentation';
@@ -70,6 +70,7 @@ interface State {
 const PresentationHostShow: React.FC<Props> = () => {
     const fullScreenRef = useRef<FullScreenRef>(null);
     const modalRef = useRef<ModalBaseRef>(null);
+    const presentShowFooterRef = useRef<PresentShowFooterRef>(null);
 
     const authUser = useAppSelector((state: RootState) => state.auth.authUser);
     const { socket } = useSocketContext();
@@ -114,6 +115,26 @@ const PresentationHostShow: React.FC<Props> = () => {
                 case 'k':
                 case 'K':
                     handleHotKeysOverview();
+                    return;
+                case 'm':
+                case 'M':
+                    const messageModalState = presentShowFooterRef.current?.getModalMessageState();
+                    if (messageModalState) {
+                        presentShowFooterRef.current?.onCloseMessageModal();
+                        return;
+                    }
+
+                    presentShowFooterRef.current?.onOpenMessageModal();
+                    return;
+                case 'Q':
+                case 'q':
+                    const questionModalState = presentShowFooterRef.current?.getModalQuestionState();
+                    if (questionModalState) {
+                        presentShowFooterRef.current?.onCloseQuestionModal();
+                        return;
+                    }
+
+                    presentShowFooterRef.current?.onOpenQuestionModal();
                     return;
                 case null:
                 default:
@@ -195,11 +216,14 @@ const PresentationHostShow: React.FC<Props> = () => {
         });
 
         socket.on(SocketEvent.QUESTION, async ({ question }: { question: QuestionDto }) => {
+            await refetchQuestionList();
+
+            if (presentShowFooterRef.current?.getModalQuestionState()) return;
+
             setState(pre => ({
                 ...pre,
                 isSeenNewestQuestion: false,
             }));
-            await refetchQuestionList();
         });
 
         socket.on(SocketEvent.UPVOTE_QUESTION, async ({ question }: { question: QuestionDto }) => {
@@ -384,7 +408,7 @@ const PresentationHostShow: React.FC<Props> = () => {
                         >
                             <div className="w-full h-full flex flex-col">
                                 <PresentationShowBody />
-                                <PresentationShowFooter />
+                                <PresentationShowFooter ref={presentShowFooterRef} />
                             </div>
                         </div>
                     </div>

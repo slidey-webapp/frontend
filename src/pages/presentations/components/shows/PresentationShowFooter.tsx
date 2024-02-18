@@ -1,6 +1,6 @@
 import { Badge } from '@mui/material';
 import { motion } from 'framer-motion';
-import React, { useRef } from 'react';
+import React, { useImperativeHandle, useRef } from 'react';
 import ButtonIconBase from '~/components/buttons/ButtonIconBase';
 import ModalBase, { ModalBaseRef } from '~/components/modals/ModalBase';
 import { usePresentationShowContext } from '../../PresentationHostShow';
@@ -9,7 +9,17 @@ import PresentationQuestionList from './PresentationQuestionList';
 
 interface Props {}
 
-const PresentationShowFooter: React.FC<Props> = () => {
+export interface PresentShowFooterRef {
+    getModalMessageState: () => boolean;
+    onOpenMessageModal: () => void;
+    onCloseMessageModal: () => void;
+
+    getModalQuestionState: () => boolean;
+    onOpenQuestionModal: () => void;
+    onCloseQuestionModal: () => void;
+}
+
+const PresentationShowFooter = React.forwardRef<PresentShowFooterRef, Props>((props, ref) => {
     const {
         isFirstSlide,
         isLastSlide,
@@ -27,7 +37,24 @@ const PresentationShowFooter: React.FC<Props> = () => {
         setState,
     } = usePresentationShowContext();
 
-    const modalRef = useRef<ModalBaseRef>(null);
+    const modalQuestionRef = useRef<ModalBaseRef>(null);
+    const modalMessageRef = useRef<ModalBaseRef>(null);
+
+    const openQuestionModal = () => {
+        setState(pre => ({
+            ...pre,
+            isSeenNewestQuestion: true,
+        }));
+        modalQuestionRef.current?.onOpen(
+            <PresentationQuestionList sessionID={session.sessionID} />,
+            'Tất cả câu hỏi',
+            '50%',
+        );
+    };
+
+    const openMessageModal = () => {
+        modalMessageRef.current?.onOpen(<PresentationMessageList />, 'Tất cả tin nhắn', '50%');
+    };
 
     const renderActionButton = () => {
         if (session.status === 'STARTING') return null;
@@ -130,12 +157,7 @@ const PresentationShowFooter: React.FC<Props> = () => {
                                 showZero={false}
                                 max={99}
                             >
-                                <motion.button
-                                    whileTap={{ scale: 0.5 }}
-                                    onClick={() => {
-                                        modalRef.current?.onOpen(<PresentationMessageList />, 'Tất cả tin nhắn', '50%');
-                                    }}
-                                >
+                                <motion.button whileTap={{ scale: 0.5 }} onClick={openMessageModal}>
                                     <ButtonIconBase
                                         icon={'message-outlined'}
                                         color={'inherit'}
@@ -183,20 +205,7 @@ const PresentationShowFooter: React.FC<Props> = () => {
                                         },
                                     }}
                                 >
-                                    <motion.button
-                                        whileTap={{ scale: 0.5 }}
-                                        onClick={() => {
-                                            setState(pre => ({
-                                                ...pre,
-                                                isSeenNewestQuestion: true,
-                                            }));
-                                            modalRef.current?.onOpen(
-                                                <PresentationQuestionList sessionID={session.sessionID} />,
-                                                'Tất cả câu hỏi',
-                                                '50%',
-                                            );
-                                        }}
-                                    >
+                                    <motion.button whileTap={{ scale: 0.5 }} onClick={openQuestionModal}>
                                         <ButtonIconBase
                                             icon={'question-answer'}
                                             color={'inherit'}
@@ -237,13 +246,26 @@ const PresentationShowFooter: React.FC<Props> = () => {
         );
     };
 
+    useImperativeHandle(
+        ref,
+        () => ({
+            getModalMessageState: () => !!modalMessageRef.current?.state,
+            onOpenMessageModal: () => openMessageModal(),
+            onCloseMessageModal: () => modalMessageRef.current?.onClose(),
+            getModalQuestionState: () => !!modalQuestionRef.current?.state,
+            onOpenQuestionModal: () => openQuestionModal(),
+            onCloseQuestionModal: () => modalQuestionRef.current?.onClose(),
+        }),
+        [],
+    );
+
     return (
         <div className="w-full h-24 flex flex-col">
             {renderActionButton()}
             {renderProgressBar()}
-            <ModalBase ref={modalRef} />
+            <ModalBase ref={modalQuestionRef} />
+            <ModalBase ref={modalMessageRef} />
         </div>
     );
-};
-
+});
 export default PresentationShowFooter;
