@@ -24,20 +24,22 @@ const SideNavItem: React.FC<Props> = ({ routeDefinition }) => {
                     px: '16px',
                 }}
                 subheader={
-                    <ListSubheader
-                        sx={{
-                            color: 'neutral.400',
-                            bgcolor: 'transparent',
-                            textTransform: 'uppercase',
-                            fontWeight: '600',
-                            height: 36,
-                            display: 'flex',
-                            alignItems: 'center',
-                        }}
-                        component="div"
-                    >
-                        {item.title}
-                    </ListSubheader>
+                    item.hideTitle ? undefined : (
+                        <ListSubheader
+                            sx={{
+                                color: 'neutral.400',
+                                bgcolor: 'transparent',
+                                textTransform: 'uppercase',
+                                fontWeight: '600',
+                                height: 36,
+                                display: 'flex',
+                                alignItems: 'center',
+                            }}
+                            component="div"
+                        >
+                            {item.title}
+                        </ListSubheader>
+                    )
                 }
             >
                 {item.children && item.children.filter(x => !x.hide).map(renderMenu)}
@@ -76,21 +78,23 @@ const SideNavItem: React.FC<Props> = ({ routeDefinition }) => {
                             <BaseIcon type={item.icon} />
                         </ListItemIcon>
                     )}
-                    <ListItemText
-                        primary={item.title}
-                        sx={{
-                            alignItems: 'center',
-                            color: 'neutral.400',
-                            display: 'inline-flex',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            whiteSpace: 'nowrap',
-                            ml: '12px',
-                            ...(item.disabled && {
-                                color: 'neutral.500',
-                            }),
-                        }}
-                    />
+                    {!item.hideTitle && (
+                        <ListItemText
+                            primary={item.title}
+                            sx={{
+                                alignItems: 'center',
+                                color: 'neutral.400',
+                                display: 'inline-flex',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                whiteSpace: 'nowrap',
+                                ml: '12px',
+                                ...(item.disabled && {
+                                    color: 'neutral.500',
+                                }),
+                            }}
+                        />
+                    )}
                     {open ? <BaseIcon type="expand-less" /> : <BaseIcon type="expand-more" />}
                 </ListItemButton>
 
@@ -145,30 +149,33 @@ const SideNavItem: React.FC<Props> = ({ routeDefinition }) => {
                     >
                         <BaseIcon type={item.icon ?? 'dot'} size={item.icon ? 20 : 10} />
                     </ListItemIcon>
-                    <ListItemText
-                        primary={item.title}
-                        sx={{
-                            alignItems: 'center',
-                            color: 'neutral.400',
-                            display: 'inline-flex',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            whiteSpace: 'nowrap',
-                            ml: '12px',
-                            ...(active && {
-                                color: 'primary.main',
-                            }),
-                            ...(item.disabled && {
-                                color: 'neutral.500',
-                            }),
-                        }}
-                    />
+                    {!item.hideTitle && (
+                        <ListItemText
+                            primary={item.title}
+                            sx={{
+                                alignItems: 'center',
+                                color: 'neutral.400',
+                                display: 'inline-flex',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                whiteSpace: 'nowrap',
+                                ml: '12px',
+                                ...(active && {
+                                    color: 'primary.main',
+                                }),
+                                ...(item.disabled && {
+                                    color: 'neutral.500',
+                                }),
+                            }}
+                        />
+                    )}
                 </ListItemButton>
                 {item.divider && (
                     <Divider
                         sx={{
-                            margin: '4px 0',
+                            margin: '15px 0',
                             borderColor: 'neutral.600',
+                            borderStyle: 'dashed'
                         }}
                     />
                 )}

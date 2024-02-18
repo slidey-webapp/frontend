@@ -18,7 +18,7 @@ export interface BreadcrumbRef {
 
 const Breadcrumb = React.forwardRef<BreadcrumbRef, Props>((props, ref) => {
     // @ts-ignore
-    const routesMatched = matchRoutes(routeList, location.pathname);
+    const routesMatched = matchRoutes(routeList, location.pathname)?.filter(x => !x.route?.hideBreadcrumb);
 
     const defaultBreadcrumbs: BreadcrumbType[] = [
         {

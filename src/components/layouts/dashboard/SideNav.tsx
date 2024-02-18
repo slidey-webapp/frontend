@@ -1,12 +1,8 @@
-import {
-    Box,
-    Drawer,
-    useMediaQuery,
-    useTheme
-} from '@mui/material';
+import { Box, Drawer, useMediaQuery, useTheme } from '@mui/material';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Scrollbar from '~/components/scrollbar/Scrollbar';
+import logo from '~/images/logo.png';
 import { routeList } from '~/routes/AppRoute';
 import SideNavItem from './SideNavItem';
 
@@ -41,16 +37,15 @@ const SideNav: React.FC<Props> = ({ open, onClose }) => {
                 }}
             >
                 <Box sx={{ py: 3, px: 4 }}>
-                    <Box
-                        component={Link}
-                        to="/"
-                        sx={{
-                            display: 'inline-flex',
-                            height: 32,
-                            width: 32,
-                        }}
-                    >
-                        logo
+                    <Box component={Link} to="/" className="flex items-center justify-center">
+                        <img
+                            src={logo}
+                            alt="logo"
+                            className=""
+                            style={{
+                                height: 40,
+                            }}
+                        />
                     </Box>
                 </Box>
                 {dashboardRoutes.map(item => (
