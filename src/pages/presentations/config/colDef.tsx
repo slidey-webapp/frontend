@@ -40,7 +40,7 @@ export const presentationGridColDef: BaseGridColDef[] = [
         },
     },
     {
-        headerName: 'Thời gian cập nhật gần nhất',
+        headerName: 'Thời gian cập nhật',
         field: nameof.full<PresentationDto>(x => x.updatedAt),
         cellStyle: {
             display: 'flex',

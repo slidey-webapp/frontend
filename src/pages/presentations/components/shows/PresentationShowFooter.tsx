@@ -1,11 +1,25 @@
+import { Badge } from '@mui/material';
 import { motion } from 'framer-motion';
-import React from 'react';
+import React, { useImperativeHandle, useRef } from 'react';
 import ButtonIconBase from '~/components/buttons/ButtonIconBase';
+import ModalBase, { ModalBaseRef } from '~/components/modals/ModalBase';
 import { usePresentationShowContext } from '../../PresentationHostShow';
+import PresentationMessageList from './PresentationMessageList';
+import PresentationQuestionList from './PresentationQuestionList';
 
 interface Props {}
 
-const PresentationShowFooter: React.FC<Props> = () => {
+export interface PresentShowFooterRef {
+    getModalMessageState: () => boolean;
+    onOpenMessageModal: () => void;
+    onCloseMessageModal: () => void;
+
+    getModalQuestionState: () => boolean;
+    onOpenQuestionModal: () => void;
+    onCloseQuestionModal: () => void;
+}
+
+const PresentationShowFooter = React.forwardRef<PresentShowFooterRef, Props>((props, ref) => {
     const {
         isFirstSlide,
         isLastSlide,
@@ -13,14 +27,39 @@ const PresentationShowFooter: React.FC<Props> = () => {
         slides,
         currentSlideId,
         session,
+        messages,
+        questions,
+        isSeenNewestQuestion,
         onFullScreen,
         onExitFullScreen,
         onSlideChange,
         onHotKeysOverview,
+        setState,
     } = usePresentationShowContext();
+
+    const modalQuestionRef = useRef<ModalBaseRef>(null);
+    const modalMessageRef = useRef<ModalBaseRef>(null);
+
+    const openQuestionModal = () => {
+        setState(pre => ({
+            ...pre,
+            isSeenNewestQuestion: true,
+        }));
+        modalQuestionRef.current?.onOpen(
+            <PresentationQuestionList sessionID={session.sessionID} />,
+            'Tất cả câu hỏi',
+            '50%',
+        );
+    };
+
+    const openMessageModal = () => {
+        modalMessageRef.current?.onOpen(<PresentationMessageList />, 'Tất cả tin nhắn', '50%');
+    };
 
     const renderActionButton = () => {
         if (session.status === 'STARTING') return null;
+        const messageCount = messages.length;
+        const questionUnAnsweredCount = questions.filter(x => !x.isAnswered).length;
 
         return (
             <div className="flex-1 px-4 text-black  flex items-center justify-center ">
@@ -103,43 +142,84 @@ const PresentationShowFooter: React.FC<Props> = () => {
                     </div>
                     <div className="flex-1 flex justify-end items-center">
                         <div className="mx-1 bg-[#ededf099] rounded-full">
-                            <ButtonIconBase
-                                icon={'thumb-up-alt'}
-                                color={'inherit'}
-                                size="large"
-                                style={{
-                                    margin: 0,
-                                    width: 48,
-                                    height: 48,
-                                    fontSize: 20,
+                            <Badge
+                                badgeContent={messageCount}
+                                anchorOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'left',
                                 }}
-                            />
+                                color="primary"
+                                sx={{
+                                    '& > .MuiBadge-badge': {
+                                        left: '50%',
+                                    },
+                                }}
+                                showZero={false}
+                                max={99}
+                            >
+                                <motion.button whileTap={{ scale: 0.5 }} onClick={openMessageModal}>
+                                    <ButtonIconBase
+                                        icon={'message-outlined'}
+                                        color={'inherit'}
+                                        size="large"
+                                        style={{
+                                            margin: 0,
+                                            width: 48,
+                                            height: 48,
+                                            fontSize: 20,
+                                        }}
+                                    />
+                                </motion.button>
+                            </Badge>
                         </div>
                         <div className="mx-1 bg-[#ededf099] rounded-full">
-                            <ButtonIconBase
-                                icon={'comment'}
-                                color={'inherit'}
-                                size="large"
-                                style={{
-                                    margin: 0,
-                                    width: 48,
-                                    height: 48,
-                                    fontSize: 20,
+                            <Badge
+                                invisible={isSeenNewestQuestion}
+                                anchorOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
                                 }}
-                            />
-                        </div>
-                        <div className="mx-1 bg-[#ededf099] rounded-full">
-                            <ButtonIconBase
-                                icon={'question-answer'}
-                                color={'inherit'}
-                                size="large"
-                                style={{
-                                    margin: 0,
-                                    width: 48,
-                                    height: 48,
-                                    fontSize: 20,
+                                color="primary"
+                                variant="dot"
+                                sx={{
+                                    '& > .MuiBadge-badge': {
+                                        top: '20%',
+                                        width: 10,
+                                        height: 10,
+                                        borderRadius: '100%',
+                                    },
                                 }}
-                            />
+                            >
+                                <Badge
+                                    badgeContent={questionUnAnsweredCount}
+                                    showZero={false}
+                                    max={99}
+                                    anchorOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'left',
+                                    }}
+                                    color="primary"
+                                    sx={{
+                                        '& > .MuiBadge-badge': {
+                                            left: '50%',
+                                        },
+                                    }}
+                                >
+                                    <motion.button whileTap={{ scale: 0.5 }} onClick={openQuestionModal}>
+                                        <ButtonIconBase
+                                            icon={'question-answer'}
+                                            color={'inherit'}
+                                            size="large"
+                                            style={{
+                                                margin: 0,
+                                                width: 48,
+                                                height: 48,
+                                                fontSize: 20,
+                                            }}
+                                        />
+                                    </motion.button>
+                                </Badge>
+                            </Badge>
                         </div>
                     </div>
                 </div>
@@ -166,12 +246,26 @@ const PresentationShowFooter: React.FC<Props> = () => {
         );
     };
 
+    useImperativeHandle(
+        ref,
+        () => ({
+            getModalMessageState: () => !!modalMessageRef.current?.state,
+            onOpenMessageModal: () => openMessageModal(),
+            onCloseMessageModal: () => modalMessageRef.current?.onClose(),
+            getModalQuestionState: () => !!modalQuestionRef.current?.state,
+            onOpenQuestionModal: () => openQuestionModal(),
+            onCloseQuestionModal: () => modalQuestionRef.current?.onClose(),
+        }),
+        [],
+    );
+
     return (
         <div className="w-full h-24 flex flex-col">
             {renderActionButton()}
             {renderProgressBar()}
+            <ModalBase ref={modalQuestionRef} />
+            <ModalBase ref={modalMessageRef} />
         </div>
     );
-};
-
+});
 export default PresentationShowFooter;

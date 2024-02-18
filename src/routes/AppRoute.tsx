@@ -20,6 +20,7 @@ const GroupDetailPage = React.lazy(() => import('~/pages/groups/GroupDetailPage'
 const PresentationPage = React.lazy(() => import('~/pages/presentations/PresentationPage'));
 const PresentationDetailPage = React.lazy(() => import('~/pages/presentations/PresentationDetailPage'));
 const PresentationHostShow = React.lazy(() => import('~/pages/presentations/PresentationHostShow'));
+const PresentationJoinSession = React.lazy(() => import('~/pages/presentations/PresentationJoinSession'));
 // #endregion
 
 // #region presentation
@@ -221,6 +222,24 @@ export const routeList: RouteDefinition[] = [
         ),
     },
 
+    {
+        title: 'Tham gia phiên trình chiếu',
+        path: 'join/:code',
+        element: (
+            <Suspense>
+                <PresentationJoinSession />
+            </Suspense>
+        ),
+    },
+    {
+        title: 'Tham gia phiên trình chiếu',
+        path: 'join',
+        element: (
+            <Suspense>
+                <PresentationJoinSession />
+            </Suspense>
+        ),
+    },
     {
         title: 'Not found',
         path: '/*',

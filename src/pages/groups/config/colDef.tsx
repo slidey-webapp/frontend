@@ -45,7 +45,7 @@ export const groupGridColDef: BaseGridColDef[] = [
         },
     },
     {
-        headerName: 'Thời gian cập nhật gần nhất',
+        headerName: 'Thời gian cập nhật',
         field: nameof.full<GroupDto>(x => x.updatedAt),
         cellStyle: {
             display: 'flex',

@@ -1,21 +1,29 @@
 import _ from 'lodash';
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
+import { useQuery } from 'react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 import { RootState, useAppSelector } from '~/AppStore';
 import FullScreen, { FullScreenRef } from '~/components/full-screen/FullScreen';
 import Loading from '~/components/loadings/Loading';
 import ModalBase, { ModalBaseRef } from '~/components/modals/ModalBase';
 import { PreviewSizeConstant, SocketEvent } from '~/configs/constants';
-import { requestApi } from '~/libs/axios';
+import { PaginatedList, requestApi } from '~/libs/axios';
 import { useSocketContext } from '~/providers/SocketProvider';
 import { Id } from '~/types/shared';
-import { SESSION_END_API, SESSION_SLIDE_CHANGED_API } from './api/presentation.api';
+import {
+    SESSION_END_API,
+    SESSION_MESSAGE_INDEX_API,
+    SESSION_QUESTION_INDEX_API,
+    SESSION_SLIDE_CHANGED_API,
+} from './api/presentation.api';
 import { useSessionDetail } from './api/useSessionDetail';
 import PresentationHotKeysOverview from './components/PresentationHotKeysOverview';
 import PresentationShowBody from './components/shows/PresentationShowBody';
-import PresentationShowFooter from './components/shows/PresentationShowFooter';
+import PresentationShowFooter, { PresentShowFooterRef } from './components/shows/PresentationShowFooter';
+import { MessageDto } from './types/message';
 import { ParticipantDto } from './types/participant';
 import { PresentationDto } from './types/presentation';
+import { QuestionDto } from './types/question';
 import { SessionDto } from './types/session';
 import { MultipleChoiceSlideOption, SlideDto } from './types/slide';
 
@@ -29,6 +37,9 @@ export interface IPresentationShowContext {
     isFullScreen: boolean;
     isFirstSlide: boolean;
     isLastSlide: boolean;
+    questions: QuestionDto[];
+    isSeenNewestQuestion: boolean;
+    messages: MessageDto[];
     setState: React.Dispatch<React.SetStateAction<State>>;
     onFullScreen: () => void;
     onExitFullScreen: () => void;
@@ -51,11 +62,15 @@ interface State {
     isFullScreen: boolean;
     isFirstSlide: boolean;
     isLastSlide: boolean;
+    questions: QuestionDto[];
+    isSeenNewestQuestion: boolean;
+    messages: MessageDto[];
 }
 
 const PresentationHostShow: React.FC<Props> = () => {
     const fullScreenRef = useRef<FullScreenRef>(null);
     const modalRef = useRef<ModalBaseRef>(null);
+    const presentShowFooterRef = useRef<PresentShowFooterRef>(null);
 
     const authUser = useAppSelector((state: RootState) => state.auth.authUser);
     const { socket } = useSocketContext();
@@ -73,6 +88,9 @@ const PresentationHostShow: React.FC<Props> = () => {
         isFullScreen: false,
         isFirstSlide: true,
         isLastSlide: true,
+        questions: [],
+        isSeenNewestQuestion: true,
+        messages: [],
     });
 
     useEffect(() => {
@@ -97,6 +115,26 @@ const PresentationHostShow: React.FC<Props> = () => {
                 case 'k':
                 case 'K':
                     handleHotKeysOverview();
+                    return;
+                case 'm':
+                case 'M':
+                    const messageModalState = presentShowFooterRef.current?.getModalMessageState();
+                    if (messageModalState) {
+                        presentShowFooterRef.current?.onCloseMessageModal();
+                        return;
+                    }
+
+                    presentShowFooterRef.current?.onOpenMessageModal();
+                    return;
+                case 'Q':
+                case 'q':
+                    const questionModalState = presentShowFooterRef.current?.getModalQuestionState();
+                    if (questionModalState) {
+                        presentShowFooterRef.current?.onCloseQuestionModal();
+                        return;
+                    }
+
+                    presentShowFooterRef.current?.onOpenQuestionModal();
                     return;
                 case null:
                 default:
@@ -173,6 +211,44 @@ const PresentationHostShow: React.FC<Props> = () => {
             },
         );
 
+        socket.on(SocketEvent.MESSAGE, async ({ message }: { message: MessageDto }) => {
+            await refetchMessageList();
+        });
+
+        socket.on(SocketEvent.QUESTION, async ({ question }: { question: QuestionDto }) => {
+            await refetchQuestionList();
+
+            if (presentShowFooterRef.current?.getModalQuestionState()) return;
+
+            setState(pre => ({
+                ...pre,
+                isSeenNewestQuestion: false,
+            }));
+        });
+
+        socket.on(SocketEvent.UPVOTE_QUESTION, async ({ question }: { question: QuestionDto }) => {
+            await refetchQuestionList();
+        });
+
+        socket.on(SocketEvent.ANSWER_QUESTION, async ({ question: { questionID } }: { question: QuestionDto }) => {
+            setState(pre => {
+                const stateCloned = _.cloneDeep(pre);
+                const questionsCloned = _.cloneDeep(pre.questions);
+
+                const questionIndex = questionsCloned.findIndex(x => x.questionID == questionID);
+                if (questionIndex === -1) return stateCloned;
+
+                questionsCloned[questionIndex] = {
+                    ...questionsCloned[questionIndex],
+                    isAnswered: true,
+                };
+
+                stateCloned.questions = questionsCloned;
+
+                return stateCloned;
+            });
+        });
+
         return () => {
             socket.disconnect();
         };
@@ -203,6 +279,34 @@ const PresentationHostShow: React.FC<Props> = () => {
                 isFirstSlide,
                 isLastSlide,
                 currentSlideId: pre.currentSlideId || slides?.[0]?.slideID,
+            }));
+        },
+    });
+
+    const { refetch: refetchQuestionList } = useQuery({
+        queryKey: ['QuestionList'],
+        queryFn: () =>
+            requestApi<PaginatedList<QuestionDto>>('get', SESSION_QUESTION_INDEX_API, null, {
+                params: { sessionID, offset: 0, limit: 100000 },
+            }),
+        onSuccess: res => {
+            setState(pre => ({
+                ...pre,
+                questions: res.data.result?.items || [],
+            }));
+        },
+    });
+
+    const { refetch: refetchMessageList } = useQuery({
+        queryKey: ['MessageList'],
+        queryFn: () =>
+            requestApi<PaginatedList<MessageDto>>('get', SESSION_MESSAGE_INDEX_API, null, {
+                params: { sessionID, offset: 0, limit: 100000 },
+            }),
+        onSuccess: res => {
+            setState(pre => ({
+                ...pre,
+                messages: res.data.result?.items || [],
             }));
         },
     });
@@ -271,6 +375,9 @@ const PresentationHostShow: React.FC<Props> = () => {
                 isFullScreen: state.isFullScreen,
                 isFirstSlide: state.isFirstSlide,
                 isLastSlide: state.isLastSlide,
+                messages: state.messages,
+                questions: state.questions,
+                isSeenNewestQuestion: state.isSeenNewestQuestion,
                 onFullScreen: async () => await fullScreenRef.current?.open(),
                 onExitFullScreen: async () => await fullScreenRef.current?.exit(),
                 onSlideChange: handleSlideChange,
@@ -301,7 +408,7 @@ const PresentationHostShow: React.FC<Props> = () => {
                         >
                             <div className="w-full h-full flex flex-col">
                                 <PresentationShowBody />
-                                <PresentationShowFooter />
+                                <PresentationShowFooter ref={presentShowFooterRef} />
                             </div>
                         </div>
                     </div>
