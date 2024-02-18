@@ -154,18 +154,21 @@ const SideNavItem: React.FC<Props> = ({ routeDefinition }) => {
                             primary={item.title}
                             sx={{
                                 alignItems: 'center',
+                                ml: '12px',
                                 color: 'neutral.400',
                                 display: 'inline-flex',
-                                overflow: 'hidden',
-                                textOverflow: 'ellipsis',
-                                whiteSpace: 'nowrap',
-                                ml: '12px',
-                                ...(active && {
-                                    color: 'primary.main',
-                                }),
-                                ...(item.disabled && {
-                                    color: 'neutral.500',
-                                }),
+                                '& > span': {
+                                    width: '100%',
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    whiteSpace: 'nowrap',
+                                    ...(active && {
+                                        color: 'primary.main',
+                                    }),
+                                    ...(item.disabled && {
+                                        color: 'neutral.500',
+                                    }),
+                                },
                             }}
                         />
                     )}
@@ -175,7 +178,7 @@ const SideNavItem: React.FC<Props> = ({ routeDefinition }) => {
                         sx={{
                             margin: '15px 0',
                             borderColor: 'neutral.600',
-                            borderStyle: 'dashed'
+                            borderStyle: 'dashed',
                         }}
                     />
                 )}
