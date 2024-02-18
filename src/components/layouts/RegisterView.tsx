@@ -11,6 +11,7 @@ import NotifyUtil from '~/utils/NotifyUtil';
 import { ButtonBase } from '../buttons/ButtonBase';
 import BaseForm from '../forms/BaseForm';
 import Overlay, { OverlayRef } from '../loadings/Overlay';
+import logo from '~/images/logo.png';
 
 const RegisterView: React.FC = () => {
     const { isAuthenticated } = useAppSelector((state: RootState) => state.auth);
@@ -48,7 +49,15 @@ const RegisterView: React.FC = () => {
 
     if (isAuthenticated) return <Navigate to={'/'} />;
     return (
-        <div className="w-full h-screen relative flex items-center justify-center" key="register">
+        <div className="w-full h-screen relative flex flex-col items-center justify-center" key="register">
+            <img
+                src={logo}
+                alt="logo"
+                style={{
+                    transform: 'scale(0.6)',
+                }}
+                className=""
+            />
             <div className="w-[440px] bg-white rounded-md shadow p-5 flex flex-col">
                 <div className="text-orange-400 font-bold text-xl mb-5">Đăng ký</div>
                 <BaseForm

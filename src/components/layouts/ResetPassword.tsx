@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import { Navigate, useNavigate, useParams } from 'react-router';
 import { RootState, useAppSelector } from '~/AppStore';
 import { RESET_PASSWORD_API } from '~/configs/global.api';
+import logo from '~/images/logo.png';
 import { requestApi } from '~/libs/axios';
 import { ResetPasswordParam } from '~/types/auth';
 import NotifyUtil from '~/utils/NotifyUtil';
@@ -93,7 +94,15 @@ const ResetPassword: React.FC<Props> = () => {
         }
 
         return (
-            <div className="w-full h-screen relative flex items-center justify-center" key="login">
+            <div className="w-full h-screen relative flex flex-col items-center justify-center" key="login">
+                <img
+                    src={logo}
+                    alt="logo"
+                    style={{
+                        transform: 'scale(0.6)',
+                    }}
+                    className=""
+                />
                 <div className="w-[440px] bg-white rounded-md shadow p-5 flex flex-col">
                     <div className="text-orange-400 font-bold text-xl mb-5">Đặt lại mật khẩu</div>
                     {body}

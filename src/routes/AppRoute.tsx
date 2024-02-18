@@ -30,6 +30,8 @@ const SessionDashboardPage = React.lazy(() => import('~/pages/sessions/SessionDa
 
 export type RouteDefinition = Omit<RouteObject, 'children'> & {
     title: string;
+    hideTitle?: boolean;
+    hideBreadcrumb?: boolean;
     disabled?: boolean;
     external?: boolean;
     path: string;
@@ -100,7 +102,8 @@ export const routeList: RouteDefinition[] = [
         ),
     },
     {
-        title: 'Dashboard',
+        title: 'Tổng quan',
+        hideTitle: true,
         path: '/dashboard',
         element: (
             <Suspense>
@@ -126,8 +129,9 @@ export const routeList: RouteDefinition[] = [
                         <DashboardHomePage />
                     </Suspense>
                 ),
-                icon: 'home',
+                icon: 'dashboard-outlined',
                 divider: true,
+                hideBreadcrumb: true,
             },
             {
                 title: 'Quản lý nhóm',
@@ -154,7 +158,7 @@ export const routeList: RouteDefinition[] = [
                         ),
                     },
                 ],
-                icon: 'list',
+                icon: 'groups-outlined',
             },
             {
                 title: 'Bài thuyết trình của tôi',
@@ -171,13 +175,12 @@ export const routeList: RouteDefinition[] = [
                         ),
                     },
                 ],
-                icon: 'list',
+                icon: 'presentation-outlined',
             },
             {
                 title: 'Phiên trình chiếu của tôi',
                 path: 'present-session',
-
-                icon: 'list',
+                icon: 'slide-outlined',
                 children: [
                     {
                         title: 'Phiên trình chiếu của tôi',

@@ -44,6 +44,10 @@ const IconsMap = {
     'keyboard-alt-outlined': loadable(() => import('@mui/icons-material/KeyboardAltOutlined')),
     'keyboard': loadable(() => import('@mui/icons-material/Keyboard')),
     'message-outlined': loadable(() => import('@mui/icons-material/MessageOutlined')),
+    'groups-outlined': loadable(() => import('@mui/icons-material/GroupsOutlined')),
+    'presentation-outlined': loadable(() => import('@mui/icons-material/CoPresentOutlined')),
+    'slide-outlined': loadable(() => import('@mui/icons-material/SlideshowOutlined')),
+    'dashboard-outlined': loadable(() => import('@mui/icons-material/DashboardOutlined')),
 };
 
 type Size = 8 | 10 | 12 | 14 | 16 | 18 | 20 | 22 | 24;
