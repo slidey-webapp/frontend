@@ -1,5 +1,4 @@
 import {
-    Avatar,
     AvatarGroup,
     Box,
     Divider,
@@ -22,6 +21,7 @@ import Loading from '~/components/loadings/Loading';
 import { ComboOptionConstant } from '~/configs/constants';
 import { requestApi } from '~/libs/axios';
 import { Id } from '~/types/shared';
+import ComponentUtil from '~/utils/ComponentUtil';
 import NotifyUtil from '~/utils/NotifyUtil';
 import { GROUP_REMOVE_MEMBER_API, GROUP_SEND_INVITATION_API, GROUP_UPDATE_MEMBER_ROLE_API } from './api/group.api';
 import { useGroupDetail } from './api/useGroupDetail';
@@ -159,17 +159,11 @@ const GroupDetailPage: React.FC<Props> = () => {
                             }}
                         >
                             {members.map(member => {
-                                return (
-                                    <Avatar
-                                        key={member.groupMemberID}
-                                        sx={{
-                                            width: 36,
-                                            height: 36,
-                                        }}
-                                    >
-                                        {member.fullname.trim()?.[0]}
-                                    </Avatar>
-                                );
+                                return ComponentUtil.renderAvatarUser({
+                                    key: member.groupMemberID,
+                                    fullName: member.fullname,
+                                    size: 36,
+                                });
                             })}
                         </AvatarGroup>
                         <Popover
@@ -231,14 +225,10 @@ const GroupDetailPage: React.FC<Props> = () => {
                                             >
                                                 <div className="flex items-center">
                                                     <div className="mr-3">
-                                                        <Avatar
-                                                            sx={{
-                                                                width: 36,
-                                                                height: 36,
-                                                            }}
-                                                        >
-                                                            {member.fullname.trim()?.[0]}
-                                                        </Avatar>
+                                                        {ComponentUtil.renderAvatarUser({
+                                                            fullName: member.fullname,
+                                                            size: 36,
+                                                        })}
                                                     </div>
                                                     <div className="flex-1 flex flex-col h-full justify-between">
                                                         <div className="">{member.fullname}</div>

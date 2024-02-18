@@ -7,6 +7,7 @@ import ButtonIconBase from '~/components/buttons/ButtonIconBase';
 import BaseForm, { BaseFormRef } from '~/components/forms/BaseForm';
 import BaseIcon from '~/components/icons/BaseIcon';
 import { requestApi } from '~/libs/axios';
+import ComponentUtil from '~/utils/ComponentUtil';
 import NotifyUtil from '~/utils/NotifyUtil';
 import { usePresentationContext } from '../PresentationDetailPage';
 import { COLLABORATION_DELETE_API, COLLABORATION_INVITATION_API } from '../api/presentation.api';
@@ -126,17 +127,11 @@ const PresentationHeader: React.FC<Props> = () => {
                             }}
                         >
                             {collaborations.map(collab => {
-                                return (
-                                    <Avatar
-                                        key={collab.collaborationID}
-                                        sx={{
-                                            width: 32,
-                                            height: 32,
-                                        }}
-                                    >
-                                        {collab.fullname.toString().trim()?.[0]}
-                                    </Avatar>
-                                );
+                                return ComponentUtil.renderAvatarUser({
+                                    key: collab.collaborationID,
+                                    fullName: collab.fullname,
+                                    size: 32,
+                                });
                             })}
                             {collaborations.length === 0 && (
                                 <Avatar
@@ -190,52 +185,53 @@ const PresentationHeader: React.FC<Props> = () => {
                                 </div>
                             </Box>
                             <Divider />
-                            <Box
-                                sx={{
-                                    py: 1.5,
-                                    px: 2,
-                                }}
-                            >
-                                <div className="w-full flex flex-col">
-                                    {collaborations.map(collab => {
-                                        return (
-                                            <div
-                                                key={collab.collaborationID}
-                                                className="flex-1  flex items-center justify-between"
-                                                style={{
-                                                    height: 56,
-                                                    minHeight: 56,
-                                                }}
-                                            >
-                                                <div className="flex items-center">
-                                                    <div className="mr-3">
-                                                        <Avatar
-                                                            sx={{
-                                                                width: 32,
-                                                                height: 32,
-                                                            }}
-                                                        >
-                                                            {collab.fullname.toString().trim()?.[0]}
-                                                        </Avatar>
+                            {collaborations.length > 0 && (
+                                <>
+                                    <Box
+                                        sx={{
+                                            py: 1.5,
+                                            px: 2,
+                                        }}
+                                    >
+                                        <div className="w-full flex flex-col">
+                                            {collaborations.map(collab => {
+                                                return (
+                                                    <div
+                                                        key={collab.collaborationID}
+                                                        className="flex-1  flex items-center justify-between"
+                                                        style={{
+                                                            height: 56,
+                                                            minHeight: 56,
+                                                        }}
+                                                    >
+                                                        <div className="flex items-center">
+                                                            <div className="mr-3">
+                                                                {ComponentUtil.renderAvatarUser({
+                                                                    key: collab.collaborationID,
+                                                                    fullName: collab.fullname,
+                                                                    size: 32,
+                                                                })}
+                                                            </div>
+                                                            <div className="flex-1 flex flex-col h-full justify-between">
+                                                                <div className="">{collab.fullname}</div>
+                                                                <div className="text-xs">{collab.email}</div>
+                                                            </div>
+                                                        </div>
+                                                        <ButtonIconBase
+                                                            className="!ml-2"
+                                                            icon="remove"
+                                                            color="error"
+                                                            tooltip="Xóa cộng tác viên"
+                                                            onClick={() => handleRemoveCollab(collab)}
+                                                        />
                                                     </div>
-                                                    <div className="flex-1 flex flex-col h-full justify-between">
-                                                        <div className="">{collab.fullname}</div>
-                                                        <div className="text-xs">{collab.email}</div>
-                                                    </div>
-                                                </div>
-                                                <ButtonIconBase
-                                                    className="!ml-2"
-                                                    icon="remove"
-                                                    color="error"
-                                                    tooltip="Xóa cộng tác viên"
-                                                    onClick={() => handleRemoveCollab(collab)}
-                                                />
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            </Box>
-                            <Divider />
+                                                );
+                                            })}
+                                        </div>
+                                    </Box>
+                                    <Divider />
+                                </>
+                            )}
                             <Box
                                 sx={{
                                     py: 1.5,

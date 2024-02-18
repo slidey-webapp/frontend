@@ -141,6 +141,7 @@ export const routeList: RouteDefinition[] = [
                         hide: true,
                         path: '',
                         title: 'Quản lý nhóm',
+                        hideBreadcrumb: true,
                         element: (
                             <Suspense>
                                 <GroupPage />
@@ -167,6 +168,7 @@ export const routeList: RouteDefinition[] = [
                     {
                         hide: true,
                         path: '',
+                        hideBreadcrumb: true,
                         title: 'Bài thuyết trình của tôi',
                         element: (
                             <Suspense>
@@ -186,6 +188,7 @@ export const routeList: RouteDefinition[] = [
                         title: 'Phiên trình chiếu của tôi',
                         path: '',
                         hide: true,
+                        hideBreadcrumb: true,
                         element: (
                             <Suspense>
                                 <SessionDashboardPage />
