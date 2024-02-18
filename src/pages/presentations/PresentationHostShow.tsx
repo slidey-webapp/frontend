@@ -38,6 +38,7 @@ export interface IPresentationShowContext {
     isFirstSlide: boolean;
     isLastSlide: boolean;
     questions: QuestionDto[];
+    isSeenNewestQuestion: boolean;
     messages: MessageDto[];
     setState: React.Dispatch<React.SetStateAction<State>>;
     onFullScreen: () => void;
@@ -62,6 +63,7 @@ interface State {
     isFirstSlide: boolean;
     isLastSlide: boolean;
     questions: QuestionDto[];
+    isSeenNewestQuestion: boolean;
     messages: MessageDto[];
 }
 
@@ -86,6 +88,7 @@ const PresentationHostShow: React.FC<Props> = () => {
         isFirstSlide: true,
         isLastSlide: true,
         questions: [],
+        isSeenNewestQuestion: true,
         messages: [],
     });
 
@@ -192,6 +195,10 @@ const PresentationHostShow: React.FC<Props> = () => {
         });
 
         socket.on(SocketEvent.QUESTION, async ({ question }: { question: QuestionDto }) => {
+            setState(pre => ({
+                ...pre,
+                isSeenNewestQuestion: false,
+            }));
             await refetchQuestionList();
         });
 
@@ -346,6 +353,7 @@ const PresentationHostShow: React.FC<Props> = () => {
                 isLastSlide: state.isLastSlide,
                 messages: state.messages,
                 questions: state.questions,
+                isSeenNewestQuestion: state.isSeenNewestQuestion,
                 onFullScreen: async () => await fullScreenRef.current?.open(),
                 onExitFullScreen: async () => await fullScreenRef.current?.exit(),
                 onSlideChange: handleSlideChange,

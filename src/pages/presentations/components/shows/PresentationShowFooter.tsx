@@ -19,16 +19,20 @@ const PresentationShowFooter: React.FC<Props> = () => {
         session,
         messages,
         questions,
+        isSeenNewestQuestion,
         onFullScreen,
         onExitFullScreen,
         onSlideChange,
         onHotKeysOverview,
+        setState,
     } = usePresentationShowContext();
 
     const modalRef = useRef<ModalBaseRef>(null);
 
     const renderActionButton = () => {
         if (session.status === 'STARTING') return null;
+        const messageCount = messages.length;
+        const questionUnAnsweredCount = questions.filter(x => !x.isAnswered).length;
 
         return (
             <div className="flex-1 px-4 text-black  flex items-center justify-center ">
@@ -111,43 +115,101 @@ const PresentationShowFooter: React.FC<Props> = () => {
                     </div>
                     <div className="flex-1 flex justify-end items-center">
                         <div className="mx-1 bg-[#ededf099] rounded-full">
-                            <Badge badgeContent={messages.length} color="error" showZero={false} max={99}>
-                                <ButtonIconBase
-                                    icon={'message-outlined'}
-                                    color={'inherit'}
-                                    size="large"
-                                    style={{
-                                        margin: 0,
-                                        width: 48,
-                                        height: 48,
-                                        fontSize: 20,
-                                    }}
+                            <Badge
+                                badgeContent={messageCount}
+                                anchorOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'left',
+                                }}
+                                color="primary"
+                                sx={{
+                                    '& > .MuiBadge-badge': {
+                                        left: '50%',
+                                    },
+                                }}
+                                showZero={false}
+                                max={99}
+                            >
+                                <motion.button
+                                    whileTap={{ scale: 0.5 }}
                                     onClick={() => {
                                         modalRef.current?.onOpen(<PresentationMessageList />, 'Tất cả tin nhắn', '50%');
                                     }}
-                                />
+                                >
+                                    <ButtonIconBase
+                                        icon={'message-outlined'}
+                                        color={'inherit'}
+                                        size="large"
+                                        style={{
+                                            margin: 0,
+                                            width: 48,
+                                            height: 48,
+                                            fontSize: 20,
+                                        }}
+                                    />
+                                </motion.button>
                             </Badge>
                         </div>
                         <div className="mx-1 bg-[#ededf099] rounded-full">
-                            <Badge badgeContent={questions.length} color="error" showZero={false} max={99}>
-                                <ButtonIconBase
-                                    icon={'question-answer'}
-                                    color={'inherit'}
-                                    size="large"
-                                    style={{
-                                        margin: 0,
-                                        width: 48,
-                                        height: 48,
-                                        fontSize: 20,
+                            <Badge
+                                invisible={isSeenNewestQuestion}
+                                anchorOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+                                color="primary"
+                                variant="dot"
+                                sx={{
+                                    '& > .MuiBadge-badge': {
+                                        top: '20%',
+                                        width: 10,
+                                        height: 10,
+                                        borderRadius: '100%',
+                                    },
+                                }}
+                            >
+                                <Badge
+                                    badgeContent={questionUnAnsweredCount}
+                                    showZero={false}
+                                    max={99}
+                                    anchorOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'left',
                                     }}
-                                    onClick={() => {
-                                        modalRef.current?.onOpen(
-                                            <PresentationQuestionList sessionID={session.sessionID} />,
-                                            'Tất cả câu hỏi',
-                                            '50%',
-                                        );
+                                    color="primary"
+                                    sx={{
+                                        '& > .MuiBadge-badge': {
+                                            left: '50%',
+                                        },
                                     }}
-                                />
+                                >
+                                    <motion.button
+                                        whileTap={{ scale: 0.5 }}
+                                        onClick={() => {
+                                            setState(pre => ({
+                                                ...pre,
+                                                isSeenNewestQuestion: true,
+                                            }));
+                                            modalRef.current?.onOpen(
+                                                <PresentationQuestionList sessionID={session.sessionID} />,
+                                                'Tất cả câu hỏi',
+                                                '50%',
+                                            );
+                                        }}
+                                    >
+                                        <ButtonIconBase
+                                            icon={'question-answer'}
+                                            color={'inherit'}
+                                            size="large"
+                                            style={{
+                                                margin: 0,
+                                                width: 48,
+                                                height: 48,
+                                                fontSize: 20,
+                                            }}
+                                        />
+                                    </motion.button>
+                                </Badge>
                             </Badge>
                         </div>
                     </div>
