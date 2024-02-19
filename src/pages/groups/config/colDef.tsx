@@ -1,5 +1,7 @@
+import { AvatarGroup } from '@mui/material';
 import _ from 'lodash';
 import { BaseGridColDef } from '~/components/grid/BaseGrid';
+import ComponentUtil from '~/utils/ComponentUtil';
 import DateTimeUtil from '~/utils/DateTimeUtil';
 import { GroupDto } from '../types/group';
 
@@ -25,6 +27,40 @@ export const groupGridColDef: BaseGridColDef[] = [
         headerName: 'Mô tả',
         field: nameof.full<GroupDto>(x => x.description),
         minWidth: 200,
+    },
+    {
+        headerName: 'Thành viên',
+        field: nameof.full<GroupDto>(x => x.members),
+        width: 150,
+        minWidth: 150,
+        resizable: false,
+        cellRenderer: (params: any) => {
+            const data = _.get(params, 'data') as GroupDto;
+            const { members } = data;
+            return (
+                <AvatarGroup
+                    max={5}
+                    sx={{
+                        '& .MuiAvatar-root': { width: 28, height: 28 },
+                    }}
+                >
+                    {members.map(member => {
+                        return ComponentUtil.renderAvatarUser({
+                            key: member.groupMemberID,
+                            fullName: member.fullname,
+                            size: 28,
+                            style: {
+                                fontSize: 12,
+                            },
+                            tooltip: true,
+                        });
+                    })}
+                </AvatarGroup>
+            );
+        },
+        cellStyle: {
+            display: 'flex',
+        },
     },
     {
         headerName: 'Thời gian tạo',
