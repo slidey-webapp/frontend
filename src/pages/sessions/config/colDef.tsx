@@ -36,7 +36,8 @@ export const sessionGridColDef: BaseGridColDef[] = [
         cellRenderer: (params: any) => {
             const data = _.get(params, 'data') as SessionDto;
             const { createdAt } = data;
-            const createdAtFormatted = DateTimeUtil.formatDateTime(createdAt, DateTimeUtil.VN_DATE_TIME_FORMAT);
+            const createdRemoveUtc = DateTimeUtil.convertDateFromUtcDate(createdAt);
+            const createdAtFormatted = DateTimeUtil.formatDateTime(createdRemoveUtc, DateTimeUtil.VN_DATE_TIME_FORMAT);
             return <div className="h-full flex items-center justify-center">{createdAtFormatted}</div>;
         },
     },

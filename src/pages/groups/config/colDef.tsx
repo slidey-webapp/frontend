@@ -76,7 +76,8 @@ export const groupGridColDef: BaseGridColDef[] = [
         cellRenderer: (params: any) => {
             const data = _.get(params, 'data') as GroupDto;
             const { createdAt } = data;
-            const createdAtFormatted = DateTimeUtil.formatDateTime(createdAt, DateTimeUtil.VN_DATE_TIME_FORMAT);
+            const createdRemoveUtc = DateTimeUtil.convertDateFromUtcDate(createdAt);
+            const createdAtFormatted = DateTimeUtil.formatDateTime(createdRemoveUtc, DateTimeUtil.VN_DATE_TIME_FORMAT);
             return <div className="h-full flex items-center justify-center">{createdAtFormatted}</div>;
         },
     },
@@ -96,7 +97,8 @@ export const groupGridColDef: BaseGridColDef[] = [
             const { updatedAt } = data;
             if (!updatedAt) return <></>;
 
-            const updatedAtFormatted = DateTimeUtil.formatDateTime(updatedAt, DateTimeUtil.VN_DATE_TIME_FORMAT);
+            const updatedRemoveUtc = DateTimeUtil.convertDateFromUtcDate(updatedAt);
+            const updatedAtFormatted = DateTimeUtil.formatDateTime(updatedRemoveUtc, DateTimeUtil.VN_DATE_TIME_FORMAT);
             return <div className="h-full flex items-center justify-center">{updatedAtFormatted}</div>;
         },
     },
