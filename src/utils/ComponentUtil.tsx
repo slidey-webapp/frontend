@@ -1,5 +1,6 @@
-import { Avatar } from '@mui/material';
+import { Avatar, Tooltip, TooltipProps } from '@mui/material';
 import _ from 'lodash';
+import React from 'react';
 
 export default class ComponentUtil {
     static renderAvatarUser = (config: {
@@ -10,18 +11,24 @@ export default class ComponentUtil {
         size?: number;
         className?: string;
         style?: React.CSSProperties;
+        tooltip?: boolean;
     }) => {
-        const { key, avatarUrl, fullName, size, variant, className, style } = config;
+        const { key, avatarUrl, fullName, size, variant, className, style, tooltip = false } = config;
+
         if (avatarUrl) {
-            <Avatar
-                key={key}
-                sx={{
-                    width: size,
-                    height: size,
-                }}
-                variant={variant}
-                src={avatarUrl}
-            />;
+            return this.tooltipComponent(
+                <Avatar
+                    key={key}
+                    sx={{
+                        width: size,
+                        height: size,
+                    }}
+                    variant={variant}
+                    src={avatarUrl}
+                />,
+                tooltip,
+                fullName,
+            );
         }
 
         const index = generateRandom(fullName);
@@ -30,7 +37,7 @@ export default class ComponentUtil {
         const matches = _.words(fullName);
         const firstWord = matches[0].substring(0, 1).toUpperCase();
         if (_.size(matches) === 1) {
-            return (
+            return this.tooltipComponent(
                 <Avatar
                     key={key}
                     variant={variant}
@@ -42,11 +49,13 @@ export default class ComponentUtil {
                     className={className}
                 >
                     {firstWord}
-                </Avatar>
+                </Avatar>,
+                tooltip,
+                fullName,
             );
         }
         const lastWord = _.last(matches)?.substring(0, 1).toUpperCase();
-        return (
+        return this.tooltipComponent(
             <Avatar
                 key={key}
                 style={{ background: background, ...style }}
@@ -58,7 +67,19 @@ export default class ComponentUtil {
                 className={className}
             >
                 {firstWord + lastWord}
-            </Avatar>
+            </Avatar>,
+            tooltip,
+            fullName,
+        );
+    };
+
+    static tooltipComponent = (children: TooltipProps['children'], tooltip?: boolean, title?: string) => {
+        if (!tooltip) return children;
+
+        return (
+            <Tooltip title={title} placement="top">
+                {children}
+            </Tooltip>
         );
     };
 }

@@ -183,7 +183,12 @@ const BaseGrid = React.forwardRef<BaseGridRef, BaseGridProps>((props, ref) => {
                             event?.api?.sizeColumnsToFit?.();
                         }}
                         onColumnResized={event => {
-                            if (!event.finished || event.source === 'uiColumnDragged') return;
+                            if (
+                                !event.finished ||
+                                event.source === 'uiColumnDragged' ||
+                                event.source == 'sizeColumnsToFit'
+                            )
+                                return;
 
                             event?.api?.sizeColumnsToFit?.();
                         }}
