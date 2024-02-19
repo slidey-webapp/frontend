@@ -27,7 +27,7 @@ export interface IPresentationContext {
     refetchPresentation: () => Promise<void>;
     refetchCollaborations: () => Promise<void>;
     onUpdatePresentation: (params: { name?: string; slides?: SlideDto[] }) => Promise<void>;
-    onShowPresentation: () => void;
+    onShowPresentation: (groupID?: Id) => void;
 }
 
 export const PresentationContext = createContext<IPresentationContext>({} as IPresentationContext);
@@ -97,14 +97,14 @@ const PresentationDetailPage: React.FC<Props> = () => {
         if (response.status === 200) await refetchPresentation();
     };
 
-    const handleShowPresentation = async () => {
+    const handleShowPresentation = async (groupID?: Id) => {
         overlayRef.current?.open();
         const response = await requestApi<{
             session: SessionDto;
             presentation: PresentationDto;
         }>('post', SESSION_INITIAL_API, {
             presentationID,
-            // todo: groupID
+            groupID,
         });
         overlayRef.current?.close();
 
