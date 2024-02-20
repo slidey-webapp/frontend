@@ -28,6 +28,7 @@ export const presentationGridColDef: BaseGridColDef[] = [
         field: nameof.full<PresentationDto>(x => x.collaborators),
         width: 150,
         minWidth: 150,
+        maxWidth: 150,
         resizable: false,
         cellRenderer: (params: any) => {
             const data = _.get(params, 'data') as PresentationDto;
@@ -71,7 +72,8 @@ export const presentationGridColDef: BaseGridColDef[] = [
         cellRenderer: (params: any) => {
             const data = _.get(params, 'data') as PresentationDto;
             const { createdAt } = data;
-            const createdAtFormatted = DateTimeUtil.formatDateTime(createdAt, DateTimeUtil.VN_DATE_TIME_FORMAT);
+            const createdRemoveUtc = DateTimeUtil.convertDateFromUtcDate(createdAt);
+            const createdAtFormatted = DateTimeUtil.formatDateTime(createdRemoveUtc, DateTimeUtil.VN_DATE_TIME_FORMAT);
             return <div className="h-full flex items-center justify-center">{createdAtFormatted}</div>;
         },
     },
@@ -91,8 +93,9 @@ export const presentationGridColDef: BaseGridColDef[] = [
             const { updatedAt } = data;
             if (!updatedAt) return <></>;
 
-            const updatedAtFormatted = DateTimeUtil.formatDateTime(updatedAt, DateTimeUtil.VN_DATE_TIME_FORMAT);
-            return <div className="h-full flex items-center justify-center">{updatedAtFormatted}</div>;
+            const updatedRemoveUtc = DateTimeUtil.convertDateFromUtcDate(updatedAt);
+            const updatedAtFormatted = DateTimeUtil.formatDateTime(updatedRemoveUtc, DateTimeUtil.VN_DATE_TIME_FORMAT);
+             return <div className="h-full flex items-center justify-center">{updatedAtFormatted}</div>;
         },
     },
 ];

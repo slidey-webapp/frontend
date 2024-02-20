@@ -53,6 +53,7 @@ module.exports = {
             },
             zIndex: {
                 999: '999',
+                9999: '9999',
             },
             colors: {
                 neutral: {
