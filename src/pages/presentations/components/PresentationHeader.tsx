@@ -7,12 +7,14 @@ import ButtonIconBase from '~/components/buttons/ButtonIconBase';
 import Dropdown from '~/components/dropdowns/Dropdown';
 import BaseForm, { BaseFormRef } from '~/components/forms/BaseForm';
 import BaseIcon, { BaseIconProps } from '~/components/icons/BaseIcon';
+import ModalBase, { ModalBaseRef } from '~/components/modals/ModalBase';
 import { requestApi } from '~/libs/axios';
 import ComponentUtil from '~/utils/ComponentUtil';
 import NotifyUtil from '~/utils/NotifyUtil';
 import { usePresentationContext } from '../PresentationDetailPage';
 import { COLLABORATION_DELETE_API, COLLABORATION_INVITATION_API } from '../api/presentation.api';
 import { CollaborationDto } from '../types/collaboration';
+import PresentGroupShareForm from './PresentGroupShareForm';
 
 interface Props {}
 
@@ -28,6 +30,7 @@ const PresentationHeader: React.FC<Props> = () => {
     const navigate = useNavigate();
 
     const formRef = useRef<BaseFormRef>(null);
+    const modalRef = useRef<ModalBaseRef>(null);
 
     const handleSendInvitation = async () => {
         const isValid = await formRef.current?.isValid();
@@ -261,8 +264,14 @@ const PresentationHeader: React.FC<Props> = () => {
                                             title: 'Trong nhóm',
                                             icon: 'lock' as BaseIconProps['type'],
                                             onClick: () => {
-                                                // todo...
-                                                console.log(';handle share nhom...');
+                                                modalRef.current?.onOpen(
+                                                    <PresentGroupShareForm
+                                                        onClose={() => modalRef.current?.onClose()}
+                                                        onSubmit={onShowPresentation}
+                                                    />,
+                                                    'Trình chiếu trong nhóm',
+                                                    '50%',
+                                                );
                                             },
                                         },
                                     ].map((item, index) => {
@@ -296,6 +305,7 @@ const PresentationHeader: React.FC<Props> = () => {
                     </div>
                 </div>
             </div>
+            <ModalBase ref={modalRef} />
         </div>
     );
 };

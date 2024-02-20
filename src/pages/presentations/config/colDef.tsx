@@ -28,6 +28,7 @@ export const presentationGridColDef: BaseGridColDef[] = [
         field: nameof.full<PresentationDto>(x => x.collaborators),
         width: 150,
         minWidth: 150,
+        maxWidth: 150,
         resizable: false,
         cellRenderer: (params: any) => {
             const data = _.get(params, 'data') as PresentationDto;

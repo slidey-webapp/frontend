@@ -5,6 +5,7 @@ export const GROUP_CREATE_API = APP_API_PATH + '/group/create';
 export const GROUP_UPDATE_API = APP_API_PATH + '/group/update';
 export const GROUP_DELETE_API = APP_API_PATH + '/group/delete';
 export const GROUP_DETAIL_API = APP_API_PATH + '/group/detail';
+export const GROUP_COMBO_API =  APP_API_PATH + '/group/combo';
 
 export const GROUP_SEND_INVITATION_API = APP_API_PATH + '/group/send-invitation';
 export const GROUP_MEMBER_JOIN_API = APP_API_PATH + '/group/join';
