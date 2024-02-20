@@ -5,6 +5,7 @@ export interface GroupDto extends FullAuditedDto {
     name: string;
     code: string;
     description?: string;
+    members: GroupMemberDto[]
 }
 
 export type GroupMemberRole = 'OWNER' | 'COOWNER' | 'MEMBER';

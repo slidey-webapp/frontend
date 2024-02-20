@@ -10,12 +10,15 @@ import { GROUP_DELETE_API, GROUP_INDEX_API } from './api/group.api';
 import GroupForm from './components/GroupForm';
 import { groupGridColDef } from './config/colDef';
 import { GroupDto } from './types/group';
+import { useNavigate } from 'react-router';
 
 export interface Props {}
 
 const GroupPage: React.FC<Props> = () => {
     const gridRef = useRef<BaseGridRef>(null);
     const modalRef = useRef<ModalBaseRef>(null);
+
+    const navigate = useNavigate();
 
     const gridController = useBaseGrid<GroupDto>({
         url: GROUP_INDEX_API,
@@ -59,7 +62,7 @@ const GroupPage: React.FC<Props> = () => {
     };
 
     const handleDetail = async (data: GroupDto) => {
-        window.open('/dashboard/group/' + data.groupID, '_blank');
+        navigate('/dashboard/group/' + data.groupID)
     };
 
     return (

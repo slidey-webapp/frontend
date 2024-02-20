@@ -1,28 +1,20 @@
-import {
-    Avatar,
-    AvatarGroup,
-    Box,
-    Divider,
-    FormControl,
-    MenuItem,
-    Popover,
-    Select,
-    SelectChangeEvent,
-    Typography,
-} from '@mui/material';
+import { AvatarGroup, Box, Divider, FormControl, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material';
 import _ from 'lodash';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { BreadcrumbRef } from '~/components/bread-crumb/BreadCrumb';
 import { ButtonBase } from '~/components/buttons/ButtonBase';
 import ButtonIconBase from '~/components/buttons/ButtonIconBase';
+import Dropdown from '~/components/dropdowns/Dropdown';
 import BaseForm, { BaseFormRef } from '~/components/forms/BaseForm';
 import { AppContainer } from '~/components/layouts/AppContainer';
 import Loading from '~/components/loadings/Loading';
 import { ComboOptionConstant } from '~/configs/constants';
 import { requestApi } from '~/libs/axios';
 import { Id } from '~/types/shared';
+import ComponentUtil from '~/utils/ComponentUtil';
 import NotifyUtil from '~/utils/NotifyUtil';
+import SessionGrid from '../sessions/components/SessionGrid';
 import { GROUP_REMOVE_MEMBER_API, GROUP_SEND_INVITATION_API, GROUP_UPDATE_MEMBER_ROLE_API } from './api/group.api';
 import { useGroupDetail } from './api/useGroupDetail';
 import { useGroupMembers } from './api/useGroupMembers';
@@ -37,9 +29,6 @@ const GroupDetailPage: React.FC<Props> = () => {
     const { groupID } = useParams<{
         groupID: string;
     }>();
-
-    const [anchorElPopover, setAnchorElPopover] = React.useState<null | HTMLElement>(null);
-    const openPopover = Boolean(anchorElPopover);
 
     const [members, setMembers] = useState<GroupMemberDto[]>([]);
 
@@ -65,13 +54,6 @@ const GroupDetailPage: React.FC<Props> = () => {
 
         breadcrumbRef.current?.setBreadcrumbs(defaultBreadcrumbs);
     }, [isFetching]);
-
-    const handleAvatarGroupClicked = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-        setAnchorElPopover(event.currentTarget);
-    };
-    const handleClosePopover = () => {
-        setAnchorElPopover(null);
-    };
 
     const handleRoleChange = async (
         event: SelectChangeEvent<GroupMemberRole>,
@@ -141,50 +123,13 @@ const GroupDetailPage: React.FC<Props> = () => {
         }
     };
 
-    if (isFetching) return <Loading />;
-    return (
-        <AppContainer breadcrumbRef={breadcrumbRef}>
-            <div className="w-full h-full flex flex-col">
-                <div className="w-full flex h-10 items-center justify-between">
-                    <div className="flex-1">
-                        <div>Thông tin owner here...</div>
-                    </div>
-                    <div className="flex-1 flex justify-end">
-                        <AvatarGroup
-                            max={3}
-                            onClick={handleAvatarGroupClicked}
-                            style={{ cursor: 'pointer' }}
-                            sx={{
-                                '& .MuiAvatar-root': { width: 36, height: 36 },
-                            }}
-                        >
-                            {members.map(member => {
-                                return (
-                                    <Avatar
-                                        key={member.groupMemberID}
-                                        sx={{
-                                            width: 36,
-                                            height: 36,
-                                        }}
-                                    >
-                                        {member.fullname.trim()?.[0]}
-                                    </Avatar>
-                                );
-                            })}
-                        </AvatarGroup>
-                        <Popover
-                            anchorEl={anchorElPopover}
-                            anchorOrigin={{
-                                horizontal: 'left',
-                                vertical: 'bottom',
-                            }}
-                            onClose={handleClosePopover}
-                            open={openPopover}
-                            PaperProps={{ sx: { width: 480 } }}
-                            sx={{
-                                zIndex: 1000,
-                            }}
-                        >
+    const renderToolbar = () => {
+        return {
+            leftToolbar: <div>Thông tin owner here...</div>,
+            rightToolbar: (
+                <Dropdown
+                    overlayContent={
+                        <>
                             <Box
                                 sx={{
                                     py: 1.5,
@@ -231,14 +176,11 @@ const GroupDetailPage: React.FC<Props> = () => {
                                             >
                                                 <div className="flex items-center">
                                                     <div className="mr-3">
-                                                        <Avatar
-                                                            sx={{
-                                                                width: 36,
-                                                                height: 36,
-                                                            }}
-                                                        >
-                                                            {member.fullname.trim()?.[0]}
-                                                        </Avatar>
+                                                        {ComponentUtil.renderAvatarUser({
+                                                            fullName: member.fullname,
+                                                            size: 36,
+                                                            tooltip: true,
+                                                        })}
                                                     </div>
                                                     <div className="flex-1 flex flex-col h-full justify-between">
                                                         <div className="">{member.fullname}</div>
@@ -295,11 +237,34 @@ const GroupDetailPage: React.FC<Props> = () => {
                                     className="w-full h-10 flex items-center !m-0"
                                 />
                             </Box>
-                        </Popover>
-                    </div>
-                </div>
-                <div className="w-full flex-1">body</div>
-            </div>
+                        </>
+                    }
+                >
+                    <AvatarGroup
+                        max={3}
+                        style={{ cursor: 'pointer' }}
+                        sx={{
+                            '& .MuiAvatar-root': { width: 36, height: 36 },
+                        }}
+                    >
+                        {members.map(member => {
+                            return ComponentUtil.renderAvatarUser({
+                                key: member.groupMemberID,
+                                fullName: member.fullname,
+                                size: 36,
+                                tooltip: true,
+                            });
+                        })}
+                    </AvatarGroup>
+                </Dropdown>
+            ),
+        };
+    };
+
+    if (isFetching) return <Loading />;
+    return (
+        <AppContainer breadcrumbRef={breadcrumbRef}>
+            <SessionGrid toolbar={renderToolbar()} groupID={groupID} />
         </AppContainer>
     );
 };

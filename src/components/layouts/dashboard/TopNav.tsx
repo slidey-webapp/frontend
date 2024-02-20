@@ -1,9 +1,11 @@
-import { Avatar, Badge, Box, IconButton, Stack, SvgIcon, Tooltip, useMediaQuery } from '@mui/material';
+import { Badge, Box, IconButton, Stack, SvgIcon, Tooltip, useMediaQuery } from '@mui/material';
 import { alpha, useTheme } from '@mui/material/styles';
-import AccountPopover from './AccountPopover';
-import { usePopover } from '~/hooks/usePopover';
-import { DashboardLayoutConstant } from '~/configs/constants';
+import { RootState, useAppSelector } from '~/AppStore';
 import BaseIcon from '~/components/icons/BaseIcon';
+import { DashboardLayoutConstant } from '~/configs/constants';
+import { usePopover } from '~/hooks/usePopover';
+import ComponentUtil from '~/utils/ComponentUtil';
+import AccountPopover from './AccountPopover';
 
 interface Props {
     onNavOpen: () => void;
@@ -13,6 +15,7 @@ const TopNav: React.FC<Props> = ({ onNavOpen }) => {
     const theme = useTheme();
     const lgUp = useMediaQuery(theme.breakpoints.up('lg'));
     const accountPopover = usePopover();
+    const { authUser } = useAppSelector((state: RootState) => state.auth);
 
     return (
         <>
@@ -71,17 +74,18 @@ const TopNav: React.FC<Props> = ({ onNavOpen }) => {
                                 </Badge>
                             </IconButton>
                         </Tooltip>
-                        <Avatar
-                            onClick={accountPopover.handleOpen}
-                            ref={accountPopover.anchorRef}
-                            sx={{
-                                cursor: 'pointer',
-                                height: 40,
-                                width: 40,
-                            }}
-                            //todo: avatar src
-                            src={undefined}
-                        />
+                        {authUser?.user && (
+                            <div
+                                className="cursor-pointer w-fit h-fit rounded-full"
+                                onClick={accountPopover.handleOpen}
+                                ref={accountPopover.anchorRef}
+                            >
+                                {ComponentUtil.renderAvatarUser({
+                                    fullName: authUser?.user?.fullname,
+                                    size: 40,
+                                })}
+                            </div>
+                        )}
                     </Stack>
                 </Stack>
             </Box>

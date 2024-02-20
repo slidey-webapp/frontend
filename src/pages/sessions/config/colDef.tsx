@@ -12,7 +12,10 @@ export const sessionGridColDef: BaseGridColDef[] = [
             display: 'flex',
             justifyContent: 'center',
         },
-        width: 150,
+        width: 100,
+        minWidth: 100,
+        maxWidth: 100,
+        resizable: false,
     },
     {
         headerName: 'Tên',
@@ -27,10 +30,14 @@ export const sessionGridColDef: BaseGridColDef[] = [
             justifyContent: 'center',
         },
         width: 150,
+        minWidth: 150,
+        maxWidth: 150,
+        resizable: false,
         cellRenderer: (params: any) => {
             const data = _.get(params, 'data') as SessionDto;
             const { createdAt } = data;
-            const createdAtFormatted = DateTimeUtil.formatDateTime(createdAt, DateTimeUtil.VN_DATE_TIME_FORMAT);
+            const createdRemoveUtc = DateTimeUtil.convertDateFromUtcDate(createdAt);
+            const createdAtFormatted = DateTimeUtil.formatDateTime(createdRemoveUtc, DateTimeUtil.VN_DATE_TIME_FORMAT);
             return <div className="h-full flex items-center justify-center">{createdAtFormatted}</div>;
         },
     },
@@ -42,6 +49,9 @@ export const sessionGridColDef: BaseGridColDef[] = [
             justifyContent: 'center',
         },
         width: 150,
+        minWidth: 150,
+        maxWidth: 150,
+        resizable: false,
         cellRenderer: (params: any) => {
             const data = _.get(params, 'data') as SessionDto;
             const { totalParticipant } = data;
@@ -57,17 +67,50 @@ export const sessionGridColDef: BaseGridColDef[] = [
             justifyContent: 'center',
         },
         width: 150,
+        minWidth: 150,
+        maxWidth: 150,
+        resizable: false,
         cellRenderer: (params: any) => {
             const data = _.get(params, 'data') as SessionDto;
             const { status } = data;
             if (!status) return <></>;
             switch (status) {
                 case 'STARTING':
-                    return <>Đang bắt đầu</>;
+                    return (
+                        <div
+                            className="rounded-full px-3 h-7 flex items-center w-fit"
+                            style={{
+                                background: '#10b9811f',
+                                color: '#0b815a',
+                            }}
+                        >
+                            Đang bắt đầu
+                        </div>
+                    );
                 case 'STARTED':
-                    return <>Đang diễn ra</>;
+                    return (
+                        <div
+                            className="rounded-full px-3 h-7 flex items-center w-fit"
+                            style={{
+                                background: '#f790091f',
+                                color: '#b54708',
+                            }}
+                        >
+                            Đang diễn ra
+                        </div>
+                    );
                 case 'ENDED':
-                    return <>Đã kết thúc</>;
+                    return (
+                        <div
+                            className="rounded-full px-3 h-7 flex items-center w-fit"
+                            style={{
+                                background: '#f044381f',
+                                color: '#b42318',
+                            }}
+                        >
+                            Đã kết thúc
+                        </div>
+                    );
                 default:
                     return <></>;
             }

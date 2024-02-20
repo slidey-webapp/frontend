@@ -1,4 +1,6 @@
 import React, { useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import ButtonIconBase from '~/components/buttons/ButtonIconBase';
 import BaseGrid, { BaseGridRef } from '~/components/grid/BaseGrid';
 import GridToolbar from '~/components/grid/components/GridToolbar';
 import { AppContainer } from '~/components/layouts/AppContainer';
@@ -6,10 +8,10 @@ import ModalBase, { ModalBaseRef } from '~/components/modals/ModalBase';
 import { useBaseGrid } from '~/hooks/useBaseGrid';
 import { baseDeleteWithoutIdApi, requestApi } from '~/libs/axios';
 import NotifyUtil from '~/utils/NotifyUtil';
+import SessionGrid from '../sessions/components/SessionGrid';
 import { PRESENTATION_CREATE_API, PRESENTATION_DELETE_API, PRESENTATION_INDEX_API } from './api/presentation.api';
 import { presentationGridColDef } from './config/colDef';
 import { PresentationDto } from './types/presentation';
-import { useNavigate } from 'react-router-dom';
 
 interface Props {}
 
@@ -46,6 +48,21 @@ const PresentationPage: React.FC<Props> = () => {
         handleDetail(response.data.result?.presentation || ({} as PresentationDto));
     };
 
+    const handleOpenSessionList = (data: PresentationDto) => {
+        modalRef.current?.onOpen(
+            <div
+                className="w-full"
+                style={{
+                    height: '60vh',
+                }}
+            >
+                <SessionGrid presentationID={data.presentationID} hideToolbar />
+            </div>,
+            `Các session của ${data.name}`,
+            '80%',
+        );
+    };
+
     const handleDelete = async (data: PresentationDto) => {
         await baseDeleteWithoutIdApi(PRESENTATION_DELETE_API, { presentationID: data.presentationID }, 'post');
         gridController?.reloadData();
@@ -64,11 +81,21 @@ const PresentationPage: React.FC<Props> = () => {
                     hasDeleteBtn: true,
                     onClickDetailBtn: handleDetail,
                     onClickDeleteBtn: handleDelete,
+                    renderLeftActions: data => {
+                        return (
+                            <ButtonIconBase
+                                icon={'slide-outlined'}
+                                onClick={() => handleOpenSessionList(data)}
+                                tooltip="Các phiên trình chiếu"
+                                color="success"
+                            />
+                        );
+                    },
                 }}
                 defaultColDef={{
                     autoHeight: true,
                 }}
-                actionRowsWidth={100}
+                actionRowsWidth={140}
                 toolbar={{
                     rightToolbar: (
                         <GridToolbar

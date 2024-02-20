@@ -2,6 +2,7 @@ import _ from 'lodash';
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
+import { RootState, useAppSelector } from '~/AppStore';
 import { ButtonBase } from '~/components/buttons/ButtonBase';
 import BaseForm from '~/components/forms/BaseForm';
 import Overlay, { OverlayRef } from '~/components/loadings/Overlay';
@@ -49,6 +50,8 @@ const PresentationJoinSession: React.FC<Props> = () => {
     const { code } = useParams<{ code: string }>();
     const overlayRef = useRef<OverlayRef>(null);
     const { socket } = useSocketContext();
+
+    const { authUser } = useAppSelector((state: RootState) => state.auth);
 
     const [state, setState] = useState<State>({
         messages: [],
@@ -111,6 +114,7 @@ const PresentationJoinSession: React.FC<Props> = () => {
         socket.emit(SocketEvent.JOIN_SESSION, {
             sessionID: result?.presentation?.sessionID,
             participantID: result?.participant?.participantID,
+            token: authUser?.token,
         });
     };
 
