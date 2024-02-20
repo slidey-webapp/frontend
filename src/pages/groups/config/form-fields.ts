@@ -14,7 +14,7 @@ export const groupFields: FormField[] = [
         name: nameof.full<GroupCreateDto>(x => x.description),
         classNameCol: 'col-span-12',
         label: 'Mô tả',
-        type: 'richText',
+        type: 'textArea',
         required: true,
     },
 ];

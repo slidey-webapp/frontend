@@ -4,6 +4,6 @@ export interface CollaborationDto {
     collaborationID: Id;
     accountID: Id;
     presentationID: Id;
-    fullname:string;
+    fullname: string;
     email: string;
 }

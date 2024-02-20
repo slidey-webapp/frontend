@@ -3,6 +3,7 @@ import _ from 'lodash';
 import { BaseGridColDef } from '~/components/grid/BaseGrid';
 import ComponentUtil from '~/utils/ComponentUtil';
 import DateTimeUtil from '~/utils/DateTimeUtil';
+import { CollaborationDto } from '../types/collaboration';
 import { PresentationDto } from '../types/presentation';
 
 export const presentationGridColDef: BaseGridColDef[] = [
@@ -32,7 +33,15 @@ export const presentationGridColDef: BaseGridColDef[] = [
         resizable: false,
         cellRenderer: (params: any) => {
             const data = _.get(params, 'data') as PresentationDto;
-            const { collaborators } = data;
+            const { collaborators, creator } = data;
+            if (creator && collaborators) {
+                if (!collaborators.some(x => x.collaborationID === 'account' + creator?.accountID))
+                    collaborators.push({
+                        collaborationID: 'account' + creator?.accountID,
+                        fullname: creator.fullname,
+                    } as CollaborationDto);
+            }
+
             return (
                 <AvatarGroup
                     max={5}
@@ -95,7 +104,7 @@ export const presentationGridColDef: BaseGridColDef[] = [
 
             const updatedRemoveUtc = DateTimeUtil.convertDateFromUtcDate(updatedAt);
             const updatedAtFormatted = DateTimeUtil.formatDateTime(updatedRemoveUtc, DateTimeUtil.VN_DATE_TIME_FORMAT);
-             return <div className="h-full flex items-center justify-center">{updatedAtFormatted}</div>;
+            return <div className="h-full flex items-center justify-center">{updatedAtFormatted}</div>;
         },
     },
 ];

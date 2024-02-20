@@ -1,4 +1,5 @@
 import React from 'react';
+import { User } from './auth';
 
 export type Id = string | number;
 export interface WithId {
@@ -29,7 +30,8 @@ export interface FullAuditedTimeDto extends AuditedTimeDto {
 }
 
 export interface FullAuditedDto extends AuditedTimeDto {
-    createdBy: Id;
+    createdBy?: Id;
+    creator?: User;
     updatedBy?: Id;
 }
 
