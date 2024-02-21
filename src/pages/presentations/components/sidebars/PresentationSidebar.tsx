@@ -6,6 +6,7 @@ import { DragDropContext, Draggable, Droppable, OnDragEndResponder } from 'react
 import { ContextMenu, ContextMenuTrigger, MenuItem } from 'react-contextmenu';
 import BaseIcon from '~/components/icons/BaseIcon';
 import { requestApi } from '~/libs/axios';
+import { ChartType, HorizontalAlignment, TextSize, VerticalAlignment } from '~/types/shared';
 import NotifyUtil from '~/utils/NotifyUtil';
 import { usePresentationContext } from '../../PresentationDetailPage';
 import { PRESENTATION_CREATE_SLIDE_API } from '../../api/presentation.api';
@@ -109,6 +110,12 @@ const PresentationSidebar: React.FC<Props> = ({ isReadonly }) => {
         const response = await requestApi<SlideDto>('post', PRESENTATION_CREATE_SLIDE_API, {
             presentationID,
             type,
+            horizontalAlignment: HorizontalAlignment.Left,
+            verticalAlignment: VerticalAlignment.Top,
+            textSize: TextSize.Medium,
+            textColor: '#000000',
+            textBackground: '#ffffff',
+            chartType: ChartType.Bar,
         });
 
         if (response.status === 200) return response.data.result;

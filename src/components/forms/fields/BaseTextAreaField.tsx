@@ -22,6 +22,8 @@ const BaseTextAreaField: React.FC<Props> = ({ control, name, ...props }) => {
                         value={value}
                         fullWidth
                         error={invalid}
+                        multiline
+                        rows={4}
                         helperText={error?.message}
                         {...props}
                     />

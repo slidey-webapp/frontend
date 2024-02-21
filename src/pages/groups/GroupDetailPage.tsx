@@ -125,7 +125,6 @@ const GroupDetailPage: React.FC<Props> = () => {
 
     const renderToolbar = () => {
         return {
-            leftToolbar: <div>Thông tin owner here...</div>,
             rightToolbar: (
                 <Dropdown
                     overlayContent={

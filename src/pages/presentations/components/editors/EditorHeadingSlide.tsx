@@ -62,6 +62,8 @@ const EditorHeadingSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentati
                     defaultValue={slide.subHeading}
                     placeholder="Subheading"
                     size="small"
+                    multiline
+                    rows={3}
                     onChange={event => handleChange('subHeading', event.target.value)}
                 />
             </FormControl>

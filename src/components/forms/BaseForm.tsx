@@ -28,7 +28,7 @@ export interface Props {
     renderAdditionBeforeButton?: () => JSX.Element;
 }
 
-type FormFieldType = 'text' | 'richText' | 'number' | 'positive' | 'email' | 'password' | 'select' | 'date' | 'image';
+type FormFieldType = 'text' | 'textArea' | 'number' | 'positive' | 'email' | 'password' | 'select' | 'date' | 'image';
 
 export interface FormField {
     name: string;
@@ -39,6 +39,7 @@ export interface FormField {
     disabled?: boolean;
     options?: ComboOption[];
     defaultValue?: any;
+    rows?: number;
     onChange?: (event: any) => void;
 }
 
@@ -51,7 +52,7 @@ const convertObjectShape = (fields: FormField[]): ObjectShape => {
         // type
         switch (field.type) {
             case 'text':
-            case 'richText':
+            case 'textArea':
                 schemaItem = string();
                 break;
             case 'password':
@@ -114,7 +115,7 @@ const BaseForm = React.forwardRef<BaseFormRef, Props>(
                     return <BaseTextField {...field} control={control} />;
                 case 'text':
                     return <BaseTextField {...field} control={control} />;
-                case 'richText':
+                case 'textArea':
                     return <BaseTextAreaField {...field} control={control} />;
                 case 'number':
                     return <BaseTextField {...field} control={control} />;

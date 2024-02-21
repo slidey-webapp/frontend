@@ -3,7 +3,7 @@ import PresentationMain from '~/pages/presentations/components/PresentationMain'
 import { PresentationContext } from '~/pages/presentations/PresentationDetailPage';
 import { Id } from '~/types/shared';
 import { PresentationDto } from '../types/presentation';
-import { SlideDto } from '../types/slide';
+import { SlideDto } from '~/pages/presentations/types/slide';
 interface PresentationViewerProps {
     presentation: PresentationDto & { slides?: SlideDto[] };
 }

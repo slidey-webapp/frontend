@@ -63,7 +63,7 @@ const EditorParagraphSlide: React.FC<Props> = ({ slide, slides, onUpdatePresenta
                     placeholder="Paragraph"
                     size="small"
                     multiline
-                    rows={5}
+                    rows={7}
                     onChange={event => handleChange('paragraph', event.target.value)}
                 />
             </FormControl>
