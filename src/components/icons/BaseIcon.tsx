@@ -50,9 +50,22 @@ const IconsMap = {
     'dashboard-outlined': loadable(() => import('@mui/icons-material/DashboardOutlined')),
     public: loadable(() => import('@mui/icons-material/Public')),
     lock: loadable(() => import('@mui/icons-material/Lock')),
+    'horizontal-align-left': loadable(() => import('@mui/icons-material/FormatAlignLeft')),
+    'horizontal-align-right': loadable(() => import('@mui/icons-material/FormatAlignRight')),
+    'horizontal-align-center': loadable(() => import('@mui/icons-material/FormatAlignCenter')),
+    'vertical-align-bottom': loadable(() => import('@mui/icons-material/VerticalAlignBottom')),
+    'vertical-align-center': loadable(() => import('@mui/icons-material/VerticalAlignCenter')),
+    'vertical-align-top': loadable(() => import('@mui/icons-material/VerticalAlignTop')),
+    'text-increase': loadable(() => import('@mui/icons-material/TextIncrease')),
+    'text-decrease': loadable(() => import('@mui/icons-material/TextDecrease')),
+    'bar-chart': loadable(() => import('@mui/icons-material/BarChart')),
+    'pie-chart': loadable(() => import('@mui/icons-material/PieChart')),
+    'donut-chart': loadable(() => import('@mui/icons-material/DonutLarge')),
+    'line-chart': loadable(() => import('@mui/icons-material/ShowChart')),
+
 };
 
-type Size = 8 | 10 | 12 | 14 | 16 | 18 | 20 | 22 | 24;
+type Size = 8 | 10 | 12 | 14 | 16 | 18 | 20 | 22 | 24 |26 | 28;
 
 export interface BaseIconProps {
     type: keyof typeof IconsMap;
