@@ -1,15 +1,22 @@
 import clsx from 'clsx';
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import BaseIcon from '~/components/icons/BaseIcon';
+import HistoryUtil from '~/utils/HistoryUtil';
 import { usePresentationContext } from '../../PresentationDetailPage';
 import EditorContent from './EditorContent';
 import EditorDesign from './EditorDesign';
 
 interface Props {}
 
+type EditorType = 'content' | 'design';
+
 const PresentationBodyEditor: React.FC<Props> = () => {
     const { currentSlideId } = usePresentationContext();
-    const [editorType, setEditorType] = useState<'content' | 'design'>('design');
+    const navigate = useNavigate();
+    const [editorType, setEditorType] = useState<EditorType>(
+        (HistoryUtil.getSearchParam('editorType') as EditorType) || 'content',
+    );
 
     const renderEditorType = () => {
         return editorType === 'content' ? <EditorContent /> : <EditorDesign />;
@@ -28,10 +35,16 @@ const PresentationBodyEditor: React.FC<Props> = () => {
                             'cursor-pointer hover:bg-neutral-100 border border-transparent',
                             'transition-all duration-200 ease-in-out hover:bg-indigo-lightest',
                             {
-                                'border-neutral-200 hover:border-indigo-main bg-indigo-lightest': editorType === 'content',
+                                'border-neutral-200 hover:border-indigo-main bg-indigo-lightest':
+                                    editorType === 'content',
                             },
                         )}
-                        onClick={() => setEditorType('content')}
+                        onClick={() => {
+                            HistoryUtil.pushSearchParams(navigate, {
+                                editorType: 'content',
+                            });
+                            setEditorType('content');
+                        }}
                     >
                         <BaseIcon type="drive-file-rename-outlined" />
                         <div className="mt-2 text-sm font-bold">Nội dung</div>
@@ -42,10 +55,16 @@ const PresentationBodyEditor: React.FC<Props> = () => {
                             'cursor-pointer hover:bg-neutral-100 border border-transparent ',
                             'transition-all duration-200 ease-in-out hover:bg-indigo-lightest',
                             {
-                                'border-neutral-200  hover:border-indigo-main bg-indigo-lightest': editorType === 'design',
+                                'border-neutral-200  hover:border-indigo-main bg-indigo-lightest':
+                                    editorType === 'design',
                             },
                         )}
-                        onClick={() => setEditorType('design')}
+                        onClick={() => {
+                            HistoryUtil.pushSearchParams(navigate, {
+                                editorType: 'design',
+                            });
+                            setEditorType('design');
+                        }}
                     >
                         <BaseIcon type="color-lens-outlined" />
                         <div className="mt-2 text-sm font-bold">Thiết kế</div>

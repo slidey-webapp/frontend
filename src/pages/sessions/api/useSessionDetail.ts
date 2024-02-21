@@ -7,8 +7,8 @@ import { Id } from '~/types/shared';
 
 import { PresentationDto } from '../types/presentation';
 import { SessionDto } from '../types/session';
-import { SlideDto } from '../types/slide';
 import { SESSION_DETAIL_API } from './session.api';
+import { SlideDto } from '~/pages/presentations/types/slide';
 
 export const getSessionDetail = async (
     id?: Id,

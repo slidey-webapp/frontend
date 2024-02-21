@@ -6,6 +6,7 @@ import headingSrc from '~/images/slide/heading.svg';
 import multipleChoiceSrc from '~/images/slide/multiple-choice.svg';
 import paragraphSrc from '~/images/slide/paragraph.svg';
 import { requestApi } from '~/libs/axios';
+import { ChartType, HorizontalAlignment, TextSize, VerticalAlignment } from '~/types/shared';
 import { usePresentationContext } from '../../PresentationDetailPage';
 import { PRESENTATION_CREATE_SLIDE_API } from '../../api/presentation.api';
 import { SlideDto, SlideType } from '../../types/slide';
@@ -100,6 +101,12 @@ const NewSlidePattern: React.FC<Props> = () => {
         const response = await requestApi<SlideDto>('post', PRESENTATION_CREATE_SLIDE_API, {
             presentationID,
             type,
+            horizontalAlignment: HorizontalAlignment.Left,
+            verticalAlignment: VerticalAlignment.Top,
+            textSize: TextSize.Medium,
+            textColor: '#000000',
+            textBackground: '#ffffff',
+            chartType: ChartType.Bar,
         });
         if (response.status === 200) {
             const slideId = response.data?.result?.slideID;

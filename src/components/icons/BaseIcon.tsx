@@ -58,9 +58,14 @@ const IconsMap = {
     'vertical-align-top': loadable(() => import('@mui/icons-material/VerticalAlignTop')),
     'text-increase': loadable(() => import('@mui/icons-material/TextIncrease')),
     'text-decrease': loadable(() => import('@mui/icons-material/TextDecrease')),
+    'bar-chart': loadable(() => import('@mui/icons-material/BarChart')),
+    'pie-chart': loadable(() => import('@mui/icons-material/PieChart')),
+    'donut-chart': loadable(() => import('@mui/icons-material/DonutLarge')),
+    'line-chart': loadable(() => import('@mui/icons-material/ShowChart')),
+
 };
 
-type Size = 8 | 10 | 12 | 14 | 16 | 18 | 20 | 22 | 24;
+type Size = 8 | 10 | 12 | 14 | 16 | 18 | 20 | 22 | 24 |26 | 28;
 
 export interface BaseIconProps {
     type: keyof typeof IconsMap;

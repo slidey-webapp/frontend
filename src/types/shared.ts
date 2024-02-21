@@ -40,3 +40,32 @@ export interface BaseFormModalProps {
     onClose: () => void;
     modalType: 'create' | 'update' | 'detail';
 }
+
+export enum HorizontalAlignment {
+    Left = 'Left',
+    Center = 'Center',
+    Right = 'Right',
+}
+
+export enum VerticalAlignment {
+    Top = 'Top',
+    Middle = 'Middle',
+    Bottom = 'Bottom',
+}
+
+export enum TextSize {
+    ExtraSmall = 'ExtraSmall',
+    Small = 'Small',
+    Medium = 'Medium',
+    Large = 'Large',
+    ExtraLarge = 'ExtraLarge',
+}
+
+export enum ChartType {
+    Bar = 'Bar',
+    Line = 'Line',
+    Pie = 'Pie',
+    Donut = 'Donut',
+}
+
+export const TextSizes = [TextSize.ExtraSmall, TextSize.Small, TextSize.Medium, TextSize.Large, TextSize.ExtraLarge];
