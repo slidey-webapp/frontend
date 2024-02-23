@@ -1,6 +1,7 @@
-import React from 'react';
-import { SlideDto } from '../../types/slide';
+import React, { CSSProperties, useMemo } from 'react';
 import { PreviewFontSizeConstant } from '~/configs/constants';
+import { HorizontalAlignment, TextSize, VerticalAlignment } from '~/types/shared';
+import { SlideDto } from '../../types/slide';
 
 interface Props {
     slide: SlideDto;
@@ -8,19 +9,99 @@ interface Props {
 
 const PreviewHeadingSlide: React.FC<Props> = ({ slide }) => {
     if (slide.type !== 'HEADING') return null;
+
+    const verticalAlignment = useMemo<CSSProperties | undefined>(() => {
+        if (slide.verticalAlignment === VerticalAlignment.Top)
+            return {
+                justifyContent: 'flex-start',
+            };
+
+        if (slide.verticalAlignment === VerticalAlignment.Middle)
+            return {
+                justifyContent: 'center',
+            };
+
+        if (slide.verticalAlignment === VerticalAlignment.Bottom)
+            return {
+                justifyContent: 'flex-end',
+            };
+
+        return undefined;
+    }, [slide.verticalAlignment]);
+
+    const horizontalAlignment = useMemo<CSSProperties | undefined>(() => {
+        if (slide.horizontalAlignment === HorizontalAlignment.Left)
+            return {
+                textAlign: 'left',
+            };
+
+        if (slide.horizontalAlignment === HorizontalAlignment.Center)
+            return {
+                textAlign: 'center',
+            };
+
+        if (slide.horizontalAlignment === HorizontalAlignment.Right)
+            return {
+                textAlign: 'right',
+            };
+
+        return undefined;
+    }, [slide.horizontalAlignment]);
+
+    const { headingSize, secondarySize } = useMemo<{
+        headingSize: string;
+        secondarySize: string;
+    }>(() => {
+        switch (slide.textSize) {
+            case TextSize.ExtraSmall:
+                return {
+                    headingSize: PreviewFontSizeConstant.HEADING_EXTRA_SMALL,
+                    secondarySize: PreviewFontSizeConstant.SECONDARY_EXTRA_SMALL,
+                };
+            case TextSize.Small:
+                return {
+                    headingSize: PreviewFontSizeConstant.HEADING_SMALL,
+                    secondarySize: PreviewFontSizeConstant.SECONDARY_SMALL,
+                };
+            case TextSize.Large:
+                return {
+                    headingSize: PreviewFontSizeConstant.HEADING_LARGE,
+                    secondarySize: PreviewFontSizeConstant.SECONDARY_LARGE,
+                };
+            case TextSize.ExtraLarge:
+                return {
+                    headingSize: PreviewFontSizeConstant.HEADING_EXTRA_LARGE,
+                    secondarySize: PreviewFontSizeConstant.SECONDARY_EXTRA_LARGE,
+                };
+            case TextSize.Medium:
+            default:
+                return {
+                    headingSize: PreviewFontSizeConstant.HEADING_MEDIUM,
+                    secondarySize: PreviewFontSizeConstant.SECONDARY_MEDIUM,
+                };
+        }
+    }, [slide.textSize]);
+
     return (
-        <div className="w-full h-full flex flex-col items-center justify-center">
+        <div
+            className="w-full h-full flex flex-col"
+            style={{
+                color: slide.textColor,
+                ...verticalAlignment,
+            }}
+        >
             <div
-                className="font-semibold mb-2 text-center"
+                className={'font-semibold mb-2'}
                 style={{
-                    fontSize: PreviewFontSizeConstant.HEADING,
+                    fontSize: headingSize,
+                    ...horizontalAlignment,
                 }}
             >
                 {slide.heading}
             </div>
             <div
                 style={{
-                    fontSize: PreviewFontSizeConstant.SUB_HEADING,
+                    fontSize: secondarySize,
                 }}
             >
                 {slide.subHeading}

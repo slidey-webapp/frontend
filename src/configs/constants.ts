@@ -64,9 +64,17 @@ export class ComboOptionConstant {
 }
 
 export class PreviewFontSizeConstant {
-    static HEADING = '2.25cqw';
-    static SUB_HEADING = '1cqw';
-    static PARAGRAPH = '1cqw';
+    static HEADING_EXTRA_SMALL = '1.8cqw';
+    static HEADING_SMALL = '2cqw';
+    static HEADING_MEDIUM = '2.2cqw';
+    static HEADING_LARGE = '2.4cqw';
+    static HEADING_EXTRA_LARGE = '2.6cqw';
+
+    static SECONDARY_EXTRA_SMALL = '0.75cqw';
+    static SECONDARY_SMALL = '1cqw';
+    static SECONDARY_MEDIUM = '1.25cqw';
+    static SECONDARY_LARGE = '1.5cqw';
+    static SECONDARY_EXTRA_LARGE = '2cqw';
 }
 
 export class ShowFontSizeConstant {
