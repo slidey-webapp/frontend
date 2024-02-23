@@ -78,9 +78,19 @@ export class PreviewFontSizeConstant {
 }
 
 export class ShowFontSizeConstant {
+    static HEADING_EXTRA_SMALL = '48px';
+    static HEADING_SMALL = '60px';
+    static HEADING_MEDIUM = '72px';
+    static HEADING_LARGE = '96px';
+    static HEADING_EXTRA_LARGE = '128px';
+
+    static SECONDARY_EXTRA_SMALL = '16px';
+    static SECONDARY_SMALL = '20px';
+    static SECONDARY_MEDIUM = '24px';
+    static SECONDARY_LARGE = '30px';
+    static SECONDARY_EXTRA_LARGE = '36px';
+
     static HEADING = '72px';
-    static SUB_HEADING = '24px';
-    static PARAGRAPH = '24px';
 }
 
 export class PreviewSizeConstant {

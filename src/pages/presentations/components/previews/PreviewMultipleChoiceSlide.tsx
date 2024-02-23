@@ -1,7 +1,7 @@
 import { EChartsOption } from 'echarts';
 import React, { CSSProperties, useMemo, useRef } from 'react';
 import { ReactECharts, ReactEChartsRef } from '~/components/charts/ReactECharts';
-import { PreviewFontSizeConstant } from '~/configs/constants';
+import { COLORS, PreviewFontSizeConstant } from '~/configs/constants';
 import { ChartType, HorizontalAlignment, TextSize, VerticalAlignment } from '~/types/shared';
 import { SlideDto } from '../../types/slide';
 
@@ -88,9 +88,11 @@ const PreviewMultipleChoiceSlide: React.FC<Props> = ({ slide }) => {
 
     const renderChart = () => {
         const dataXAxis = slide.options.map(x => x.option);
-        const dataSeries = slide.options.map(x => 0);
-        const dataPieSeries = slide.options.map(x => ({
+        const dataSeries = slide.options.map((x, index) => ({
             value: 0,
+            itemStyle: {
+                color: COLORS[index],
+            },
             name: x.option,
         }));
 
@@ -117,7 +119,7 @@ const PreviewMultipleChoiceSlide: React.FC<Props> = ({ slide }) => {
                         series: {
                             type: 'pie',
                             radius: '75%',
-                            data: dataPieSeries,
+                            data: dataSeries,
                             emphasis: {
                                 itemStyle: {
                                     shadowBlur: 10,
@@ -135,7 +137,7 @@ const PreviewMultipleChoiceSlide: React.FC<Props> = ({ slide }) => {
                         series: {
                             type: 'pie',
                             radius: ['40%', '75%'],
-                            data: dataPieSeries,
+                            data: dataSeries,
                             emphasis: {
                                 itemStyle: {
                                     shadowBlur: 10,
@@ -198,7 +200,7 @@ const PreviewMultipleChoiceSlide: React.FC<Props> = ({ slide }) => {
             >
                 {slide.question}
             </div>
-            {renderChart()}
+            <div className="w-full flex-1">{renderChart()}</div>
         </div>
     );
 };

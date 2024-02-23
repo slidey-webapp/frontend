@@ -12,7 +12,6 @@ const PresentationShowBody: React.FC<Props> = () => {
 
     const renderSlide = () => {
         if (session.status === 'STARTING') return <PresentationShowWaiting code={session.code} />;
-
         const slide = slides.find(x => x.slideID === currentSlideId);
 
         switch (slide?.type) {
