@@ -168,6 +168,10 @@ const PresentationSidebar: React.FC<Props> = ({ isReadonly }) => {
                                                                             },
                                                                         )}
                                                                         onClick={() => setCurrentSlideId(slide.slideID)}
+                                                                        style={{
+                                                                            color: slide.textColor,
+                                                                            background: slide.textBackground,
+                                                                        }}
                                                                     >
                                                                         {renderOverviewSlide(slide)}
                                                                     </div>
