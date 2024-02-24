@@ -22,6 +22,10 @@ const PresentationViewer = ({ presentation }: PresentationViewerProps) => {
                     usersOnline: [],
                     setCurrentSlideId: setCurrentSlideId,
                     backStep: 1,
+                    hover: {} as any,
+                    setHoverState: () => {
+                        //
+                    },
                     increaseBackStep: () => {
                         //
                     },

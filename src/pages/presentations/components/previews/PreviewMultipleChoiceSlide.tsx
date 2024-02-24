@@ -3,52 +3,58 @@ import React, { CSSProperties, useMemo, useRef } from 'react';
 import { ReactECharts, ReactEChartsRef } from '~/components/charts/ReactECharts';
 import { COLORS, PreviewFontSizeConstant } from '~/configs/constants';
 import { ChartType, HorizontalAlignment, TextSize, VerticalAlignment } from '~/types/shared';
+import { IPresentationContext } from '../../PresentationDetailPage';
 import { SlideDto } from '../../types/slide';
 
 interface Props {
     slide: SlideDto;
+    hover?: IPresentationContext['hover'];
 }
 
-const PreviewMultipleChoiceSlide: React.FC<Props> = ({ slide }) => {
+const PreviewMultipleChoiceSlide: React.FC<Props> = ({ slide, hover }) => {
     if (slide.type !== 'MULTIPLE_CHOICE') return null;
 
     const verticalAlignment = useMemo<CSSProperties | undefined>(() => {
-        if (slide.verticalAlignment === VerticalAlignment.Top)
+        const verAlign = hover?.verticalAlignment || slide.verticalAlignment;
+
+        if (verAlign === VerticalAlignment.Top)
             return {
                 justifyContent: 'flex-start',
             };
 
-        if (slide.verticalAlignment === VerticalAlignment.Middle)
+        if (verAlign === VerticalAlignment.Middle)
             return {
                 justifyContent: 'center',
             };
 
-        if (slide.verticalAlignment === VerticalAlignment.Bottom)
+        if (verAlign === VerticalAlignment.Bottom)
             return {
                 justifyContent: 'flex-end',
             };
 
         return undefined;
-    }, [slide.verticalAlignment]);
+    }, [slide.verticalAlignment, hover]);
 
     const horizontalAlignment = useMemo<CSSProperties | undefined>(() => {
-        if (slide.horizontalAlignment === HorizontalAlignment.Left)
+        const horAlign = hover?.horizontalAlignment || slide.horizontalAlignment;
+
+        if (horAlign === HorizontalAlignment.Left)
             return {
                 textAlign: 'left',
             };
 
-        if (slide.horizontalAlignment === HorizontalAlignment.Center)
+        if (horAlign === HorizontalAlignment.Center)
             return {
                 textAlign: 'center',
             };
 
-        if (slide.horizontalAlignment === HorizontalAlignment.Right)
+        if (horAlign === HorizontalAlignment.Right)
             return {
                 textAlign: 'right',
             };
 
         return undefined;
-    }, [slide.horizontalAlignment]);
+    }, [slide.horizontalAlignment, hover]);
 
     const { headingSize, secondarySize } = useMemo<{
         headingSize: string;
@@ -89,7 +95,7 @@ const PreviewMultipleChoiceSlide: React.FC<Props> = ({ slide }) => {
     const renderChart = () => {
         const dataXAxis = slide.options.map(x => x.option);
         const dataSeries = slide.options.map((x, index) => ({
-            value: 0,
+            value: hover?.chartType ? Math.round(Math.random() * 10) : 0,
             itemStyle: {
                 color: COLORS[index],
             },
@@ -97,11 +103,13 @@ const PreviewMultipleChoiceSlide: React.FC<Props> = ({ slide }) => {
         }));
 
         const getOptions = (): EChartsOption => {
-            switch (slide.chartType) {
+            const chartType = hover?.chartType || slide.chartType;
+            switch (chartType) {
                 case ChartType.Line:
                     return {
                         xAxis: {
                             data: dataXAxis,
+                            show: true,
                         },
                         yAxis: {
                             show: false,
@@ -113,6 +121,12 @@ const PreviewMultipleChoiceSlide: React.FC<Props> = ({ slide }) => {
                     };
                 case ChartType.Pie:
                     return {
+                        xAxis: {
+                            show: false,
+                        },
+                        yAxis: {
+                            show: false,
+                        },
                         legend: {
                             show: false,
                         },
@@ -131,6 +145,12 @@ const PreviewMultipleChoiceSlide: React.FC<Props> = ({ slide }) => {
                     };
                 case ChartType.Donut:
                     return {
+                        xAxis: {
+                            show: false,
+                        },
+                        yAxis: {
+                            show: false,
+                        },
                         legend: {
                             show: false,
                         },
@@ -152,6 +172,7 @@ const PreviewMultipleChoiceSlide: React.FC<Props> = ({ slide }) => {
                     return {
                         xAxis: {
                             data: dataXAxis,
+                            show: true,
                         },
                         yAxis: {
                             show: false,

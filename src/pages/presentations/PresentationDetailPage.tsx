@@ -2,12 +2,13 @@ import _ from 'lodash';
 import React, { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { RootState, useAppSelector } from '~/AppStore';
+import Loading from '~/components/loadings/Loading';
 import Overlay, { OverlayRef } from '~/components/loadings/Overlay';
 import { SocketEvent } from '~/configs/constants';
 import { requestApi } from '~/libs/axios';
 import { useSocketContext } from '~/providers/SocketProvider';
 import { User } from '~/types/auth';
-import { Id } from '~/types/shared';
+import { ChartType, HorizontalAlignment, Id, VerticalAlignment } from '~/types/shared';
 import HistoryUtil from '~/utils/HistoryUtil';
 import { PRESENTATION_UPDATE_API, SESSION_INITIAL_API, VISIT_HISTORY_API } from './api/presentation.api';
 import { useCollaborationsQuery } from './api/useCollaborationsQuery';
@@ -18,7 +19,6 @@ import { CollaborationDto } from './types/collaboration';
 import { PresentationDto } from './types/presentation';
 import { SessionDto } from './types/session';
 import { SlideDto } from './types/slide';
-import Loading from '~/components/loadings/Loading';
 interface Props {}
 
 export interface IPresentationContext {
@@ -29,6 +29,8 @@ export interface IPresentationContext {
     collaborations: CollaborationDto[];
     usersOnline: User[];
     backStep: number;
+    hover: PlacementHover;
+    setHoverState: React.Dispatch<React.SetStateAction<PlacementHover>>;
     increaseBackStep: () => void;
     setCurrentSlideId: (id: Id) => void;
     mask: () => void;
@@ -36,6 +38,12 @@ export interface IPresentationContext {
     refetchCollaborations: () => Promise<void>;
     onUpdatePresentation: (params: { name?: string; slides?: SlideDto[] }) => Promise<void>;
     onShowPresentation: (groupID?: Id) => void;
+}
+
+interface PlacementHover {
+    verticalAlignment: VerticalAlignment | null;
+    horizontalAlignment: HorizontalAlignment | null;
+    chartType: ChartType | null;
 }
 
 export const PresentationContext = createContext<IPresentationContext>({} as IPresentationContext);
@@ -68,6 +76,11 @@ const PresentationDetailPage: React.FC<Props> = () => {
         collaborations: [],
         reRender: false,
         backStep: 1,
+    });
+    const [hoverState, setHoverState] = useState<PlacementHover>({
+        verticalAlignment: null,
+        horizontalAlignment: null,
+        chartType: null,
     });
 
     useEffect(() => {
@@ -246,6 +259,8 @@ const PresentationDetailPage: React.FC<Props> = () => {
                             currentSlideId: state.currentSlideId,
                             collaborations: state.collaborations,
                             usersOnline: userOnlineRef.current,
+                            hover: hoverState,
+                            setHoverState,
                             setCurrentSlideId: id => {
                                 HistoryUtil.pushSearchParams(navigate, {
                                     current: id,

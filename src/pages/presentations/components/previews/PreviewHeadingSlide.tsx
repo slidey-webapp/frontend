@@ -1,52 +1,58 @@
 import React, { CSSProperties, useMemo } from 'react';
 import { PreviewFontSizeConstant } from '~/configs/constants';
 import { HorizontalAlignment, TextSize, VerticalAlignment } from '~/types/shared';
+import { IPresentationContext } from '../../PresentationDetailPage';
 import { SlideDto } from '../../types/slide';
 
 interface Props {
     slide: SlideDto;
+    hover?: IPresentationContext['hover'];
 }
 
-const PreviewHeadingSlide: React.FC<Props> = ({ slide }) => {
+const PreviewHeadingSlide: React.FC<Props> = ({ slide, hover }) => {
     if (slide.type !== 'HEADING') return null;
 
     const verticalAlignment = useMemo<CSSProperties | undefined>(() => {
-        if (slide.verticalAlignment === VerticalAlignment.Top)
+        const verAlign = hover?.verticalAlignment || slide.verticalAlignment;
+
+        if (verAlign === VerticalAlignment.Top)
             return {
                 justifyContent: 'flex-start',
             };
 
-        if (slide.verticalAlignment === VerticalAlignment.Middle)
+        if (verAlign === VerticalAlignment.Middle)
             return {
                 justifyContent: 'center',
             };
 
-        if (slide.verticalAlignment === VerticalAlignment.Bottom)
+        if (verAlign === VerticalAlignment.Bottom)
             return {
                 justifyContent: 'flex-end',
             };
 
         return undefined;
-    }, [slide.verticalAlignment]);
+    }, [slide.verticalAlignment, hover]);
 
     const horizontalAlignment = useMemo<CSSProperties | undefined>(() => {
-        if (slide.horizontalAlignment === HorizontalAlignment.Left)
+        const horAlign = hover?.horizontalAlignment || slide.horizontalAlignment;
+
+        if (horAlign === HorizontalAlignment.Left)
             return {
                 textAlign: 'left',
             };
 
-        if (slide.horizontalAlignment === HorizontalAlignment.Center)
+        if (horAlign === HorizontalAlignment.Center)
             return {
                 textAlign: 'center',
             };
 
-        if (slide.horizontalAlignment === HorizontalAlignment.Right)
+        if (horAlign === HorizontalAlignment.Right)
             return {
                 textAlign: 'right',
             };
 
         return undefined;
-    }, [slide.horizontalAlignment]);
+    }, [slide.horizontalAlignment, hover]);
 
     const { headingSize, secondarySize } = useMemo<{
         headingSize: string;
@@ -102,6 +108,7 @@ const PreviewHeadingSlide: React.FC<Props> = ({ slide }) => {
             <div
                 style={{
                     fontSize: secondarySize,
+                    ...horizontalAlignment,
                 }}
             >
                 {slide.subHeading}
