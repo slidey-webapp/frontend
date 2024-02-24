@@ -1,17 +1,16 @@
 import React from 'react';
 import { usePresentationContext } from '../../PresentationDetailPage';
 import PreviewHeadingSlide from './PreviewHeadingSlide';
-import PreviewParagraphSlide from './PreviewParagraphSlide';
 import PreviewMultipleChoiceSlide from './PreviewMultipleChoiceSlide';
+import PreviewParagraphSlide from './PreviewParagraphSlide';
 
 interface Props {}
 
 const PresentationBodyPreview: React.FC<Props> = () => {
     const { currentSlideId, slides } = usePresentationContext();
 
+    const slide = slides.find(x => x.slideID === currentSlideId);
     const renderSlide = () => {
-        const slide = slides.find(x => x.slideID === currentSlideId);
-
         switch (slide?.type) {
             case 'HEADING':
                 return <PreviewHeadingSlide slide={slide} />;
@@ -33,6 +32,7 @@ const PresentationBodyPreview: React.FC<Props> = () => {
                     aspectRatio: '16 / 9',
                     height: 'fit-content',
                     maxWidth: 960,
+                    background: slide?.textBackground,
                 }}
             >
                 {renderSlide()}
