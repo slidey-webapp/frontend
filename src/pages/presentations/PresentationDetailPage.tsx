@@ -9,7 +9,7 @@ import { useSocketContext } from '~/providers/SocketProvider';
 import { User } from '~/types/auth';
 import { Id } from '~/types/shared';
 import HistoryUtil from '~/utils/HistoryUtil';
-import { PRESENTATION_UPDATE_API, SESSION_INITIAL_API } from './api/presentation.api';
+import { PRESENTATION_UPDATE_API, SESSION_INITIAL_API, VISIT_HISTORY_API } from './api/presentation.api';
 import { useCollaborationsQuery } from './api/useCollaborationsQuery';
 import { usePresentationDetail } from './api/usePresentationDetail';
 import PresentationHeader from './components/PresentationHeader';
@@ -160,7 +160,10 @@ const PresentationDetailPage: React.FC<Props> = () => {
             const presentation = _.cloneDeep(res.data.result);
             const slides = _.cloneDeep(presentation.slides) || [];
             delete presentation.slides;
-
+            requestApi('POST', VISIT_HISTORY_API, {
+                assetID: presentation.presentationID,
+                assetType: 'PRESENTATION',
+            });
             setState(pre => ({
                 ...pre,
                 presentation,

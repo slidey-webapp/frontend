@@ -102,7 +102,7 @@ export const routeList: RouteDefinition[] = [
         ),
     },
     {
-        title: 'Tổng quan',
+        title: 'Trang chủ',
         hideTitle: true,
         path: '/dashboard',
         element: (
@@ -122,7 +122,7 @@ export const routeList: RouteDefinition[] = [
                 element: <Navigate to="home" />,
             },
             {
-                title: 'Tổng quan',
+                title: 'Trang chủ',
                 path: 'home',
                 element: (
                     <Suspense>
