@@ -1,6 +1,7 @@
 import { Avatar, Tooltip, TooltipProps } from '@mui/material';
 import _ from 'lodash';
 import React from 'react';
+import { indigo } from '~/themes/colors';
 
 export default class ComponentUtil {
     static renderAvatarUser = (config: {
@@ -11,9 +12,16 @@ export default class ComponentUtil {
         size?: number;
         className?: string;
         style?: React.CSSProperties;
-        tooltip?: boolean;
+        tooltip?: boolean | string;
+        active?: boolean;
     }) => {
-        const { key, avatarUrl, fullName, size, variant, className, style, tooltip = false } = config;
+        const { key, avatarUrl, fullName, size, variant, className, style, tooltip = false, active = false } = config;
+
+        const activeStyle: React.CSSProperties = active
+            ? {
+                  border: `2px solid ${_.get(indigo, 'main')}`,
+              }
+            : {};
 
         if (avatarUrl) {
             return this.tooltipComponent(
@@ -25,6 +33,7 @@ export default class ComponentUtil {
                     }}
                     variant={variant}
                     src={avatarUrl}
+                    style={activeStyle}
                 />,
                 tooltip,
                 fullName,
@@ -41,7 +50,7 @@ export default class ComponentUtil {
                 <Avatar
                     key={key}
                     variant={variant}
-                    style={{ background: background, ...style }}
+                    style={{ background: background, ...style, ...activeStyle }}
                     sx={{
                         width: size,
                         height: size,
@@ -58,7 +67,7 @@ export default class ComponentUtil {
         return this.tooltipComponent(
             <Avatar
                 key={key}
-                style={{ background: background, ...style }}
+                style={{ background: background, ...style, ...activeStyle }}
                 variant={variant}
                 sx={{
                     width: size,
@@ -73,11 +82,17 @@ export default class ComponentUtil {
         );
     };
 
-    static tooltipComponent = (children: TooltipProps['children'], tooltip?: boolean, title?: string) => {
+    static tooltipComponent = (children: TooltipProps['children'], tooltip?: boolean | string, title?: string) => {
         if (!tooltip) return children;
+        if (typeof tooltip === 'boolean')
+            return (
+                <Tooltip title={title} placement="top">
+                    {children}
+                </Tooltip>
+            );
 
         return (
-            <Tooltip title={title} placement="top">
+            <Tooltip title={tooltip} placement="top">
                 {children}
             </Tooltip>
         );

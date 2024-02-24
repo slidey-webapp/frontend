@@ -19,14 +19,12 @@ const PresentationViewer = ({ presentation }: PresentationViewerProps) => {
                     slides: presentation.slides || [],
                     currentSlideId: currentSlideId,
                     collaborations: [],
+                    usersOnline: [],
                     setCurrentSlideId: setCurrentSlideId,
                     mask: () => {
                         // do nothing
                     },
                     unmask: () => {
-                        // do nothing
-                    },
-                    refetchPresentation: async () => {
                         // do nothing
                     },
                     refetchCollaborations: async () => {

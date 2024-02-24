@@ -30,7 +30,7 @@ const EditorHeadingSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentati
 
     return (
         <>
-            <FormControl fullWidth>
+            <FormControl fullWidth key={slide.heading}>
                 <FormLabel
                     style={{
                         marginBottom: 10,
@@ -48,7 +48,7 @@ const EditorHeadingSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentati
                 />
             </FormControl>
             <div className="my-2" />
-            <FormControl fullWidth>
+            <FormControl fullWidth key={slide.subHeading}>
                 <FormLabel
                     style={{
                         marginBottom: 10,

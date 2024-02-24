@@ -1,9 +1,14 @@
 import _ from 'lodash';
-import React, { createContext, useContext, useMemo, useRef, useState } from 'react';
+import React, { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { RootState, useAppSelector } from '~/AppStore';
 import Overlay, { OverlayRef } from '~/components/loadings/Overlay';
+import { SocketEvent } from '~/configs/constants';
 import { requestApi } from '~/libs/axios';
+import { useSocketContext } from '~/providers/SocketProvider';
+import { User } from '~/types/auth';
 import { Id } from '~/types/shared';
+import HistoryUtil from '~/utils/HistoryUtil';
 import { PRESENTATION_UPDATE_API, SESSION_INITIAL_API } from './api/presentation.api';
 import { useCollaborationsQuery } from './api/useCollaborationsQuery';
 import { usePresentationDetail } from './api/usePresentationDetail';
@@ -21,10 +26,10 @@ export interface IPresentationContext {
     slides: SlideDto[];
     currentSlideId: Id;
     collaborations: CollaborationDto[];
+    usersOnline: User[];
     setCurrentSlideId: (id: Id) => void;
     mask: () => void;
     unmask: () => void;
-    refetchPresentation: () => Promise<void>;
     refetchCollaborations: () => Promise<void>;
     onUpdatePresentation: (params: { name?: string; slides?: SlideDto[] }) => Promise<void>;
     onShowPresentation: (groupID?: Id) => void;
@@ -39,23 +44,116 @@ interface State {
     slides: SlideDto[];
     currentSlideId: Id;
     collaborations: CollaborationDto[];
+    reRender: boolean;
 }
 
 const PresentationDetailPage: React.FC<Props> = () => {
     const { presentationID } = useParams<{ presentationID: string }>();
 
     const navigate = useNavigate();
+    const authUser = useAppSelector((state: RootState) => state.auth.authUser);
+    const { socket } = useSocketContext();
 
     const overlayRef = useRef<OverlayRef>(null);
+    const userOnlineRef = useRef<User[]>(authUser?.user ? [authUser.user] : []);
 
     const [state, setState] = useState<State>({
         presentation: {} as PresentationDto,
         slides: [],
         currentSlideId: '',
         collaborations: [],
+        reRender: false,
     });
 
-    const { isFetching: isFetchingPresentation, refetch: refetchPresentation } = usePresentationDetail(presentationID, {
+    useEffect(() => {
+        !socket.connected && socket.connect();
+        socket.emit(SocketEvent.JOIN_EDIT_PRESENTATION, {
+            presentationID,
+            accountID: authUser?.user.accountID,
+            token: authUser?.token,
+        });
+
+        const interval = setInterval(() => {
+            socket.emit(SocketEvent.PING_EDIT_PRESENTATION);
+        }, 2000);
+
+        socket.on(SocketEvent.JOIN_EDIT_PRESENTATION, ({ user }: { user: User }) => {
+            const isExist = userOnlineRef.current.some(x => x.accountID === user.accountID);
+            if (isExist) return;
+
+            userOnlineRef.current.push(user);
+
+            setState(pre => ({
+                ...pre,
+                reRender: !pre.reRender,
+            }));
+        });
+
+        socket.on(SocketEvent.PING_EDIT_PRESENTATION, ({ user }: { user: User }) => {
+            const isExist = userOnlineRef.current.some(x => x.accountID === user.accountID);
+            if (isExist) return;
+
+            userOnlineRef.current.push(user);
+
+            setState(pre => ({
+                ...pre,
+                reRender: !pre.reRender,
+            }));
+        });
+
+        socket.on(SocketEvent.LEAVE_EDIT_PRESENTATION, ({ user }: { user: User }) => {
+            userOnlineRef.current = userOnlineRef.current.filter(x => x.accountID !== user.accountID);
+            setState(pre => ({
+                ...pre,
+                reRender: !pre.reRender,
+            }));
+        });
+
+        socket.on(
+            SocketEvent.UPDATE_PRESENTATION,
+            ({ presentation }: { presentation: PresentationDto & { slides?: SlideDto[] } }) => {
+                const newSlides = _.cloneDeep(presentation.slides) || [];
+                delete presentation.slides;
+
+                setState(pre => {
+                    const preState = _.cloneDeep(pre)
+
+                    let currentId = preState.currentSlideId;
+
+                    const isCurrentSlideDeleted = newSlides.every(x => x.slideID !== currentId);
+    
+                    if (isCurrentSlideDeleted) {
+                        const currentIndex = preState.slides.findIndex(x => x.slideID === currentId);
+                        if (currentIndex <= 0) {
+                            currentId = newSlides[0]?.slideID;
+                        } else {
+                            currentId = newSlides[currentIndex - 1]?.slideID;
+                        }
+                        HistoryUtil.pushSearchParams(navigate, {
+                            current: currentId,
+                        });
+                    }
+
+                    return {
+                        ...preState,
+                        presentation: {
+                            ...presentation,
+                            creator: preState.presentation.creator,
+                        },
+                        slides: newSlides,
+                        currentSlideId: currentId,
+                    }
+                });
+            },
+        );
+
+        return () => {
+            socket.disconnect();
+            clearInterval(interval);
+        };
+    }, []);
+
+    const { isFetching: isFetchingPresentation } = usePresentationDetail(presentationID, {
         onSuccess: res => {
             if (res.status !== 200 || _.isEmpty(res.data?.result)) return;
 
@@ -67,7 +165,7 @@ const PresentationDetailPage: React.FC<Props> = () => {
                 ...pre,
                 presentation,
                 slides,
-                currentSlideId: pre.currentSlideId || slides?.[0]?.slideID,
+                currentSlideId: _.toNumber(HistoryUtil.getSearchParam('current') || slides?.[0]?.slideID),
             }));
         },
     });
@@ -89,12 +187,10 @@ const PresentationDetailPage: React.FC<Props> = () => {
         if (!params.name) _.set(params, 'name', state.presentation.name || '');
         if (!params.slides) _.set(params, 'slides', state.slides || []);
 
-        const response = await requestApi('post', PRESENTATION_UPDATE_API, {
+        await requestApi('post', PRESENTATION_UPDATE_API, {
             presentationID,
             ...params,
         });
-
-        if (response.status === 200) await refetchPresentation();
     };
 
     const handleShowPresentation = async (groupID?: Id) => {
@@ -136,12 +232,15 @@ const PresentationDetailPage: React.FC<Props> = () => {
                     slides: state.slides,
                     currentSlideId: state.currentSlideId,
                     collaborations: state.collaborations,
-                    setCurrentSlideId: id => setState(pre => ({ ...pre, currentSlideId: id })),
+                    usersOnline: userOnlineRef.current,
+                    setCurrentSlideId: id => {
+                        HistoryUtil.pushSearchParams(navigate, {
+                            current: id,
+                        });
+                        setState(pre => ({ ...pre, currentSlideId: id }));
+                    },
                     mask: () => overlayRef.current?.open(),
                     unmask: () => overlayRef.current?.close(),
-                    refetchPresentation: async () => {
-                        await refetchPresentation();
-                    },
                     refetchCollaborations: async () => {
                         await refetchCollaborations();
                     },

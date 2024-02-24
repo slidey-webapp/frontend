@@ -81,7 +81,7 @@ const SlidePatternItem = ({
 };
 
 const NewSlidePattern: React.FC<Props> = () => {
-    const { presentationID, mask, unmask, refetchPresentation, setCurrentSlideId } = usePresentationContext();
+    const { presentationID, mask, unmask, setCurrentSlideId } = usePresentationContext();
 
     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
 
@@ -111,7 +111,6 @@ const NewSlidePattern: React.FC<Props> = () => {
         if (response.status === 200) {
             const slideId = response.data?.result?.slideID;
             slideId && setCurrentSlideId(slideId);
-            await refetchPresentation();
         }
         unmask();
     };
