@@ -39,6 +39,7 @@ const getDisplayTime = (time?: Date) => {
         return `${minutes} phút trước`;
     } else if (timeDiff < 86400) {
         const hours = Math.floor(timeDiff / 3600);
+
         return `${hours} giờ trước`;
     } else {
         return DateTimeUtil.formatDateTime(removeUtc, DateTimeUtil.VN_DATE_FORMAT);
