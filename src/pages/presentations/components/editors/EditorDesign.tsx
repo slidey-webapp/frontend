@@ -18,6 +18,8 @@ interface Config {
             icon: BaseIconProps['type'];
             tooltip: string | React.ReactNode;
             onClick: () => void;
+            onMouseOver?: () => void;
+            onMouseLeave?: () => void;
             disabled?: boolean;
             active?: boolean;
         }>;
@@ -56,7 +58,7 @@ const colorInputSx: SxProps<Theme> = {
 };
 
 const EditorDesign: React.FC<Props> = () => {
-    const { currentSlideId, slides, onUpdatePresentation } = usePresentationContext();
+    const { currentSlideId, slides, onUpdatePresentation, setHoverState } = usePresentationContext();
     const currentSlideIndex = slides.findIndex(x => x.slideID === currentSlideId);
     const slide = slides.find(x => x.slideID === currentSlideId);
     if (!slide || currentSlideIndex === -1) return null;
@@ -112,6 +114,20 @@ const EditorDesign: React.FC<Props> = () => {
                                     newValue: HorizontalAlignment.Left,
                                 }),
                             tooltip: 'Trái',
+                            onMouseOver: () =>
+                                setHoverState(pre => ({
+                                    ...pre,
+                                    horizontalAlignment: HorizontalAlignment.Left,
+                                })),
+                            onMouseLeave: () =>
+                                setHoverState(pre => {
+                                    const preCloned = _.cloneDeep(pre);
+                                    if (preCloned.horizontalAlignment === HorizontalAlignment.Left) {
+                                        preCloned.horizontalAlignment = null;
+                                    }
+
+                                    return preCloned;
+                                }),
                         },
                         {
                             icon: 'horizontal-align-center',
@@ -122,6 +138,20 @@ const EditorDesign: React.FC<Props> = () => {
                                     newValue: HorizontalAlignment.Center,
                                 }),
                             tooltip: 'Giữa',
+                            onMouseOver: () =>
+                                setHoverState(pre => ({
+                                    ...pre,
+                                    horizontalAlignment: HorizontalAlignment.Center,
+                                })),
+                            onMouseLeave: () =>
+                                setHoverState(pre => {
+                                    const preCloned = _.cloneDeep(pre);
+                                    if (preCloned.horizontalAlignment === HorizontalAlignment.Center) {
+                                        preCloned.horizontalAlignment = null;
+                                    }
+
+                                    return preCloned;
+                                }),
                         },
                         {
                             icon: 'horizontal-align-right',
@@ -132,6 +162,20 @@ const EditorDesign: React.FC<Props> = () => {
                                     newValue: HorizontalAlignment.Right,
                                 }),
                             tooltip: 'Phải',
+                            onMouseOver: () =>
+                                setHoverState(pre => ({
+                                    ...pre,
+                                    horizontalAlignment: HorizontalAlignment.Right,
+                                })),
+                            onMouseLeave: () =>
+                                setHoverState(pre => {
+                                    const preCloned = _.cloneDeep(pre);
+                                    if (preCloned.horizontalAlignment === HorizontalAlignment.Right) {
+                                        preCloned.horizontalAlignment = null;
+                                    }
+
+                                    return preCloned;
+                                }),
                         },
                     ],
                 },
@@ -147,6 +191,20 @@ const EditorDesign: React.FC<Props> = () => {
                                     newValue: VerticalAlignment.Top,
                                 }),
                             tooltip: 'Trên',
+                            onMouseOver: () =>
+                                setHoverState(pre => ({
+                                    ...pre,
+                                    verticalAlignment: VerticalAlignment.Top,
+                                })),
+                            onMouseLeave: () =>
+                                setHoverState(pre => {
+                                    const preCloned = _.cloneDeep(pre);
+                                    if (preCloned.verticalAlignment === VerticalAlignment.Top) {
+                                        preCloned.verticalAlignment = null;
+                                    }
+
+                                    return preCloned;
+                                }),
                         },
                         {
                             icon: 'vertical-align-center',
@@ -157,6 +215,20 @@ const EditorDesign: React.FC<Props> = () => {
                                     newValue: VerticalAlignment.Middle,
                                 }),
                             tooltip: 'Giữa',
+                            onMouseOver: () =>
+                                setHoverState(pre => ({
+                                    ...pre,
+                                    verticalAlignment: VerticalAlignment.Middle,
+                                })),
+                            onMouseLeave: () =>
+                                setHoverState(pre => {
+                                    const preCloned = _.cloneDeep(pre);
+                                    if (preCloned.verticalAlignment === VerticalAlignment.Middle) {
+                                        preCloned.verticalAlignment = null;
+                                    }
+
+                                    return preCloned;
+                                }),
                         },
                         {
                             icon: 'vertical-align-bottom',
@@ -167,6 +239,20 @@ const EditorDesign: React.FC<Props> = () => {
                                     newValue: VerticalAlignment.Bottom,
                                 }),
                             tooltip: 'Dưới',
+                            onMouseOver: () =>
+                                setHoverState(pre => ({
+                                    ...pre,
+                                    verticalAlignment: VerticalAlignment.Bottom,
+                                })),
+                            onMouseLeave: () =>
+                                setHoverState(pre => {
+                                    const preCloned = _.cloneDeep(pre);
+                                    if (preCloned.verticalAlignment === VerticalAlignment.Bottom) {
+                                        preCloned.verticalAlignment = null;
+                                    }
+
+                                    return preCloned;
+                                }),
                         },
                     ],
                 },
@@ -299,6 +385,8 @@ const EditorDesign: React.FC<Props> = () => {
                                                                             onClick={
                                                                                 item.disabled ? undefined : item.onClick
                                                                             }
+                                                                            onMouseOver={item.onMouseOver}
+                                                                            onMouseLeave={item.onMouseLeave}
                                                                         >
                                                                             <BaseIcon type={item.icon} />
                                                                         </div>
@@ -332,6 +420,20 @@ const EditorDesign: React.FC<Props> = () => {
                                                     newValue: ChartType.Bar,
                                                 }),
                                             tooltip: 'Biểu đồ Cột',
+                                            onMouseOver: () =>
+                                                setHoverState(pre => ({
+                                                    ...pre,
+                                                    chartType: ChartType.Bar,
+                                                })),
+                                            onMouseLeave: () =>
+                                                setHoverState(pre => {
+                                                    const preCloned = _.cloneDeep(pre);
+                                                    if (preCloned.chartType === ChartType.Bar) {
+                                                        preCloned.chartType = null;
+                                                    }
+
+                                                    return preCloned;
+                                                }),
                                         },
                                         {
                                             icon: 'line-chart' as BaseIconProps['type'],
@@ -342,6 +444,20 @@ const EditorDesign: React.FC<Props> = () => {
                                                     newValue: ChartType.Line,
                                                 }),
                                             tooltip: 'Biểu đồ Đường',
+                                            onMouseOver: () =>
+                                                setHoverState(pre => ({
+                                                    ...pre,
+                                                    chartType: ChartType.Line,
+                                                })),
+                                            onMouseLeave: () =>
+                                                setHoverState(pre => {
+                                                    const preCloned = _.cloneDeep(pre);
+                                                    if (preCloned.chartType === ChartType.Line) {
+                                                        preCloned.chartType = null;
+                                                    }
+
+                                                    return preCloned;
+                                                }),
                                         },
                                         {
                                             icon: 'donut-chart' as BaseIconProps['type'],
@@ -352,6 +468,20 @@ const EditorDesign: React.FC<Props> = () => {
                                                     newValue: ChartType.Donut,
                                                 }),
                                             tooltip: 'Biểu đồ Donut',
+                                            onMouseOver: () =>
+                                                setHoverState(pre => ({
+                                                    ...pre,
+                                                    chartType: ChartType.Donut,
+                                                })),
+                                            onMouseLeave: () =>
+                                                setHoverState(pre => {
+                                                    const preCloned = _.cloneDeep(pre);
+                                                    if (preCloned.chartType === ChartType.Donut) {
+                                                        preCloned.chartType = null;
+                                                    }
+
+                                                    return preCloned;
+                                                }),
                                         },
                                         {
                                             icon: 'pie-chart' as BaseIconProps['type'],
@@ -362,6 +492,20 @@ const EditorDesign: React.FC<Props> = () => {
                                                     newValue: ChartType.Pie,
                                                 }),
                                             tooltip: 'Biểu đồ Tròn',
+                                            onMouseOver: () =>
+                                                setHoverState(pre => ({
+                                                    ...pre,
+                                                    chartType: ChartType.Pie,
+                                                })),
+                                            onMouseLeave: () =>
+                                                setHoverState(pre => {
+                                                    const preCloned = _.cloneDeep(pre);
+                                                    if (preCloned.chartType === ChartType.Pie) {
+                                                        preCloned.chartType = null;
+                                                    }
+
+                                                    return preCloned;
+                                                }),
                                         },
                                     ].map(x => {
                                         return (
@@ -377,6 +521,8 @@ const EditorDesign: React.FC<Props> = () => {
                                                             },
                                                         )}
                                                         onClick={x.onClick}
+                                                        onMouseOver={x.onMouseOver}
+                                                        onMouseLeave={x.onMouseLeave}
                                                     >
                                                         <BaseIcon type={x.icon} size={28} />
                                                     </div>
