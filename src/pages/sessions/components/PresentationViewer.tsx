@@ -21,6 +21,10 @@ const PresentationViewer = ({ presentation }: PresentationViewerProps) => {
                     collaborations: [],
                     usersOnline: [],
                     setCurrentSlideId: setCurrentSlideId,
+                    backStep: 1,
+                    increaseBackStep: () => {
+                        //
+                    },
                     mask: () => {
                         // do nothing
                     },

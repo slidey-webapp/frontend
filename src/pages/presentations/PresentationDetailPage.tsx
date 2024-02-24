@@ -18,6 +18,7 @@ import { CollaborationDto } from './types/collaboration';
 import { PresentationDto } from './types/presentation';
 import { SessionDto } from './types/session';
 import { SlideDto } from './types/slide';
+import Loading from '~/components/loadings/Loading';
 interface Props {}
 
 export interface IPresentationContext {
@@ -27,6 +28,8 @@ export interface IPresentationContext {
     currentSlideId: Id;
     collaborations: CollaborationDto[];
     usersOnline: User[];
+    backStep: number;
+    increaseBackStep: () => void;
     setCurrentSlideId: (id: Id) => void;
     mask: () => void;
     unmask: () => void;
@@ -45,6 +48,7 @@ interface State {
     currentSlideId: Id;
     collaborations: CollaborationDto[];
     reRender: boolean;
+    backStep: number;
 }
 
 const PresentationDetailPage: React.FC<Props> = () => {
@@ -63,6 +67,7 @@ const PresentationDetailPage: React.FC<Props> = () => {
         currentSlideId: '',
         collaborations: [],
         reRender: false,
+        backStep: 1,
     });
 
     useEffect(() => {
@@ -116,12 +121,13 @@ const PresentationDetailPage: React.FC<Props> = () => {
                 delete presentation.slides;
 
                 setState(pre => {
-                    const preState = _.cloneDeep(pre)
+                    const preState = _.cloneDeep(pre);
 
                     let currentId = preState.currentSlideId;
+                    let backStep = preState.backStep;
 
                     const isCurrentSlideDeleted = newSlides.every(x => x.slideID !== currentId);
-    
+
                     if (isCurrentSlideDeleted) {
                         const currentIndex = preState.slides.findIndex(x => x.slideID === currentId);
                         if (currentIndex <= 0) {
@@ -132,6 +138,7 @@ const PresentationDetailPage: React.FC<Props> = () => {
                         HistoryUtil.pushSearchParams(navigate, {
                             current: currentId,
                         });
+                        backStep = backStep + 1;
                     }
 
                     return {
@@ -142,7 +149,8 @@ const PresentationDetailPage: React.FC<Props> = () => {
                         },
                         slides: newSlides,
                         currentSlideId: currentId,
-                    }
+                        backStep,
+                    };
                 });
             },
         );
@@ -218,8 +226,6 @@ const PresentationDetailPage: React.FC<Props> = () => {
         [isFetchingPresentation || isFetchingCollaborations],
     );
 
-    // todo: add skeleton loading here
-    if (isLoading) return <div>Skeleton loading...</div>;
     return (
         <div
             className="w-screen h-screen relative overflow-hidden flex flex-col select-none"
@@ -228,33 +234,41 @@ const PresentationDetailPage: React.FC<Props> = () => {
                 maxHeight: '100vh',
             }}
         >
-            <PresentationContext.Provider
-                value={{
-                    presentationID: presentationID as Id,
-                    presentation: state.presentation,
-                    slides: state.slides,
-                    currentSlideId: state.currentSlideId,
-                    collaborations: state.collaborations,
-                    usersOnline: userOnlineRef.current,
-                    setCurrentSlideId: id => {
-                        HistoryUtil.pushSearchParams(navigate, {
-                            current: id,
-                        });
-                        setState(pre => ({ ...pre, currentSlideId: id }));
-                    },
-                    mask: () => overlayRef.current?.open(),
-                    unmask: () => overlayRef.current?.close(),
-                    refetchCollaborations: async () => {
-                        await refetchCollaborations();
-                    },
-                    onUpdatePresentation: handleUpdatePresentation,
-                    onShowPresentation: handleShowPresentation,
-                }}
-            >
-                <PresentationHeader />
-                <PresentationMain />
-            </PresentationContext.Provider>
-            <Overlay ref={overlayRef} />
+            {isLoading ? (
+                <Loading />
+            ) : (
+                <>
+                    <PresentationContext.Provider
+                        value={{
+                            presentationID: presentationID as Id,
+                            presentation: state.presentation,
+                            slides: state.slides,
+                            currentSlideId: state.currentSlideId,
+                            collaborations: state.collaborations,
+                            usersOnline: userOnlineRef.current,
+                            setCurrentSlideId: id => {
+                                HistoryUtil.pushSearchParams(navigate, {
+                                    current: id,
+                                });
+                                setState(pre => ({ ...pre, currentSlideId: id, backStep: pre.backStep + 1 }));
+                            },
+                            backStep: state.backStep,
+                            increaseBackStep: () => setState(pre => ({ ...pre, backStep: pre.backStep + 1 })),
+                            mask: () => overlayRef.current?.open(),
+                            unmask: () => overlayRef.current?.close(),
+                            refetchCollaborations: async () => {
+                                await refetchCollaborations();
+                            },
+                            onUpdatePresentation: handleUpdatePresentation,
+                            onShowPresentation: handleShowPresentation,
+                        }}
+                    >
+                        <PresentationHeader />
+                        <PresentationMain />
+                    </PresentationContext.Provider>
+                    <Overlay ref={overlayRef} />
+                </>
+            )}
         </div>
     );
 };

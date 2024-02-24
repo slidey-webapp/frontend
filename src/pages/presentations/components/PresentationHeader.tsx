@@ -28,6 +28,7 @@ const PresentationHeader: React.FC<Props> = () => {
         onUpdatePresentation,
         refetchCollaborations,
         onShowPresentation,
+        backStep
     } = usePresentationContext();
     const navigate = useNavigate();
 
@@ -90,13 +91,13 @@ const PresentationHeader: React.FC<Props> = () => {
                     <Tooltip title="Trở lại">
                         <div
                             className="cursor-pointer transition-all duration-300 ease-in-out hover:text-neutral-500"
-                            onClick={() => navigate(-1)}
+                            onClick={() => navigate(-backStep)}
                         >
                             <BaseIcon type={'arrow-back'} />
                         </div>
                     </Tooltip>
                     <div className="w-56 ml-4" title={presentation.name}>
-                        <FormControl fullWidth>
+                        <FormControl fullWidth key={presentation.name}>
                             <TextField
                                 variant="standard"
                                 size="small"
