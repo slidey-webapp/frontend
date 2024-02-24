@@ -1,7 +1,8 @@
-import { Avatar, AvatarGroup, Box, Divider, FormControl, TextField, Tooltip, Typography } from '@mui/material';
+import { AvatarGroup, Box, Divider, FormControl, TextField, Tooltip, Typography } from '@mui/material';
 import _ from 'lodash';
 import React, { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { RootState, useAppSelector } from '~/AppStore';
 import { ButtonBase } from '~/components/buttons/ButtonBase';
 import ButtonIconBase from '~/components/buttons/ButtonIconBase';
 import Dropdown from '~/components/dropdowns/Dropdown';
@@ -23,6 +24,7 @@ const PresentationHeader: React.FC<Props> = () => {
         presentation,
         presentationID,
         collaborations,
+        usersOnline,
         onUpdatePresentation,
         refetchCollaborations,
         onShowPresentation,
@@ -31,6 +33,7 @@ const PresentationHeader: React.FC<Props> = () => {
 
     const formRef = useRef<BaseFormRef>(null);
     const modalRef = useRef<ModalBaseRef>(null);
+    const { authUser } = useAppSelector((state: RootState) => state.auth);
 
     const handleSendInvitation = async () => {
         const isValid = await formRef.current?.isValid();
@@ -142,39 +145,52 @@ const PresentationHeader: React.FC<Props> = () => {
                                         </div>
                                     </Box>
                                     <Divider />
-                                    {collaborations.length > 0 && (
-                                        <>
-                                            <Box
-                                                sx={{
-                                                    py: 1.5,
-                                                    px: 2,
-                                                }}
-                                            >
-                                                <div className="w-full flex flex-col">
-                                                    {collaborations.map(collab => {
-                                                        return (
-                                                            <div
-                                                                key={collab.collaborationID}
-                                                                className="flex-1  flex items-center justify-between"
-                                                                style={{
-                                                                    height: 56,
-                                                                    minHeight: 56,
-                                                                }}
-                                                            >
-                                                                <div className="flex items-center">
-                                                                    <div className="mr-3">
-                                                                        {ComponentUtil.renderAvatarUser({
-                                                                            key: collab.collaborationID,
-                                                                            fullName: collab.fullname,
-                                                                            size: 32,
-                                                                            tooltip: true,
-                                                                        })}
-                                                                    </div>
-                                                                    <div className="flex-1 flex flex-col h-full justify-between">
-                                                                        <div className="">{collab.fullname}</div>
-                                                                        <div className="text-xs">{collab.email}</div>
-                                                                    </div>
+                                    <>
+                                        <Box
+                                            sx={{
+                                                py: 1.5,
+                                                px: 2,
+                                            }}
+                                        >
+                                            <div className="w-full flex flex-col">
+                                                {[
+                                                    {
+                                                        accountID: presentation.creator?.accountID,
+                                                        fullname: presentation.creator?.fullname,
+                                                        email: presentation.creator?.email,
+                                                        presentationID: presentationID,
+                                                        collaborationID: `creator-${presentation.creator?.accountID}`,
+                                                    } as CollaborationDto,
+                                                    ...collaborations,
+                                                ].map(collab => {
+                                                    return (
+                                                        <div
+                                                            key={collab.collaborationID}
+                                                            className="flex-1  flex items-center justify-between"
+                                                            style={{
+                                                                height: 56,
+                                                                minHeight: 56,
+                                                            }}
+                                                        >
+                                                            <div className="flex items-center">
+                                                                <div className="mr-3">
+                                                                    {ComponentUtil.renderAvatarUser({
+                                                                        key: collab.collaborationID,
+                                                                        fullName: collab.fullname,
+                                                                        size: 32,
+                                                                        tooltip:
+                                                                            collab.accountID ===
+                                                                            authUser?.user.accountID
+                                                                                ? 'Bạn'
+                                                                                : collab.fullname,
+                                                                    })}
                                                                 </div>
+                                                                <div className="flex-1 flex flex-col h-full justify-between">
+                                                                    <div className="">{collab.fullname}</div>
+                                                                    <div className="text-xs">{collab.email}</div>
+                                                                </div>
+                                                            </div>
+                                                            {presentation.createdBy !== collab.accountID && (
                                                                 <ButtonIconBase
                                                                     className="!ml-2"
                                                                     icon="remove"
@@ -182,14 +198,14 @@ const PresentationHeader: React.FC<Props> = () => {
                                                                     tooltip="Xóa cộng tác viên"
                                                                     onClick={() => handleRemoveCollab(collab)}
                                                                 />
-                                                            </div>
-                                                        );
-                                                    })}
-                                                </div>
-                                            </Box>
-                                            <Divider />
-                                        </>
-                                    )}
+                                                            )}
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        </Box>
+                                        <Divider />
+                                    </>
                                     <Box
                                         sx={{
                                             py: 1.5,
@@ -214,25 +230,25 @@ const PresentationHeader: React.FC<Props> = () => {
                                     '& .MuiAvatar-root': { width: 32, height: 32 },
                                 }}
                             >
-                                {collaborations.map(collab => {
+                                {[
+                                    {
+                                        accountID: presentation.creator?.accountID,
+                                        fullname: presentation.creator?.fullname,
+                                        email: presentation.creator?.email,
+                                        presentationID: presentationID,
+                                        collaborationID: `creator-${presentation.creator?.accountID}`,
+                                    } as CollaborationDto,
+                                    ...collaborations,
+                                ].map(collab => {
                                     return ComponentUtil.renderAvatarUser({
                                         key: collab.collaborationID,
                                         fullName: collab.fullname,
                                         size: 32,
-                                        tooltip: true,
+                                        tooltip:
+                                            collab.accountID === authUser?.user.accountID ? 'Bạn' : collab.fullname,
+                                        active: usersOnline.some(x => x.accountID === collab.accountID),
                                     });
                                 })}
-                                {collaborations.length === 0 && (
-                                    <Avatar
-                                        key={'add'}
-                                        sx={{
-                                            width: 32,
-                                            height: 32,
-                                        }}
-                                    >
-                                        <BaseIcon type="add" />
-                                    </Avatar>
-                                )}
                             </AvatarGroup>
                         </Dropdown>
                     </div>

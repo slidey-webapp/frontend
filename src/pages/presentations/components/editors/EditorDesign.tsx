@@ -2,7 +2,7 @@ import { SxProps, Theme, Tooltip } from '@mui/material';
 import clsx from 'clsx';
 import _ from 'lodash';
 import { MuiColorInput } from 'mui-color-input';
-import React, { useRef } from 'react';
+import React from 'react';
 import BaseIcon, { BaseIconProps } from '~/components/icons/BaseIcon';
 import { ChartType, HorizontalAlignment, TextSize, TextSizes, VerticalAlignment } from '~/types/shared';
 import { usePresentationContext } from '../../PresentationDetailPage';
@@ -61,8 +61,8 @@ const EditorDesign: React.FC<Props> = () => {
     const slide = slides.find(x => x.slideID === currentSlideId);
     if (!slide || currentSlideIndex === -1) return null;
 
-    const textColorRef = useRef<string>(slide.textColor);
-    const textBackgroundRef = useRef<string>(slide.textBackground);
+    let textColor = slide.textColor;
+    let textBackground = slide.textBackground;
 
     const handleUpdatePresentation = ({ field, newValue }: { field: keyof SlideDto; newValue: any }) => {
         const oldValue = _.get(slide, field);
@@ -204,16 +204,17 @@ const EditorDesign: React.FC<Props> = () => {
                     label: 'Màu chữ',
                     node: (
                         <MuiColorInput
+                            key={slide.textColor}
                             format="hex"
-                            value={textColorRef.current}
+                            value={textColor}
                             sx={colorInputSx}
-                            onChange={color => (textColorRef.current = color)}
+                            onChange={color => (textColor = color)}
                             PopoverProps={{
                                 onBlur: ({ relatedTarget }) => {
                                     if (relatedTarget?.nodeName === 'BUTTON') {
                                         handleUpdatePresentation({
                                             field: 'textColor',
-                                            newValue: textColorRef.current,
+                                            newValue: textColor,
                                         });
                                     }
                                 },
@@ -225,16 +226,17 @@ const EditorDesign: React.FC<Props> = () => {
                     label: 'Màu nền',
                     node: (
                         <MuiColorInput
+                            key={slide.textBackground}
                             format="hex"
                             sx={colorInputSx}
-                            value={textBackgroundRef.current}
-                            onChange={color => (textBackgroundRef.current = color)}
+                            value={textBackground}
+                            onChange={color => (textBackground = color)}
                             PopoverProps={{
                                 onBlur: ({ relatedTarget }) => {
                                     if (relatedTarget?.nodeName === 'BUTTON') {
                                         handleUpdatePresentation({
                                             field: 'textBackground',
-                                            newValue: textBackgroundRef.current,
+                                            newValue: textBackground,
                                         });
                                     }
                                 },

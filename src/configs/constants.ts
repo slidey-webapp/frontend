@@ -113,4 +113,8 @@ export class SocketEvent {
     static END_SESSION = 'end_session';
     static START_PRESENTING = 'start_presenting';
     static HOST_JOIN_SESSION = 'host_join_session';
+    static JOIN_EDIT_PRESENTATION = 'join_edit_presentation';
+    static UPDATE_PRESENTATION = 'update_presentation';
+    static PING_EDIT_PRESENTATION = 'ping_edit_presentation';
+    static LEAVE_EDIT_PRESENTATION = 'leave_edit_presentation';
 }
