@@ -90,7 +90,6 @@ const PresentationShowWaiting: React.FC<Props> = ({ code }) => {
             <div className="mt-10">
                 <div className="w-full h-full flex flex-wrap gap-6">
                     {participants.map(participant => {
-                        // todo: animation...
                         return (
                             <div
                                 key={participant.participantID}
