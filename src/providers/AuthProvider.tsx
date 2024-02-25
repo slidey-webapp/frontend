@@ -6,6 +6,8 @@ import { RootState, useAppSelector } from '~/AppStore';
 import Loading from '~/components/loadings/Loading';
 import { fetchAuthDataAsync } from '~/store/authSlice';
 
+const LandingPage = React.lazy(() => import('~/pages/landings/LandingPage'));
+
 const LoginView = React.lazy(() => import('~/components/layouts/LoginView'));
 const RegisterView = React.lazy(() => import('~/components/layouts/RegisterView'));
 const ForgotPassword = React.lazy(() => import('~/components/layouts/ForgotPassword'));
@@ -20,6 +22,14 @@ type Props = {
 };
 
 const authRouteList = [
+    {
+        path: '/',
+        element: (
+            <Suspense>
+                <LandingPage />
+            </Suspense>
+        ),
+    },
     {
         path: '/register',
         element: (

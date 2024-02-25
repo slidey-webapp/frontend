@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { Link, Navigate, RouteObject, useRoutes } from 'react-router-dom';
+import { Navigate, RouteObject, useRoutes } from 'react-router-dom';
 import { BaseIconProps } from '~/components/icons/BaseIcon';
 import SessionDetailPage from '~/pages/sessions/SessionDetailPage';
 
@@ -8,6 +8,8 @@ const RegisterView = React.lazy(() => import('~/components/layouts/RegisterView'
 const ForgotPassword = React.lazy(() => import('~/components/layouts/ForgotPassword'));
 const JoinGroup = React.lazy(() => import('~/pages/groups/JoinGroup'));
 const JoinPresentation = React.lazy(() => import('~/pages/presentations/JoinPresentation'));
+
+const LandingPage = React.lazy(() => import('~/pages/landings/LandingPage'));
 
 // #region Dashboard
 const DashboardLayout = React.lazy(() => import('~/components/layouts/dashboard/DashboardLayout'));
@@ -49,9 +51,9 @@ export const routeList: RouteDefinition[] = [
         title: 'Trang chủ',
         path: '/',
         element: (
-            <>
-                <Link to="/dashboard">Example admin page</Link>
-            </>
+            <Suspense>
+                <LandingPage />
+            </Suspense>
         ),
     },
     {

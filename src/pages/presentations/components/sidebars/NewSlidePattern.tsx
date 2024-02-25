@@ -19,7 +19,6 @@ interface SlidePattern {
     name: string;
     type: SlideType;
     src: string;
-    // todo: action...
 }
 
 const slidesGroup: {
