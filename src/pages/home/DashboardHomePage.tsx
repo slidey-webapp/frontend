@@ -23,6 +23,8 @@ import { SlideDto } from './types/slide';
 import headingSrc from '~/images/slide/heading.svg';
 import paragraphSrc from '~/images/slide/paragraph.svg';
 import multipleChoiceSrc from '~/images/slide/multiple-choice.svg';
+import { indigo, neutral } from '~/themes/colors';
+import _ from 'lodash';
 
 export interface Props {}
 
@@ -208,13 +210,15 @@ const DashboardHomePage: React.FC<Props> = () => {
                                     <Stack direction="column">
                                         <Box
                                             sx={{
-                                                border: '1px solid #e5e7eb',
                                                 padding: '1rem',
                                                 borderRadius: '8px',
                                                 transition: 'all .3s',
                                                 cursor: 'pointer',
+                                                borderWidth: 2,
+                                                borderColor: _.get(neutral, '100'),
+                                                borderStyle: 'solid',
                                                 '&:hover': {
-                                                    backgroundColor: 'rgb(245 247 255 / 1)',
+                                                    borderColor: _.get(indigo, 'main'),
                                                 },
                                                 marginBottom: '0.5rem',
                                                 aspectRatio: '16 / 9',
