@@ -26,9 +26,10 @@ const PresentationHeader: React.FC<Props> = () => {
         collaborations,
         usersOnline,
         onUpdatePresentation,
-        refetchCollaborations,
         onShowPresentation,
-        backStep
+        backStep,
+        mask,
+        unmask,
     } = usePresentationContext();
     const navigate = useNavigate();
 
@@ -43,10 +44,12 @@ const PresentationHeader: React.FC<Props> = () => {
         const email = formValues?.email;
         if (!email) return;
         try {
+            mask();
             const response = await requestApi('post', COLLABORATION_INVITATION_API, {
                 email,
                 presentationID,
             });
+            unmask();
             if (response?.status === 200 || response?.status === 400) {
                 if (response.status === 200) {
                     NotifyUtil.success('Mời cộng tác thành công');
@@ -68,7 +71,7 @@ const PresentationHeader: React.FC<Props> = () => {
                 accountID: collab.accountID,
             });
             if (response?.status === 200) {
-                await refetchCollaborations();
+                // await refetchCollaborations();
                 return;
             }
             NotifyUtil.error(response.data?.message || 'Có lỗi xảy ra');
@@ -160,13 +163,12 @@ const PresentationHeader: React.FC<Props> = () => {
                                                         fullname: presentation.creator?.fullname,
                                                         email: presentation.creator?.email,
                                                         presentationID: presentationID,
-                                                        collaborationID: `creator-${presentation.creator?.accountID}`,
                                                     } as CollaborationDto,
                                                     ...collaborations,
                                                 ].map(collab => {
                                                     return (
                                                         <div
-                                                            key={collab.collaborationID}
+                                                            key={collab.accountID}
                                                             className="flex-1  flex items-center justify-between"
                                                             style={{
                                                                 height: 56,
@@ -176,7 +178,7 @@ const PresentationHeader: React.FC<Props> = () => {
                                                             <div className="flex items-center">
                                                                 <div className="mr-3">
                                                                     {ComponentUtil.renderAvatarUser({
-                                                                        key: collab.collaborationID,
+                                                                        key: collab.accountID,
                                                                         fullName: collab.fullname,
                                                                         size: 32,
                                                                         tooltip:
@@ -237,12 +239,11 @@ const PresentationHeader: React.FC<Props> = () => {
                                         fullname: presentation.creator?.fullname,
                                         email: presentation.creator?.email,
                                         presentationID: presentationID,
-                                        collaborationID: `creator-${presentation.creator?.accountID}`,
                                     } as CollaborationDto,
                                     ...collaborations,
                                 ].map(collab => {
                                     return ComponentUtil.renderAvatarUser({
-                                        key: collab.collaborationID,
+                                        key: collab.accountID,
                                         fullName: collab.fullname,
                                         size: 32,
                                         tooltip:
