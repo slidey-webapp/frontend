@@ -117,4 +117,6 @@ export class SocketEvent {
     static UPDATE_PRESENTATION = 'update_presentation';
     static PING_EDIT_PRESENTATION = 'ping_edit_presentation';
     static LEAVE_EDIT_PRESENTATION = 'leave_edit_presentation';
+    static REMOVE_COLLAB = 'remove_collab';
+    static JOIN_COLLAB = 'join_collab';
 }

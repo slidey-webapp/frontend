@@ -36,7 +36,6 @@ export interface IPresentationContext {
     setCurrentSlideId: (id: Id) => void;
     mask: () => void;
     unmask: () => void;
-    refetchCollaborations: () => Promise<void>;
     onUpdatePresentation: (params: { name?: string; slides?: SlideDto[] }) => Promise<void>;
     onShowPresentation: (groupID?: Id) => void;
 }
@@ -58,6 +57,7 @@ interface State {
     collaborations: CollaborationDto[];
     reRender: boolean;
     backStep: number;
+    isRemoveCollaborator: boolean;
 }
 
 const PresentationDetailPage: React.FC<Props> = () => {
@@ -77,6 +77,7 @@ const PresentationDetailPage: React.FC<Props> = () => {
         collaborations: [],
         reRender: false,
         backStep: 1,
+        isRemoveCollaborator: false,
     });
     const [hoverState, setHoverState] = useState<PlacementHover>({
         verticalAlignment: null,
@@ -169,6 +170,36 @@ const PresentationDetailPage: React.FC<Props> = () => {
             },
         );
 
+        socket.on(SocketEvent.JOIN_COLLAB, ({ user }: { user: User }) => {
+            setState(pre => {
+                const preState = _.cloneDeep(pre);
+                const isExist = preState.collaborations.some(x => x.accountID === user.accountID);
+                if (isExist) return preState;
+                preState.collaborations.push({
+                    accountID: user.accountID,
+                    fullname: user.fullname,
+                    email: user.email,
+                } as CollaborationDto);
+
+                return preState;
+            });
+        });
+
+        socket.on(SocketEvent.REMOVE_COLLAB, ({ accountID }: { accountID: Id }) => {
+            setState(pre => {
+                const preState = _.cloneDeep(pre);
+                const isRemove = authUser?.user.accountID === accountID;
+
+                if (isRemove) {
+                    preState.isRemoveCollaborator = true;
+                    return preState;
+                }
+
+                preState.collaborations.filter(x => x.accountID !== accountID);
+                return preState;
+            });
+        });
+
         return () => {
             socket.disconnect();
             clearInterval(interval);
@@ -195,7 +226,7 @@ const PresentationDetailPage: React.FC<Props> = () => {
         },
     });
 
-    const { isFetching: isFetchingCollaborations, refetch: refetchCollaborations } = useCollaborationsQuery(
+    const { isFetching: isFetchingCollaborations } = useCollaborationsQuery(
         { presentationID: presentationID as Id },
         {
             onSuccess: res => {
@@ -240,17 +271,12 @@ const PresentationDetailPage: React.FC<Props> = () => {
         [isFetchingPresentation || isFetchingCollaborations],
     );
 
-    return (
-        <div
-            className="w-screen h-screen relative overflow-hidden flex flex-col select-none"
-            style={{
-                maxWidth: '100vw',
-                maxHeight: '100vh',
-            }}
-        >
-            {isLoading ? (
-                <Loading />
-            ) : (
+    const renderBody = () => {
+        let body = null;
+        if (isLoading) body = <Loading />;
+        else if (state.isRemoveCollaborator) body = <>Ban da bi xoa</>;
+        else
+            body = (
                 <>
                     <PresentationContext.Provider
                         value={{
@@ -273,9 +299,6 @@ const PresentationDetailPage: React.FC<Props> = () => {
                             setState,
                             mask: () => overlayRef.current?.open(),
                             unmask: () => overlayRef.current?.close(),
-                            refetchCollaborations: async () => {
-                                await refetchCollaborations();
-                            },
                             onUpdatePresentation: handleUpdatePresentation,
                             onShowPresentation: handleShowPresentation,
                         }}
@@ -285,9 +308,22 @@ const PresentationDetailPage: React.FC<Props> = () => {
                     </PresentationContext.Provider>
                     <Overlay ref={overlayRef} />
                 </>
-            )}
-        </div>
-    );
+            );
+
+        return (
+            <div
+                className="w-screen h-screen relative overflow-hidden flex flex-col select-none"
+                style={{
+                    maxWidth: '100vw',
+                    maxHeight: '100vh',
+                }}
+            >
+                {body}
+            </div>
+        );
+    };
+
+    return renderBody();
 };
 
 export default PresentationDetailPage;

@@ -38,9 +38,6 @@ const PresentationViewer = ({ presentation }: PresentationViewerProps) => {
                     unmask: () => {
                         // do nothing
                     },
-                    refetchCollaborations: async () => {
-                        // do nothing
-                    },
                     onUpdatePresentation: () => {
                         // do nothing
                         return new Promise(resolve => resolve());
