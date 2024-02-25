@@ -29,6 +29,9 @@ const PresentationViewer = ({ presentation }: PresentationViewerProps) => {
                     increaseBackStep: () => {
                         //
                     },
+                    setState: () => {
+                        //
+                    },
                     mask: () => {
                         // do nothing
                     },

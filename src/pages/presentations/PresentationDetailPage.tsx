@@ -32,6 +32,7 @@ export interface IPresentationContext {
     hover: PlacementHover;
     setHoverState: React.Dispatch<React.SetStateAction<PlacementHover>>;
     increaseBackStep: () => void;
+    setState: React.Dispatch<React.SetStateAction<State>>;
     setCurrentSlideId: (id: Id) => void;
     mask: () => void;
     unmask: () => void;
@@ -259,16 +260,17 @@ const PresentationDetailPage: React.FC<Props> = () => {
                             currentSlideId: state.currentSlideId,
                             collaborations: state.collaborations,
                             usersOnline: userOnlineRef.current,
-                            hover: hoverState,
-                            setHoverState,
                             setCurrentSlideId: id => {
                                 HistoryUtil.pushSearchParams(navigate, {
                                     current: id,
                                 });
-                                setState(pre => ({ ...pre, currentSlideId: id, backStep: pre.backStep + 1 }));
+                                setState(pre => ({ ...pre, currentSlideId: id }));
                             },
                             backStep: state.backStep,
                             increaseBackStep: () => setState(pre => ({ ...pre, backStep: pre.backStep + 1 })),
+                            hover: hoverState,
+                            setHoverState,
+                            setState,
                             mask: () => overlayRef.current?.open(),
                             unmask: () => overlayRef.current?.close(),
                             refetchCollaborations: async () => {
