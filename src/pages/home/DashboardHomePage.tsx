@@ -9,19 +9,20 @@ import { PaginatedList, requestApi } from '~/libs/axios';
 import { Id } from '~/types/shared';
 import DateTimeUtil from '~/utils/DateTimeUtil';
 import NotifyUtil from '~/utils/NotifyUtil';
-
 import { Box, Grid, Stack, Typography } from '@mui/material';
-
 import GroupForm from '../groups/components/GroupForm';
 import { PRESENTATION_CREATE_API } from '../presentations/api/presentation.api';
-import PreviewHeadingSlide from '../presentations/components/previews/PreviewHeadingSlide';
-import PreviewMultipleChoiceSlide from '../presentations/components/previews/PreviewMultipleChoiceSlide';
-import PreviewParagraphSlide from '../presentations/components/previews/PreviewParagraphSlide';
+import OverviewHeadingSlide from '../presentations/components/sidebars/OverviewHeadingSlide';
+import OverviewMultipleChoiceSlide from '../presentations/components/sidebars/OverviewMultipleChoiceSlide';
+import OverviewParagraphSlide from '../presentations/components/sidebars/OverviewParagraphSlide';
 import { PresentationDto } from '../presentations/types/presentation';
 import { VISIT_HISTORY_API } from './api/home.api';
 import SkeletonGrids from './components/SkeletonGrids';
 import { HistoryDto } from './types/history';
 import { SlideDto } from './types/slide';
+import headingSrc from '~/images/slide/heading.svg';
+import paragraphSrc from '~/images/slide/paragraph.svg';
+import multipleChoiceSrc from '~/images/slide/multiple-choice.svg';
 
 export interface Props {}
 
@@ -120,17 +121,32 @@ const DashboardHomePage: React.FC<Props> = () => {
     };
 
     const renderSlide = (slide: SlideDto) => {
-        switch (slide?.type) {
-            case 'HEADING':
-                return <PreviewHeadingSlide slide={slide} />;
-            case 'MULTIPLE_CHOICE':
-                return <PreviewMultipleChoiceSlide slide={slide} />;
-            case 'PARAGRAPH':
-                return <PreviewParagraphSlide slide={slide} />;
-            case null:
-            default:
-                return null;
+        let src = headingSrc;
+        let heading = slide.heading;
+
+        if (slide.type === 'MULTIPLE_CHOICE') {
+            src = multipleChoiceSrc;
+            heading = slide.question;
+        } else if (slide.type === 'PARAGRAPH') {
+            src = paragraphSrc;
         }
+
+        return (
+            <div className={'w-full h-full flex flex-col items-center justify-center'}>
+                <img
+                    src={src}
+                    alt={heading}
+                    style={{
+                        objectFit: 'cover',
+                        width: '30%',
+                    }}
+                    className="flex-1"
+                />
+                <div className="flex-1 text-sm font-semibold mt-1">
+                    <div className="line-clamp-2">{heading}</div>
+                </div>
+            </div>
+        );
     };
 
     useEffect(() => {
@@ -201,7 +217,7 @@ const DashboardHomePage: React.FC<Props> = () => {
                                                     backgroundColor: 'rgb(245 247 255 / 1)',
                                                 },
                                                 marginBottom: '0.5rem',
-                                                height: '200px',
+                                                aspectRatio: '16 / 9',
                                             }}
                                             onClick={() => handleDetailPresentation(item.assetID)}
                                         >
