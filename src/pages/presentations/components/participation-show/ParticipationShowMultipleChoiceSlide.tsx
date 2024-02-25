@@ -1,6 +1,6 @@
 import { FormControl, FormControlLabel, Radio, RadioGroup } from '@mui/material';
 import { motion } from 'framer-motion';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ButtonBase } from '~/components/buttons/ButtonBase';
 import { requestApi } from '~/libs/axios';
 import { Id } from '~/types/shared';
@@ -19,6 +19,10 @@ const ParticipationShowMultipleChoiceSlide: React.FC<Props> = ({ slide, particip
 
     const [optSelected, setOptSelected] = useState<MultipleChoiceSlideOption | undefined>();
     const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+
+    useEffect(() => {
+        setIsSubmitted(false);
+    }, [slide.slideID]);
 
     const handleSubmit = async () => {
         if (!optSelected) return;

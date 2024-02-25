@@ -64,15 +64,33 @@ export class ComboOptionConstant {
 }
 
 export class PreviewFontSizeConstant {
-    static HEADING = '2.25cqw';
-    static SUB_HEADING = '1cqw';
-    static PARAGRAPH = '1cqw';
+    static HEADING_EXTRA_SMALL = '1.8cqw';
+    static HEADING_SMALL = '2cqw';
+    static HEADING_MEDIUM = '2.2cqw';
+    static HEADING_LARGE = '2.4cqw';
+    static HEADING_EXTRA_LARGE = '2.6cqw';
+
+    static SECONDARY_EXTRA_SMALL = '0.75cqw';
+    static SECONDARY_SMALL = '1cqw';
+    static SECONDARY_MEDIUM = '1.25cqw';
+    static SECONDARY_LARGE = '1.5cqw';
+    static SECONDARY_EXTRA_LARGE = '2cqw';
 }
 
 export class ShowFontSizeConstant {
+    static HEADING_EXTRA_SMALL = '48px';
+    static HEADING_SMALL = '60px';
+    static HEADING_MEDIUM = '72px';
+    static HEADING_LARGE = '96px';
+    static HEADING_EXTRA_LARGE = '128px';
+
+    static SECONDARY_EXTRA_SMALL = '16px';
+    static SECONDARY_SMALL = '20px';
+    static SECONDARY_MEDIUM = '24px';
+    static SECONDARY_LARGE = '30px';
+    static SECONDARY_EXTRA_LARGE = '36px';
+
     static HEADING = '72px';
-    static SUB_HEADING = '24px';
-    static PARAGRAPH = '24px';
 }
 
 export class PreviewSizeConstant {
@@ -95,4 +113,10 @@ export class SocketEvent {
     static END_SESSION = 'end_session';
     static START_PRESENTING = 'start_presenting';
     static HOST_JOIN_SESSION = 'host_join_session';
+    static JOIN_EDIT_PRESENTATION = 'join_edit_presentation';
+    static UPDATE_PRESENTATION = 'update_presentation';
+    static PING_EDIT_PRESENTATION = 'ping_edit_presentation';
+    static LEAVE_EDIT_PRESENTATION = 'leave_edit_presentation';
+    static REMOVE_COLLAB = 'remove_collab';
+    static JOIN_COLLAB = 'join_collab';
 }

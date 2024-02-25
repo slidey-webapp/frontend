@@ -65,6 +65,7 @@ interface State {
     questions: QuestionDto[];
     isSeenNewestQuestion: boolean;
     messages: MessageDto[];
+    backgroundColor: string;
 }
 
 const PresentationHostShow: React.FC<Props> = () => {
@@ -91,6 +92,7 @@ const PresentationHostShow: React.FC<Props> = () => {
         questions: [],
         isSeenNewestQuestion: true,
         messages: [],
+        backgroundColor: '#ffffff',
     });
 
     useEffect(() => {
@@ -278,7 +280,8 @@ const PresentationHostShow: React.FC<Props> = () => {
                 slides,
                 isFirstSlide,
                 isLastSlide,
-                currentSlideId: pre.currentSlideId || slides?.[0]?.slideID,
+                currentSlideId: slides?.[0]?.slideID,
+                backgroundColor: slides?.[0]?.textBackground,
             }));
         },
     });
@@ -336,6 +339,7 @@ const PresentationHostShow: React.FC<Props> = () => {
             isFirstSlide,
             isLastSlide,
             currentSlideId: newCurrentSlide?.slideID,
+            backgroundColor: newCurrentSlide?.textBackground,
         }));
 
         return;
@@ -404,6 +408,7 @@ const PresentationHostShow: React.FC<Props> = () => {
                                 width: PreviewSizeConstant.WIDTH,
                                 transform: `scale(${calculateScale()})`,
                                 aspectRatio: '16 / 9',
+                                background: state.backgroundColor,
                             }}
                         >
                             <div className="w-full h-full flex flex-col">

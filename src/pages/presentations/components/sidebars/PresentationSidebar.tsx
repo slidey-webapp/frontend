@@ -29,16 +29,20 @@ const reorder = (list: SlideDto[], startIndex: number, endIndex: number) => {
 };
 
 const PresentationSidebar: React.FC<Props> = ({ isReadonly }) => {
-    const { presentation, currentSlideId, presentationID, slides, onUpdatePresentation, setCurrentSlideId } =
+    const { currentSlideId, presentationID, slides, onUpdatePresentation, setCurrentSlideId, setState } =
         usePresentationContext();
 
-    const onDragEnd: OnDragEndResponder = result => {
+    const onDragEnd: OnDragEndResponder = async result => {
         if (!result.destination || result.destination?.index === result.source.index) return;
 
         const newSlides = reorder(slides, result.source.index, result.destination.index);
 
+        setState(pre => ({
+            ...pre,
+            slides: newSlides,
+        }));
+
         onUpdatePresentation({
-            name: presentation.name,
             slides: newSlides,
         });
     };
@@ -70,6 +74,11 @@ const PresentationSidebar: React.FC<Props> = ({ isReadonly }) => {
 
         newSlides.splice(slideIndex, 1);
 
+        setState(pre => ({
+            ...pre,
+            slides: newSlides,
+        }));
+
         await onUpdatePresentation({
             slides: newSlides,
         });
@@ -84,7 +93,7 @@ const PresentationSidebar: React.FC<Props> = ({ isReadonly }) => {
     };
 
     const handleDuplicateSlide = async (slide: SlideDto) => {
-        const newSlide = await createSlide(slide.type);
+        const newSlide = await createSlide(slide.type, _.cloneDeep(slide));
         if (!newSlide) return;
 
         const newSlides = _.cloneDeep(slides);
@@ -101,21 +110,26 @@ const PresentationSidebar: React.FC<Props> = ({ isReadonly }) => {
             options: slideCloned.options,
         });
 
-        onUpdatePresentation({
+        setState(pre => ({
+            ...pre,
+            slides: newSlides,
+        }));
+
+        await onUpdatePresentation({
             slides: newSlides,
         });
     };
 
-    const createSlide = async (type: SlideType) => {
+    const createSlide = async (type: SlideType, rootSlide?: SlideDto) => {
         const response = await requestApi<SlideDto>('post', PRESENTATION_CREATE_SLIDE_API, {
             presentationID,
             type,
-            horizontalAlignment: HorizontalAlignment.Left,
-            verticalAlignment: VerticalAlignment.Top,
-            textSize: TextSize.Medium,
-            textColor: '#000000',
-            textBackground: '#ffffff',
-            chartType: ChartType.Bar,
+            horizontalAlignment: rootSlide?.horizontalAlignment || HorizontalAlignment.Left,
+            verticalAlignment: rootSlide?.verticalAlignment || VerticalAlignment.Top,
+            textSize: rootSlide?.textSize || TextSize.Medium,
+            textColor: rootSlide?.textColor || '#000000',
+            textBackground: rootSlide?.textBackground || '#ffffff',
+            chartType: rootSlide?.chartType || ChartType.Bar,
         });
 
         if (response.status === 200) return response.data.result;
@@ -168,6 +182,10 @@ const PresentationSidebar: React.FC<Props> = ({ isReadonly }) => {
                                                                             },
                                                                         )}
                                                                         onClick={() => setCurrentSlideId(slide.slideID)}
+                                                                        style={{
+                                                                            color: slide.textColor,
+                                                                            background: slide.textBackground,
+                                                                        }}
                                                                     >
                                                                         {renderOverviewSlide(slide)}
                                                                     </div>

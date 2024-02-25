@@ -137,7 +137,6 @@ const PresentationJoinSession: React.FC<Props> = () => {
         });
 
         socket.on(SocketEvent.END_SESSION, () => {
-            // todo: remove code param
             setState({
                 questions: [],
                 messages: [],

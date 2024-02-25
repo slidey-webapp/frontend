@@ -14,7 +14,6 @@ const BaseTextAreaField: React.FC<Props> = ({ control, name, ...props }) => {
             name={name}
             render={({ field: { onChange, onBlur, value }, fieldState: { invalid, error } }) => {
                 return (
-                    // todo: text area...
                     <TextField
                         variant="outlined"
                         onBlur={onBlur}

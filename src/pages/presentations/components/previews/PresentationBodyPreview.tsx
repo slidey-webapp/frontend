@@ -1,24 +1,23 @@
 import React from 'react';
 import { usePresentationContext } from '../../PresentationDetailPage';
 import PreviewHeadingSlide from './PreviewHeadingSlide';
-import PreviewParagraphSlide from './PreviewParagraphSlide';
 import PreviewMultipleChoiceSlide from './PreviewMultipleChoiceSlide';
+import PreviewParagraphSlide from './PreviewParagraphSlide';
 
 interface Props {}
 
 const PresentationBodyPreview: React.FC<Props> = () => {
-    const { currentSlideId, slides } = usePresentationContext();
+    const { currentSlideId, slides, hover } = usePresentationContext();
 
+    const slide = slides.find(x => x.slideID === currentSlideId);
     const renderSlide = () => {
-        const slide = slides.find(x => x.slideID === currentSlideId);
-
         switch (slide?.type) {
             case 'HEADING':
-                return <PreviewHeadingSlide slide={slide} />;
+                return <PreviewHeadingSlide slide={slide} hover={hover} />;
             case 'MULTIPLE_CHOICE':
-                return <PreviewMultipleChoiceSlide slide={slide} />;
+                return <PreviewMultipleChoiceSlide slide={slide} hover={hover} />;
             case 'PARAGRAPH':
-                return <PreviewParagraphSlide slide={slide} />;
+                return <PreviewParagraphSlide slide={slide} hover={hover} />;
             case null:
             default:
                 return null;
@@ -33,6 +32,7 @@ const PresentationBodyPreview: React.FC<Props> = () => {
                     aspectRatio: '16 / 9',
                     height: 'fit-content',
                     maxWidth: 960,
+                    background: slide?.textBackground,
                 }}
             >
                 {renderSlide()}

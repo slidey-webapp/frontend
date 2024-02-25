@@ -19,17 +19,23 @@ const PresentationViewer = ({ presentation }: PresentationViewerProps) => {
                     slides: presentation.slides || [],
                     currentSlideId: currentSlideId,
                     collaborations: [],
+                    usersOnline: [],
                     setCurrentSlideId: setCurrentSlideId,
+                    backStep: 1,
+                    hover: {} as any,
+                    setHoverState: () => {
+                        //
+                    },
+                    increaseBackStep: () => {
+                        //
+                    },
+                    setState: () => {
+                        //
+                    },
                     mask: () => {
                         // do nothing
                     },
                     unmask: () => {
-                        // do nothing
-                    },
-                    refetchPresentation: async () => {
-                        // do nothing
-                    },
-                    refetchCollaborations: async () => {
                         // do nothing
                     },
                     onUpdatePresentation: () => {

@@ -1,4 +1,4 @@
-import { FormControl, FormLabel, TextField, styled } from '@mui/material';
+import { FormControl, FormLabel, TextField } from '@mui/material';
 import _ from 'lodash';
 import React from 'react';
 import { IPresentationContext } from '../../PresentationDetailPage';
@@ -30,7 +30,7 @@ const EditorParagraphSlide: React.FC<Props> = ({ slide, slides, onUpdatePresenta
 
     return (
         <>
-            <FormControl fullWidth>
+            <FormControl fullWidth key={slide.heading}>
                 <FormLabel
                     style={{
                         marginBottom: 10,
@@ -48,7 +48,7 @@ const EditorParagraphSlide: React.FC<Props> = ({ slide, slides, onUpdatePresenta
                 />
             </FormControl>
             <div className="my-2" />
-            <FormControl fullWidth>
+            <FormControl fullWidth key={slide.paragraph}>
                 <FormLabel
                     style={{
                         marginBottom: 10,
