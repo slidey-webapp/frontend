@@ -2,10 +2,12 @@ import { AvatarGroup, Box, Divider, FormControl, MenuItem, Select, SelectChangeE
 import _ from 'lodash';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useAppSelector } from '~/AppStore';
 import { BreadcrumbRef } from '~/components/bread-crumb/BreadCrumb';
 import { ButtonBase } from '~/components/buttons/ButtonBase';
 import ButtonIconBase from '~/components/buttons/ButtonIconBase';
 import Dropdown from '~/components/dropdowns/Dropdown';
+import Forbidden from '~/components/errors/Forbidden';
 import BaseForm, { BaseFormRef } from '~/components/forms/BaseForm';
 import { AppContainer } from '~/components/layouts/AppContainer';
 import Loading from '~/components/loadings/Loading';
@@ -19,7 +21,6 @@ import { GROUP_REMOVE_MEMBER_API, GROUP_SEND_INVITATION_API, GROUP_UPDATE_MEMBER
 import { useGroupDetail } from './api/useGroupDetail';
 import { useGroupMembers } from './api/useGroupMembers';
 import { GroupMemberDto, GroupMemberRole } from './types/group';
-import { useAppSelector } from '~/AppStore';
 
 interface Props {}
 
@@ -34,10 +35,22 @@ const GroupDetailPage: React.FC<Props> = () => {
 
     const [members, setMembers] = useState<GroupMemberDto[]>([]);
     const [role, setRole] = useState<GroupMemberRole>('MEMBER');
+    const [isForbidden, setIsForbidden] = useState<boolean>(false);
 
-    const { data: responseGroup, isFetching: isFetchingGroup } = useGroupDetail(groupID as Id);
+    const { data: responseGroup, isFetching: isFetchingGroup } = useGroupDetail(groupID as Id, {
+        onSuccess: res => {
+            if (res.status === 403) {
+                setIsForbidden(true);
+                return;
+            }
+        },
+    });
     const { refetch: refetchMembers } = useGroupMembers(groupID as Id, {
         onSuccess: res => {
+            if (res.status === 403) {
+                setIsForbidden(true);
+                return;
+            }
             if (res.status !== 200) return;
             const resMembers = res.data.result?.members || [];
             const resRole = resMembers.find(x => x.accountID === authUser?.user?.accountID)?.role || 'MEMBER';
@@ -273,6 +286,7 @@ const GroupDetailPage: React.FC<Props> = () => {
     };
 
     if (isFetching) return <Loading />;
+    if (isForbidden) return <Forbidden />;
     return (
         <AppContainer breadcrumbRef={breadcrumbRef}>
             <SessionGrid toolbar={renderToolbar()} groupID={groupID} />
