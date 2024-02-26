@@ -1,14 +1,14 @@
 import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
 import { ColDef, ColGroupDef, GetDataPath, ModuleRegistry, RowGroupingDisplayType } from '@ag-grid-community/core';
 import { AgGridReact, AgGridReactProps } from '@ag-grid-community/react';
-import { RowGroupingModule } from '@ag-grid-enterprise/row-grouping';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
+import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';
-import NotifyUtil from '~/utils/NotifyUtil';
-
 import { BaseGridResponse } from '~/hooks/useBaseGrid';
+import emptySrc from '~/images/empty.svg';
+import NotifyUtil from '~/utils/NotifyUtil';
 import ButtonIconBase from '../buttons/ButtonIconBase';
 import Loading from '../loadings/Loading';
 import GridPagination from './components/GridPagination';
@@ -16,7 +16,7 @@ import './styles/base-grid.scss';
 
 export interface BaseGridColDef extends ColDef, Partial<ColGroupDef> {}
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, RowGroupingModule]);
+ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
 export interface BaseGridProps extends BaseGridResponse<any> {
     columnDefs: BaseGridColDef[];
@@ -42,7 +42,6 @@ export interface BaseGridProps extends BaseGridResponse<any> {
     groupDefaultExpanded?: number;
     autoGroupColumnDef?: ColDef<any>;
     groupDisplayType?: RowGroupingDisplayType;
-    pagination?: boolean;
     toolbar?: {
         rightToolbar?: JSX.Element;
         leftToolbar?: JSX.Element;
@@ -54,7 +53,7 @@ interface GridConfig extends AgGridReactProps {}
 export interface BaseGridRef extends AgGridReact {}
 
 const BaseGrid = React.forwardRef<BaseGridRef, BaseGridProps>((props, ref) => {
-    const { numberRows = true, actionRows = true, actionRowsList, pagination = true, paginatedList } = props;
+    const { numberRows = true, actionRows = true, actionRowsList, paginatedList } = props;
 
     const customColDefs = (
         numberRows
@@ -211,7 +210,7 @@ const BaseGrid = React.forwardRef<BaseGridRef, BaseGridProps>((props, ref) => {
                 </div>
             )}
             <div className="w-full flex-1 ag-theme-alpine grid base-grid">
-                <div className="w-full h-full flex flex-col">
+                <div className="w-full h-full flex flex-col relative">
                     <AgGridReact
                         className="flex-1"
                         ref={ref}
@@ -224,6 +223,7 @@ const BaseGrid = React.forwardRef<BaseGridRef, BaseGridProps>((props, ref) => {
                             ...props.defaultColDef,
                         }}
                         loadingOverlayComponent={() => <Loading />}
+                        noRowsOverlayComponent={() => <Loading />}
                         treeData={props.treeData}
                         animateRows
                         getDataPath={props.getDataPath}
@@ -245,8 +245,29 @@ const BaseGrid = React.forwardRef<BaseGridRef, BaseGridProps>((props, ref) => {
                         }}
                         {...props.gridConfig}
                     />
-                    {pagination && (
-                        <GridPagination onChangePage={props.onChangePage} paginatedList={props.paginatedList} />
+                    <GridPagination onChangePage={props.onChangePage} paginatedList={props.paginatedList} />
+                    {paginatedList?.items?.length === 0 && (
+                        <div
+                            className={clsx('w-full bg-white absolute z-999 ')}
+                            style={{
+                                height: 'calc(100% - 50px - 49px)',
+                                width: 'calc(100% - 2px)',
+                                top: 50,
+                                left: 1,
+                                borderEndEndRadius: '10px',
+                            }}
+                        >
+                            <div className="flex flex-col items-center justify-center w-full h-full select-none">
+                                <img
+                                    src={emptySrc}
+                                    style={{
+                                        height: 120,
+                                        objectFit: 'cover',
+                                    }}
+                                />
+                                <div className="mt-2 text-base">Không có dữ liệu</div>
+                            </div>
+                        </div>
                     )}
                 </div>
             </div>

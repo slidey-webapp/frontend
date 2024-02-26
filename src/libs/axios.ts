@@ -34,7 +34,7 @@ export type PaginatedList<T = any> = {
     limit: number;
     totalPages: number;
     currentPage: number;
-    items: T[];
+    items: T[] | null;
 };
 
 export type PaginatedListQuery = {
