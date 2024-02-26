@@ -117,7 +117,7 @@ const DashboardHomePage: React.FC<Props> = () => {
         );
 
         if (response.status === 200 && response.data?.result) {
-            setRecentVisitedItem(response.data?.result.items);
+            setRecentVisitedItem(response.data?.result.items || []);
         }
         setIsLoading(false);
     };
