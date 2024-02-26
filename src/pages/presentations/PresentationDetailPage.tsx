@@ -30,6 +30,7 @@ export interface IPresentationContext {
     usersOnline: User[];
     backStep: number;
     hover: PlacementHover;
+    isOwner: boolean;
     setHoverState: React.Dispatch<React.SetStateAction<PlacementHover>>;
     increaseBackStep: () => void;
     setState: React.Dispatch<React.SetStateAction<State>>;
@@ -286,15 +287,16 @@ const PresentationDetailPage: React.FC<Props> = () => {
                             currentSlideId: state.currentSlideId,
                             collaborations: state.collaborations,
                             usersOnline: userOnlineRef.current,
+                            hover: hoverState,
+                            backStep: state.backStep,
+                            isOwner: authUser?.user.accountID === state.presentation.createdBy,
                             setCurrentSlideId: id => {
                                 HistoryUtil.pushSearchParams(navigate, {
                                     current: id,
                                 });
-                                setState(pre => ({ ...pre, currentSlideId: id }));
+                                setState(pre => ({ ...pre, currentSlideId: id, backStep: pre.backStep + 1 }));
                             },
-                            backStep: state.backStep,
                             increaseBackStep: () => setState(pre => ({ ...pre, backStep: pre.backStep + 1 })),
-                            hover: hoverState,
                             setHoverState,
                             setState,
                             mask: () => overlayRef.current?.open(),

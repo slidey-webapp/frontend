@@ -27,7 +27,9 @@ const ShowHeadingSlide: React.FC<Props> = ({ slide }) => {
                 justifyContent: 'flex-end',
             };
 
-        return undefined;
+        return {
+            justifyContent: 'flex-start',
+        };
     }, [slide.verticalAlignment]);
 
     const horizontalAlignment = useMemo<CSSProperties | undefined>(() => {
@@ -46,7 +48,9 @@ const ShowHeadingSlide: React.FC<Props> = ({ slide }) => {
                 textAlign: 'right',
             };
 
-        return undefined;
+        return {
+            textAlign: 'left',
+        };
     }, [slide.horizontalAlignment]);
 
     const { headingSize, secondarySize } = useMemo<{

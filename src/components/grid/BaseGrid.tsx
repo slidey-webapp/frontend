@@ -75,7 +75,7 @@ const BaseGrid = React.forwardRef<BaseGridRef, BaseGridProps>((props, ref) => {
                       valueGetter: params => {
                           const rowIndex = _.get(params, 'node.rowIndex');
 
-                          return Number(rowIndex) + 1;
+                          return Number(rowIndex) + 1 + paginatedList.currentPage * paginatedList.limit;
                       },
                   },
               ]
@@ -246,10 +246,7 @@ const BaseGrid = React.forwardRef<BaseGridRef, BaseGridProps>((props, ref) => {
                         {...props.gridConfig}
                     />
                     {pagination && (
-                        <GridPagination
-                            onChangePage={props.onChangePage}
-                            paginatedList={props.paginatedList}
-                        />
+                        <GridPagination onChangePage={props.onChangePage} paginatedList={props.paginatedList} />
                     )}
                 </div>
             </div>

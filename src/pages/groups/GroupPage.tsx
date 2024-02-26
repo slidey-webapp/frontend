@@ -47,7 +47,7 @@ const GroupPage: React.FC<Props> = () => {
         modalRef.current?.onOpen(
             <GroupForm
                 rowData={data}
-                modalType="create"
+                modalType="update"
                 onClose={modalRef.current.onClose}
                 onSuccess={() => {
                     NotifyUtil.success('Câp nhật nhóm thành công');
@@ -88,14 +88,22 @@ const GroupPage: React.FC<Props> = () => {
                 columnDefs={groupGridColDef}
                 ref={gridRef}
                 actionRowsList={{
-                    hasEditBtn: true,
-                    hasDeleteBtn: true,
+                    hasEditBtn: (data: GroupDto) => {
+                        if (data.createdBy === authUser?.user.accountID) return true;
+
+                        return false;
+                    },
+                    hasDeleteBtn: (data: GroupDto) => {
+                        if (data.createdBy === authUser?.user.accountID) return true;
+
+                        return false;
+                    },
                     hasDetailBtn: true,
                     onClickDetailBtn: handleDetail,
                     onClickEditBtn: handleUpdate,
                     onClickDeleteBtn: handleDelete,
                     renderLeftActions: (data: GroupDto) => {
-                        if (data.creator?.accountID === authUser?.user.accountID) return <></>;
+                        if (data.createdBy === authUser?.user.accountID) return <></>;
 
                         return (
                             <ButtonIconBase
@@ -116,7 +124,7 @@ const GroupPage: React.FC<Props> = () => {
                 defaultColDef={{
                     autoHeight: true,
                 }}
-                actionRowsWidth={170}
+                actionRowsWidth={150}
                 toolbar={{
                     rightToolbar: (
                         <GridToolbar
