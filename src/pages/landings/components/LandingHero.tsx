@@ -15,7 +15,7 @@ const LandingHero: React.FC<Props> = () => {
     const textFieldRef = useRef<HTMLInputElement>(null);
 
     const renderButton = () => {
-        if (isAuthenticated) return <ButtonBase title="Đến trang chủ" onClick={() => navigate('/dashboard')} />;
+        if (isAuthenticated) return <ButtonBase title="Không gian làm việc" onClick={() => navigate('/dashboard')} />;
         return <ButtonBase title="Bắt đầu ngay" onClick={() => navigate('/register')} />;
     };
 

@@ -2,9 +2,9 @@ import { Pagination } from '@mui/material';
 import React from 'react';
 import { BaseGridResponse } from '~/hooks/useBaseGrid';
 
-interface Props extends BaseGridResponse<any> {}
+interface Props extends Pick<BaseGridResponse<any>, 'onChangePage' | 'paginatedList'> {}
 
-const GridPagination: React.FC<Props> = ({ paginatedList, ...props }) => {
+const GridPagination: React.FC<Props> = ({ paginatedList, onChangePage }) => {
     return (
         <div className="h-12 w-full">
             <div className="w-full h-full flex items-center justify-end">
@@ -15,7 +15,7 @@ const GridPagination: React.FC<Props> = ({ paginatedList, ...props }) => {
                     showLastButton
                     variant="text"
                     color="primary"
-                    onChange={(event, page) => props.onChangePage(page)}
+                    onChange={(event, page) => onChangePage(page)}
                 />
             </div>
         </div>

@@ -14,9 +14,9 @@ export const presentationGridColDef: BaseGridColDef[] = [
             display: 'flex',
             justifyContent: 'center',
         },
-        width: 80,
-        minWidth: 80,
-        maxWidth: 80,
+        width: 100,
+        minWidth: 100,
+        maxWidth: 100,
         resizable: false,
     },
     {
