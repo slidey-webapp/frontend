@@ -19,24 +19,30 @@ import { GROUP_REMOVE_MEMBER_API, GROUP_SEND_INVITATION_API, GROUP_UPDATE_MEMBER
 import { useGroupDetail } from './api/useGroupDetail';
 import { useGroupMembers } from './api/useGroupMembers';
 import { GroupMemberDto, GroupMemberRole } from './types/group';
+import { useAppSelector } from '~/AppStore';
 
 interface Props {}
 
 const GroupDetailPage: React.FC<Props> = () => {
     const breadcrumbRef = useRef<BreadcrumbRef>(null);
     const formRef = useRef<BaseFormRef>(null);
+    const { authUser } = useAppSelector(x => x.auth);
 
     const { groupID } = useParams<{
         groupID: string;
     }>();
 
     const [members, setMembers] = useState<GroupMemberDto[]>([]);
+    const [role, setRole] = useState<GroupMemberRole>('MEMBER');
 
     const { data: responseGroup, isFetching: isFetchingGroup } = useGroupDetail(groupID as Id);
     const { refetch: refetchMembers } = useGroupMembers(groupID as Id, {
         onSuccess: res => {
             if (res.status !== 200) return;
-            setMembers(res.data.result?.members || []);
+            const resMembers = res.data.result?.members || [];
+            const resRole = resMembers.find(x => x.accountID === authUser?.user?.accountID)?.role || 'MEMBER';
+            setMembers(resMembers);
+            setRole(resRole);
         },
     });
 
@@ -186,36 +192,41 @@ const GroupDetailPage: React.FC<Props> = () => {
                                                         <div className="text-xs">{member.email}</div>
                                                     </div>
                                                 </div>
-                                                {member.role !== 'OWNER' && (
-                                                    <div>
-                                                        <FormControl sx={{ minWidth: 150 }} size="small">
-                                                            <Select
-                                                                defaultValue={member.role}
-                                                                onChange={event =>
-                                                                    handleRoleChange(event, {
-                                                                        accountID: member.accountID,
-                                                                        groupID: member.groupID,
-                                                                    })
-                                                                }
-                                                            >
-                                                                {ComboOptionConstant.ROLE.map(({ value, label }) => {
-                                                                    return (
-                                                                        <MenuItem key={value} value={value}>
-                                                                            {label}
-                                                                        </MenuItem>
-                                                                    );
-                                                                })}
-                                                            </Select>
-                                                        </FormControl>
-                                                        <ButtonIconBase
-                                                            className="!ml-2"
-                                                            icon="remove"
-                                                            color="error"
-                                                            tooltip="Xóa thành viên"
-                                                            onClick={() => handleRemoveMember(member)}
-                                                        />
-                                                    </div>
-                                                )}
+                                                {member.role !== 'OWNER' &&
+                                                    authUser?.user.accountID !== member.accountID && (
+                                                        <div>
+                                                            <FormControl sx={{ minWidth: 150 }} size="small">
+                                                                <Select
+                                                                    defaultValue={member.role}
+                                                                    onChange={event =>
+                                                                        handleRoleChange(event, {
+                                                                            accountID: member.accountID,
+                                                                            groupID: member.groupID,
+                                                                        })
+                                                                    }
+                                                                >
+                                                                    {ComboOptionConstant.ROLE.map(
+                                                                        ({ value, label }) => {
+                                                                            return (
+                                                                                <MenuItem key={value} value={value}>
+                                                                                    {label}
+                                                                                </MenuItem>
+                                                                            );
+                                                                        },
+                                                                    )}
+                                                                </Select>
+                                                            </FormControl>
+                                                            {role === 'OWNER' && (
+                                                                <ButtonIconBase
+                                                                    className="!ml-2"
+                                                                    icon="remove"
+                                                                    color="error"
+                                                                    tooltip="Xóa thành viên"
+                                                                    onClick={() => handleRemoveMember(member)}
+                                                                />
+                                                            )}
+                                                        </div>
+                                                    )}
                                             </div>
                                         );
                                     })}
@@ -238,10 +249,11 @@ const GroupDetailPage: React.FC<Props> = () => {
                             </Box>
                         </>
                     }
+                    hidden={role === 'MEMBER'}
                 >
                     <AvatarGroup
                         max={3}
-                        style={{ cursor: 'pointer' }}
+                        style={{ cursor: role === 'MEMBER' ? 'default' : 'pointer' }}
                         sx={{
                             '& .MuiAvatar-root': { width: 36, height: 36 },
                         }}

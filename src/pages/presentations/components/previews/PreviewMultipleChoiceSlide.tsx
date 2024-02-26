@@ -32,7 +32,9 @@ const PreviewMultipleChoiceSlide: React.FC<Props> = ({ slide, hover }) => {
                 justifyContent: 'flex-end',
             };
 
-        return undefined;
+        return {
+            justifyContent: 'flex-start',
+        };
     }, [slide.verticalAlignment, hover]);
 
     const horizontalAlignment = useMemo<CSSProperties | undefined>(() => {
@@ -53,7 +55,9 @@ const PreviewMultipleChoiceSlide: React.FC<Props> = ({ slide, hover }) => {
                 textAlign: 'right',
             };
 
-        return undefined;
+            return {
+                textAlign: 'left',
+            };
     }, [slide.horizontalAlignment, hover]);
 
     const { headingSize, secondarySize } = useMemo<{

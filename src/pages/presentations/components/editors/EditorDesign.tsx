@@ -60,8 +60,18 @@ const colorInputSx: SxProps<Theme> = {
 const EditorDesign: React.FC<Props> = () => {
     const { currentSlideId, slides, onUpdatePresentation, setHoverState } = usePresentationContext();
     const currentSlideIndex = slides.findIndex(x => x.slideID === currentSlideId);
-    const slide = slides.find(x => x.slideID === currentSlideId);
-    if (!slide || currentSlideIndex === -1) return null;
+    const currentSlide = slides.find(x => x.slideID === currentSlideId);
+    if (!currentSlide || currentSlideIndex === -1) return null;
+
+    const slide: SlideDto = {
+        ...currentSlide,
+        verticalAlignment: currentSlide?.verticalAlignment || VerticalAlignment.Top,
+        horizontalAlignment: currentSlide?.horizontalAlignment || HorizontalAlignment.Left,
+        textSize: currentSlide?.textSize || TextSize.Medium,
+        textColor: currentSlide?.textColor || '#000000',
+        textBackground: currentSlide?.textBackground || '#ffffff',
+        chartType: currentSlide?.chartType || ChartType.Bar,
+    };
 
     let textColor = slide.textColor;
     let textBackground = slide.textBackground;

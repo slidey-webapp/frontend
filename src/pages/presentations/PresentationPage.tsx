@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAppSelector } from '~/AppStore';
 import ButtonIconBase from '~/components/buttons/ButtonIconBase';
 import BaseGrid, { BaseGridRef } from '~/components/grid/BaseGrid';
 import GridToolbar from '~/components/grid/components/GridToolbar';
@@ -19,6 +20,7 @@ const PresentationPage: React.FC<Props> = () => {
     const gridRef = useRef<BaseGridRef>(null);
     const modalRef = useRef<ModalBaseRef>(null);
 
+    const { authUser } = useAppSelector(x => x.auth);
     const navigate = useNavigate();
 
     const gridController = useBaseGrid<PresentationDto>({
@@ -78,10 +80,16 @@ const PresentationPage: React.FC<Props> = () => {
                 ref={gridRef}
                 actionRowsList={{
                     hasDetailBtn: true,
-                    hasDeleteBtn: true,
+                    hasDeleteBtn: (data: PresentationDto) => {
+                        if (data.createdBy === authUser?.user.accountID) return true;
+
+                        return false;
+                    },
                     onClickDetailBtn: handleDetail,
                     onClickDeleteBtn: handleDelete,
                     renderLeftActions: data => {
+                        if (data.createdBy !== authUser?.user.accountID) return <></>;
+
                         return (
                             <ButtonIconBase
                                 icon={'slide-outlined'}
