@@ -12,17 +12,10 @@ import '~/mocks/mock';
 import { createTheme } from '~/themes';
 import './App.scss';
 import store from './AppStore';
+import InternalServerError from './components/errors/InternalServerError';
 import { AuthProvider } from './providers/AuthProvider';
 import SocketProvider from './providers/SocketProvider';
 import AppRoute from './routes/AppRoute';
-
-const ErrorFallback = () => {
-    return (
-        <div className="text-red-500 w-screen h-screen flex flex-col justify-center items-center" role="alert">
-            error fallback
-        </div>
-    );
-};
 
 const App = () => {
     const theme = createTheme();
@@ -31,7 +24,7 @@ const App = () => {
         <React.Fragment>
             <Provider store={store}>
                 <GoogleOAuthProvider clientId={process.env.REACT_APP_OAUTH_GOOGLE_CLIENT_ID as string}>
-                    <ErrorBoundary FallbackComponent={ErrorFallback}>
+                    <ErrorBoundary FallbackComponent={InternalServerError}>
                         <QueryClientProvider client={queryClient}>
                             <BrowserRouter>
                                 <SocketProvider>

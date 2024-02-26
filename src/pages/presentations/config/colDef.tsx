@@ -3,7 +3,6 @@ import _ from 'lodash';
 import { BaseGridColDef } from '~/components/grid/BaseGrid';
 import ComponentUtil from '~/utils/ComponentUtil';
 import DateTimeUtil from '~/utils/DateTimeUtil';
-import { CollaborationDto } from '../types/collaboration';
 import { PresentationDto } from '../types/presentation';
 
 export const presentationGridColDef: BaseGridColDef[] = [
@@ -14,9 +13,9 @@ export const presentationGridColDef: BaseGridColDef[] = [
             display: 'flex',
             justifyContent: 'center',
         },
-        width: 80,
-        minWidth: 80,
-        maxWidth: 80,
+        width: 100,
+        minWidth: 100,
+        maxWidth: 100,
         resizable: false,
     },
     {
@@ -25,7 +24,7 @@ export const presentationGridColDef: BaseGridColDef[] = [
         minWidth: 200,
     },
     {
-        headerName: 'Thành viên',
+        headerName: 'Cộng tác viên',
         field: nameof.full<PresentationDto>(x => x.collaborators),
         width: 150,
         minWidth: 150,
@@ -33,14 +32,7 @@ export const presentationGridColDef: BaseGridColDef[] = [
         resizable: false,
         cellRenderer: (params: any) => {
             const data = _.get(params, 'data') as PresentationDto;
-            const { collaborators, creator } = data;
-            if (creator && collaborators) {
-                if (!collaborators.some(x => x.collaborationID === 'account' + creator?.accountID))
-                    collaborators.push({
-                        collaborationID: 'account' + creator?.accountID,
-                        fullname: creator.fullname,
-                    } as CollaborationDto);
-            }
+            const { collaborators } = data;
 
             return (
                 <AvatarGroup
@@ -65,6 +57,33 @@ export const presentationGridColDef: BaseGridColDef[] = [
         },
         cellStyle: {
             display: 'flex',
+        },
+    },
+    {
+        headerName: 'Người tạo',
+        field: nameof.full<PresentationDto>(x => x.creator),
+        width: 100,
+        minWidth: 100,
+        maxWidth: 100,
+        resizable: false,
+        cellRenderer: (params: any) => {
+            const data = _.get(params, 'data') as PresentationDto;
+            const { creator } = data;
+            if (!creator) return null;
+
+            return ComponentUtil.renderAvatarUser({
+                fullName: creator.fullname,
+                size: 28,
+                style: {
+                    fontSize: 12,
+                },
+                tooltip: true,
+            });
+        },
+        cellStyle: {
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
         },
     },
     {

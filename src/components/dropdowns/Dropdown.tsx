@@ -8,6 +8,7 @@ export interface DropdownProps extends React.PropsWithChildren {
     wrapperClassName?: string;
     openStyle?: CSSProperties;
     wrapperStyle?: CSSProperties;
+    hidden?: boolean;
     popoverProps?: Partial<PopoverProps>;
 }
 
@@ -18,16 +19,19 @@ const Dropdown: React.FC<DropdownProps> = ({
     wrapperClassName,
     wrapperStyle,
     openStyle,
+    hidden,
     popoverProps,
 }) => {
     const [anchorElPopover, setAnchorElPopover] = React.useState<null | HTMLElement>(null);
     const openPopover = Boolean(anchorElPopover);
 
     const handleOpen = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        if (hidden) return;
         setAnchorElPopover(event.currentTarget);
     };
 
     const handleClose = () => {
+        if (hidden) return;
         setAnchorElPopover(null);
     };
 

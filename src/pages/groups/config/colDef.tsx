@@ -13,9 +13,9 @@ export const groupGridColDef: BaseGridColDef[] = [
             display: 'flex',
             justifyContent: 'center',
         },
-        width: 80,
-        minWidth: 80,
-        maxWidth: 80,
+        width: 100,
+        minWidth: 100,
+        maxWidth: 100,
         resizable: false,
     },
     {
@@ -61,6 +61,33 @@ export const groupGridColDef: BaseGridColDef[] = [
         },
         cellStyle: {
             display: 'flex',
+        },
+    },
+    {
+        headerName: 'Người tạo',
+        field: nameof.full<GroupDto>(x => x.creator),
+        width: 100,
+        minWidth: 100,
+        maxWidth: 100,
+        resizable: false,
+        cellRenderer: (params: any) => {
+            const data = _.get(params, 'data') as GroupDto;
+            const { creator } = data;
+            if (!creator) return null;
+
+            return ComponentUtil.renderAvatarUser({
+                fullName: creator.fullname,
+                size: 28,
+                style: {
+                    fontSize: 12,
+                },
+                tooltip: true,
+            });
+        },
+        cellStyle: {
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
         },
     },
     {

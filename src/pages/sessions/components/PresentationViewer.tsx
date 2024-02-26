@@ -23,6 +23,7 @@ const PresentationViewer = ({ presentation }: PresentationViewerProps) => {
                     setCurrentSlideId: setCurrentSlideId,
                     backStep: 1,
                     hover: {} as any,
+                    isOwner: true,
                     setHoverState: () => {
                         //
                     },

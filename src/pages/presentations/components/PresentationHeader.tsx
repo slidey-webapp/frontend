@@ -25,9 +25,10 @@ const PresentationHeader: React.FC<Props> = () => {
         presentationID,
         collaborations,
         usersOnline,
+        backStep,
+        isOwner,
         onUpdatePresentation,
         onShowPresentation,
-        backStep,
         mask,
         unmask,
     } = usePresentationContext();
@@ -159,7 +160,7 @@ const PresentationHeader: React.FC<Props> = () => {
                                             <div className="w-full flex flex-col">
                                                 {[
                                                     {
-                                                        accountID: presentation.creator?.accountID,
+                                                        accountID: presentation.createdBy,
                                                         fullname: presentation.creator?.fullname,
                                                         email: presentation.creator?.email,
                                                         presentationID: presentationID,
@@ -225,17 +226,18 @@ const PresentationHeader: React.FC<Props> = () => {
                                     </Box>
                                 </>
                             }
+                            hidden={!isOwner}
                         >
                             <AvatarGroup
                                 max={3}
-                                style={{ cursor: 'pointer' }}
+                                style={{ cursor: isOwner ? 'pointer' : 'default' }}
                                 sx={{
                                     '& .MuiAvatar-root': { width: 32, height: 32 },
                                 }}
                             >
                                 {[
                                     {
-                                        accountID: presentation.creator?.accountID,
+                                        accountID: presentation.createdBy,
                                         fullname: presentation.creator?.fullname,
                                         email: presentation.creator?.email,
                                         presentationID: presentationID,
@@ -254,73 +256,77 @@ const PresentationHeader: React.FC<Props> = () => {
                             </AvatarGroup>
                         </Dropdown>
                     </div>
-                    <Divider
-                        orientation="vertical"
-                        sx={{
-                            margin: '0 12px',
-                            height: '24px',
-                        }}
-                    />
-                    <div>
-                        <Dropdown
-                            popoverProps={{
-                                slotProps: {
-                                    paper: {
-                                        sx: { width: 220 },
-                                    },
-                                },
-                            }}
-                            overlayContent={
-                                <>
-                                    {[
-                                        {
-                                            title: 'Công khai',
-                                            icon: 'public' as BaseIconProps['type'],
-                                            onClick: onShowPresentation,
-                                        },
-                                        {
-                                            title: 'Trong nhóm',
-                                            icon: 'lock' as BaseIconProps['type'],
-                                            onClick: () => {
-                                                modalRef.current?.onOpen(
-                                                    <PresentGroupShareForm
-                                                        onClose={() => modalRef.current?.onClose()}
-                                                        onSubmit={onShowPresentation}
-                                                    />,
-                                                    'Trình chiếu trong nhóm',
-                                                    '50%',
-                                                );
+                    {isOwner && (
+                        <>
+                            <Divider
+                                orientation="vertical"
+                                sx={{
+                                    margin: '0 12px',
+                                    height: '24px',
+                                }}
+                            />
+                            <div>
+                                <Dropdown
+                                    popoverProps={{
+                                        slotProps: {
+                                            paper: {
+                                                sx: { width: 220 },
                                             },
                                         },
-                                    ].map((item, index) => {
-                                        return (
-                                            <>
-                                                <div
-                                                    key={item.title}
-                                                    className="px-4 py-3 cursor-pointer transition-all duration-100 ease-in-out hover:bg-neutral-50"
-                                                    onClick={() => item.onClick()}
-                                                >
-                                                    <div className="flex-1 h-6 flex items-center justify-between">
-                                                        <div className="flex items-center">
-                                                            <div className="mr-3">
-                                                                <BaseIcon type={item.icon} />
-                                                            </div>
-                                                            <div className="flex-1 flex flex-col h-full">
-                                                                {item.title}
+                                    }}
+                                    overlayContent={
+                                        <>
+                                            {[
+                                                {
+                                                    title: 'Công khai',
+                                                    icon: 'public' as BaseIconProps['type'],
+                                                    onClick: onShowPresentation,
+                                                },
+                                                {
+                                                    title: 'Trong nhóm',
+                                                    icon: 'lock' as BaseIconProps['type'],
+                                                    onClick: () => {
+                                                        modalRef.current?.onOpen(
+                                                            <PresentGroupShareForm
+                                                                onClose={() => modalRef.current?.onClose()}
+                                                                onSubmit={onShowPresentation}
+                                                            />,
+                                                            'Trình chiếu trong nhóm',
+                                                            '50%',
+                                                        );
+                                                    },
+                                                },
+                                            ].map((item, index) => {
+                                                return (
+                                                    <>
+                                                        <div
+                                                            key={item.title}
+                                                            className="px-4 py-3 cursor-pointer transition-all duration-100 ease-in-out hover:bg-neutral-50"
+                                                            onClick={() => item.onClick()}
+                                                        >
+                                                            <div className="flex-1 h-6 flex items-center justify-between">
+                                                                <div className="flex items-center">
+                                                                    <div className="mr-3">
+                                                                        <BaseIcon type={item.icon} />
+                                                                    </div>
+                                                                    <div className="flex-1 flex flex-col h-full">
+                                                                        {item.title}
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                                {index < 1 && <Divider />}
-                                            </>
-                                        );
-                                    })}
-                                </>
-                            }
-                        >
-                            <ButtonBase title={'Trình chiếu'} startIcon={'play-arrow'} className="!m-0" />
-                        </Dropdown>
-                    </div>
+                                                        {index < 1 && <Divider />}
+                                                    </>
+                                                );
+                                            })}
+                                        </>
+                                    }
+                                >
+                                    <ButtonBase title={'Trình chiếu'} startIcon={'play-arrow'} className="!m-0" />
+                                </Dropdown>
+                            </div>
+                        </>
+                    )}
                 </div>
             </div>
             <ModalBase ref={modalRef} />
