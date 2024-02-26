@@ -62,7 +62,7 @@ const IconsMap = {
     'pie-chart': loadable(() => import('@mui/icons-material/PieChart')),
     'donut-chart': loadable(() => import('@mui/icons-material/DonutLarge')),
     'line-chart': loadable(() => import('@mui/icons-material/ShowChart')),
-
+    'reload': loadable(() => import('@mui/icons-material/Replay')),
 };
 
 type Size = 8 | 10 | 12 | 14 | 16 | 18 | 20 | 22 | 24 |26 | 28;

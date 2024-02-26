@@ -3,6 +3,7 @@ import { Navigate, RouteObject, useRoutes } from 'react-router-dom';
 import { BaseIconProps } from '~/components/icons/BaseIcon';
 import SessionDetailPage from '~/pages/sessions/SessionDetailPage';
 
+const NotFound = React.lazy(() => import('~/components/errors/NotFound'));
 const LoginView = React.lazy(() => import('~/components/layouts/LoginView'));
 const RegisterView = React.lazy(() => import('~/components/layouts/RegisterView'));
 const ForgotPassword = React.lazy(() => import('~/components/layouts/ForgotPassword'));
@@ -251,7 +252,7 @@ export const routeList: RouteDefinition[] = [
     {
         title: 'Not found',
         path: '/*',
-        element: <div>notfound</div>,
+        element: <NotFound />,
     },
 ];
 
