@@ -2,6 +2,7 @@ import _ from 'lodash';
 import React, { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { RootState, useAppSelector } from '~/AppStore';
+import Forbidden from '~/components/errors/Forbidden';
 import Loading from '~/components/loadings/Loading';
 import Overlay, { OverlayRef } from '~/components/loadings/Overlay';
 import { SocketEvent } from '~/configs/constants';
@@ -58,7 +59,6 @@ interface State {
     collaborations: CollaborationDto[];
     reRender: boolean;
     backStep: number;
-    isRemoveCollaborator: boolean;
 }
 
 const PresentationDetailPage: React.FC<Props> = () => {
@@ -78,13 +78,13 @@ const PresentationDetailPage: React.FC<Props> = () => {
         collaborations: [],
         reRender: false,
         backStep: 1,
-        isRemoveCollaborator: false,
     });
     const [hoverState, setHoverState] = useState<PlacementHover>({
         verticalAlignment: null,
         horizontalAlignment: null,
         chartType: null,
     });
+    const [isForbidden, setIsForbidden] = useState<boolean>(false);
 
     useEffect(() => {
         !socket.connected && socket.connect();
@@ -187,18 +187,9 @@ const PresentationDetailPage: React.FC<Props> = () => {
         });
 
         socket.on(SocketEvent.REMOVE_COLLAB, ({ accountID }: { accountID: Id }) => {
-            setState(pre => {
-                const preState = _.cloneDeep(pre);
-                const isRemove = authUser?.user.accountID === accountID;
-
-                if (isRemove) {
-                    preState.isRemoveCollaborator = true;
-                    return preState;
-                }
-
-                preState.collaborations.filter(x => x.accountID !== accountID);
-                return preState;
-            });
+            const isRemove = authUser?.user.accountID === accountID;
+            if (!isRemove) return;
+            setIsForbidden(true);
         });
 
         return () => {
@@ -209,6 +200,10 @@ const PresentationDetailPage: React.FC<Props> = () => {
 
     const { isFetching: isFetchingPresentation } = usePresentationDetail(presentationID, {
         onSuccess: res => {
+            if (res.status === 403) {
+                setIsForbidden(true);
+                return;
+            }
             if (res.status !== 200 || _.isEmpty(res.data?.result)) return;
 
             const presentation = _.cloneDeep(res.data.result);
@@ -275,7 +270,7 @@ const PresentationDetailPage: React.FC<Props> = () => {
     const renderBody = () => {
         let body = null;
         if (isLoading) body = <Loading />;
-        else if (state.isRemoveCollaborator) body = <>Ban da bi xoa</>;
+        else if (isForbidden) body = <Forbidden />;
         else
             body = (
                 <>
