@@ -10,6 +10,8 @@ export interface BaseGridResponse<TData> {
     paginatedList: PaginatedList<TData>;
     reloadData: () => void;
     onChangePage: (pageNumber: number) => void;
+    mask: () => void;
+    unmask: () => void;
 }
 
 interface Props<TData> {
@@ -70,5 +72,9 @@ export function useBaseGrid<TData>(props: Props<TData>): BaseGridResponse<TData>
         paginatedList: paginatedList,
         reloadData: fetchData,
         onChangePage,
+        mask: () => props.gridRef?.current?.api?.showLoadingOverlay?.(),
+        unmask: () => {
+            setTimeout(() => props.gridRef?.current?.api?.hideOverlay, 250);
+        },
     };
 }

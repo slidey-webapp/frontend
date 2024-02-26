@@ -13,7 +13,7 @@ const LandingHeader: React.FC<Props> = () => {
 
     const renderRight = () => {
         if (isAuthenticated)
-            return <ButtonBase color="primary" onClick={() => navigate('/dashboard')} title="Đến trang chủ" />;
+            return <ButtonBase color="primary" onClick={() => navigate('/dashboard')} title="Không gian làm việc" />;
 
         return (
             <div className="flex gap-x-4">

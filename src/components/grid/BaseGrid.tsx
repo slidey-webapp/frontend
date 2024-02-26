@@ -25,9 +25,9 @@ export interface BaseGridProps extends BaseGridResponse<any> {
     numberRows?: boolean;
     actionRows?: boolean;
     actionRowsList?: {
-        hasEditBtn?: boolean;
-        hasDeleteBtn?: boolean;
-        hasDetailBtn?: boolean;
+        hasEditBtn?: boolean | ((data: any) => boolean);
+        hasDeleteBtn?: boolean | ((data: any) => boolean);
+        hasDetailBtn?: boolean | ((data: any) => boolean);
         hasCreateChildBtn?: boolean;
         hasAddUserBtn?: boolean;
         onClickEditBtn?: (data: any) => void;
@@ -84,6 +84,85 @@ const BaseGrid = React.forwardRef<BaseGridRef, BaseGridProps>((props, ref) => {
 
     customColDefs.push(...props.columnDefs);
 
+    const renderDetailButton = (data: any) => {
+        if (!actionRowsList?.hasDetailBtn) return null;
+        const button = (
+            <ButtonIconBase
+                icon={'info'}
+                onClick={() => {
+                    actionRowsList.onClickDetailBtn?.(data);
+                }}
+                tooltip="Chi tiết"
+            />
+        );
+        if (typeof actionRowsList?.hasDetailBtn === 'boolean') {
+            if (actionRowsList.hasDetailBtn) {
+                return button;
+            }
+
+            return null;
+        }
+
+        const isDisplay = actionRowsList?.hasDetailBtn(data);
+        if (!isDisplay) return null;
+
+        return button;
+    };
+
+    const renderUpdateButton = (data: any) => {
+        if (!actionRowsList?.hasEditBtn) return null;
+        const button = (
+            <ButtonIconBase
+                icon={'edit'}
+                color={'success'}
+                onClick={() => {
+                    actionRowsList.onClickEditBtn?.(data);
+                }}
+                tooltip="Cập nhật"
+            />
+        );
+        if (typeof actionRowsList?.hasEditBtn === 'boolean') {
+            if (actionRowsList.hasEditBtn) {
+                return button;
+            }
+
+            return null;
+        }
+
+        const isDisplay = actionRowsList?.hasEditBtn(data);
+        if (!isDisplay) return null;
+
+        return button;
+    };
+
+    const renderDeleteButton = (data: any) => {
+        if (!actionRowsList?.hasDeleteBtn) return null;
+        const button = (
+            <ButtonIconBase
+                icon={'delete'}
+                tooltip="Xóa"
+                color={'error'}
+                onClick={() => {
+                    NotifyUtil.confirmDialog('Thông báo', 'Bạn có chắc muốn xóa ?').then(confirm => {
+                        if (confirm.isConfirmed) actionRowsList.onClickDeleteBtn?.(data);
+                    });
+                }}
+            />
+        );
+        if (typeof actionRowsList?.hasDeleteBtn === 'boolean') {
+            if (actionRowsList.hasDeleteBtn) {
+                return button;
+            }
+
+            return null;
+        }
+
+        const isDisplay = actionRowsList?.hasDeleteBtn(data);
+        if (!isDisplay) return null;
+
+        return button;
+    };
+
     actionRows &&
         customColDefs.push({
             field: 'actionRows',
@@ -104,37 +183,9 @@ const BaseGrid = React.forwardRef<BaseGridRef, BaseGridProps>((props, ref) => {
                 return (
                     <div className="w-full h-full flex items-center justify-center">
                         {actionRowsList?.renderLeftActions?.(data)}
-                        {actionRowsList?.hasDetailBtn && (
-                            <ButtonIconBase
-                                icon={'info'}
-                                onClick={() => {
-                                    actionRowsList.onClickDetailBtn?.(data);
-                                }}
-                                tooltip="Chi tiết"
-                            />
-                        )}
-                        {actionRowsList?.hasEditBtn && (
-                            <ButtonIconBase
-                                icon={'edit'}
-                                color={'success'}
-                                onClick={() => {
-                                    actionRowsList.onClickEditBtn?.(data);
-                                }}
-                                tooltip="Cập nhật"
-                            />
-                        )}
-                        {actionRowsList?.hasDeleteBtn && (
-                            <ButtonIconBase
-                                icon={'delete'}
-                                tooltip="Xóa"
-                                color={'error'}
-                                onClick={() => {
-                                    NotifyUtil.confirmDialog('Thông báo', 'Bạn có chắc muốn xóa ?').then(confirm => {
-                                        if (confirm.isConfirmed) actionRowsList.onClickDeleteBtn?.(data);
-                                    });
-                                }}
-                            />
-                        )}
+                        {renderDetailButton(data)}
+                        {renderUpdateButton(data)}
+                        {renderDeleteButton(data)}
                         {actionRowsList?.renderRightActions?.(data)}
                     </div>
                 );
@@ -198,7 +249,6 @@ const BaseGrid = React.forwardRef<BaseGridRef, BaseGridProps>((props, ref) => {
                         <GridPagination
                             onChangePage={props.onChangePage}
                             paginatedList={props.paginatedList}
-                            reloadData={props.reloadData}
                         />
                     )}
                 </div>
