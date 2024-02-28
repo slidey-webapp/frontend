@@ -25,6 +25,19 @@ export interface SlideDto extends FullAuditedTimeDto {
     chartType: ChartType;
     options: MultipleChoiceSlideOption[];
     // #endregion
+
+    // #region quote
+    quote: string;
+    author: string;
+    // #endregion
+
+    // #region bullets
+    items: BulletSlideItem[];
+    // #endregion
+
+    // #region word cloud
+    words: string[]
+    // #endregion
 }
 
 export interface MultipleChoiceSlideOption {
@@ -36,4 +49,10 @@ export interface MultipleChoiceSlideOption {
     chosenAmount?: number;
 }
 
-export type SlideType = 'HEADING' | 'PARAGRAPH' | 'MULTIPLE_CHOICE';
+export interface BulletSlideItem {
+    slideID: Id;
+    bulletListSlideItemID: Id;
+    value: string;
+}
+
+export type SlideType = 'HEADING' | 'PARAGRAPH' | 'MULTIPLE_CHOICE' | 'QUOTE' | 'BULLET_LIST' | 'WORD_CLOUD';

@@ -57,8 +57,20 @@ export class ComboOptionConstant {
             label: 'Paragraph',
         },
         {
+            value: 'BULLET_LIST',
+            label: 'Bullets',
+        },
+        {
+            value: 'QUOTE',
+            label: 'Quote',
+        },
+        {
             value: 'MULTIPLE_CHOICE',
             label: 'Multiple choice',
+        },
+        {
+            value: 'WORD_CLOUD',
+            label: 'Word Cloud',
         },
     ];
 }
