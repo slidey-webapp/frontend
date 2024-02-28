@@ -7,6 +7,9 @@ import { SlideDto, SlideType } from '../../types/slide';
 import EditorHeadingSlide from './EditorHeadingSlide';
 import EditorMultipleChoiceSlide from './EditorMultipleChoice';
 import EditorParagraphSlide from './EditorParagraphSlide';
+import EditorBulletSlide from './EditorBulletSlide';
+import EditorWordCloud from './EditorWordCloud';
+import EditorQuoteSlide from './EditorQuoteSlide';
 
 interface Props {}
 
@@ -30,6 +33,12 @@ const EditorContent: React.FC<Props> = () => {
                         onUpdatePresentation={onUpdatePresentation}
                     />
                 );
+            case 'BULLET_LIST':
+                return <EditorBulletSlide slide={slide} slides={slides} onUpdatePresentation={onUpdatePresentation} />;
+            case 'WORD_CLOUD':
+                return <EditorWordCloud slide={slide} slides={slides} onUpdatePresentation={onUpdatePresentation} />;
+            case 'QUOTE':
+                return <EditorQuoteSlide slide={slide} slides={slides} onUpdatePresentation={onUpdatePresentation} />;
             case null:
             default:
                 return null;

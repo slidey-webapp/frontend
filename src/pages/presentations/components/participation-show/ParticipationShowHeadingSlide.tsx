@@ -53,8 +53,6 @@ const ParticipationShowHeadingSlide: React.FC<Props> = ({ slide }) => {
             </div>
         </div>
     );
-
-    return <div>ParticipationShowHeading</div>;
 };
 
 export default ParticipationShowHeadingSlide;

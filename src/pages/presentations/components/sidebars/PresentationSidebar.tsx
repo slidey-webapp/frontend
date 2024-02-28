@@ -13,9 +13,12 @@ import { usePresentationContext } from '../../PresentationDetailPage';
 import { PRESENTATION_CREATE_SLIDE_API } from '../../api/presentation.api';
 import { SlideDto, SlideType } from '../../types/slide';
 import NewSlidePattern from './NewSlidePattern';
+import OverviewBulletSlide from './OverviewBulletSlide';
 import OverviewHeadingSlide from './OverviewHeadingSlide';
 import OverviewMultipleChoiceSlide from './OverviewMultipleChoiceSlide';
 import OverviewParagraphSlide from './OverviewParagraphSlide';
+import OverviewQuoteSlide from './OverviewQuoteSlide';
+import OverviewWordCloudSlide from './OverviewWordCloudSlide';
 
 interface Props {
     isReadonly?: boolean;
@@ -56,6 +59,12 @@ const PresentationSidebar: React.FC<Props> = ({ isReadonly }) => {
                 return <OverviewParagraphSlide slide={slide} key={slide.slideID} />;
             case 'MULTIPLE_CHOICE':
                 return <OverviewMultipleChoiceSlide slide={slide} key={slide.slideID} />;
+            case 'BULLET_LIST':
+                return <OverviewBulletSlide slide={slide} key={slide.slideID} />;
+            case 'QUOTE':
+                return <OverviewQuoteSlide slide={slide} key={slide.slideID} />;
+            case 'WORD_CLOUD':
+                return <OverviewWordCloudSlide slide={slide} key={slide.slideID} />;
             case null:
             default:
                 return null;

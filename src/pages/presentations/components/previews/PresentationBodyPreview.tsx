@@ -3,6 +3,9 @@ import { usePresentationContext } from '../../PresentationDetailPage';
 import PreviewHeadingSlide from './PreviewHeadingSlide';
 import PreviewMultipleChoiceSlide from './PreviewMultipleChoiceSlide';
 import PreviewParagraphSlide from './PreviewParagraphSlide';
+import PreviewBulletSlide from './PreviewBulletSlide';
+import PreviewWordCloudSlide from './PreviewWordCloudSlide';
+import PreviewQuoteSlide from './PreviewQuoteSlide';
 
 interface Props {}
 
@@ -18,6 +21,12 @@ const PresentationBodyPreview: React.FC<Props> = () => {
                 return <PreviewMultipleChoiceSlide slide={slide} hover={hover} />;
             case 'PARAGRAPH':
                 return <PreviewParagraphSlide slide={slide} hover={hover} />;
+            case 'BULLET_LIST':
+                return <PreviewBulletSlide slide={slide} hover={hover} />;
+            case 'WORD_CLOUD':
+                return <PreviewWordCloudSlide slide={slide} hover={hover} />;
+            case 'QUOTE':
+                return <PreviewQuoteSlide slide={slide} hover={hover} />;
             case null:
             default:
                 return null;

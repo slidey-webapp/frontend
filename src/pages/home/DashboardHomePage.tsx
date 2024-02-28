@@ -204,47 +204,49 @@ const DashboardHomePage: React.FC<Props> = () => {
                         }}
                     >
                         {isLoading && <SkeletonGrids />}
-                        {recentVisitedItem.map(item => {
-                            return (
-                                <Grid key={item.visitHistoryID} item xs={12} sm={6} md={4} lg={3}>
-                                    <Stack direction="column">
-                                        <Box
-                                            sx={{
-                                                padding: '1rem',
-                                                borderRadius: '8px',
-                                                transition: 'all .3s',
-                                                cursor: 'pointer',
-                                                borderWidth: 2,
-                                                borderColor: _.get(neutral, '100'),
-                                                borderStyle: 'solid',
-                                                '&:hover': {
-                                                    borderColor: _.get(indigo, 'main'),
-                                                },
-                                                marginBottom: '0.5rem',
-                                                aspectRatio: '16 / 9',
-                                            }}
-                                            onClick={() => handleDetailPresentation(item.assetID)}
-                                        >
-                                            {renderSlide(item.asset.firstSlide)}
-                                        </Box>
-                                        <Typography
-                                            component="p"
-                                            variant="subtitle1"
-                                            sx={{ cursor: 'pointer' }}
-                                            onClick={() => handleDetailPresentation(item.assetID)}
-                                        >
-                                            {item.asset.name}
-                                        </Typography>
-                                        <Typography component="p" variant="body2">
-                                            Truy cập lần cuối {getDisplayTime(item.updatedAt)}
-                                        </Typography>
-                                        {/* <Typography component="p" variant="body2">
+                        {recentVisitedItem
+                            .filter(x => x.asset?.firstSlide)
+                            .map(item => {
+                                return (
+                                    <Grid key={item.visitHistoryID} item xs={12} sm={6} md={4} lg={3}>
+                                        <Stack direction="column">
+                                            <Box
+                                                sx={{
+                                                    padding: '1rem',
+                                                    borderRadius: '8px',
+                                                    transition: 'all .3s',
+                                                    cursor: 'pointer',
+                                                    borderWidth: 2,
+                                                    borderColor: _.get(neutral, '100'),
+                                                    borderStyle: 'solid',
+                                                    '&:hover': {
+                                                        borderColor: _.get(indigo, 'main'),
+                                                    },
+                                                    marginBottom: '0.5rem',
+                                                    aspectRatio: '16 / 9',
+                                                }}
+                                                onClick={() => handleDetailPresentation(item.assetID)}
+                                            >
+                                                {renderSlide(item.asset?.firstSlide)}
+                                            </Box>
+                                            <Typography
+                                                component="p"
+                                                variant="subtitle1"
+                                                sx={{ cursor: 'pointer' }}
+                                                onClick={() => handleDetailPresentation(item.assetID)}
+                                            >
+                                                {item.asset.name}
+                                            </Typography>
+                                            <Typography component="p" variant="body2">
+                                                Truy cập lần cuối {getDisplayTime(item.updatedAt)}
+                                            </Typography>
+                                            {/* <Typography component="p" variant="body2">
                                             Cập nhật lần cuối {getDisplayTime(item.asset.updatedAt)}
                                         </Typography> */}
-                                    </Stack>
-                                </Grid>
-                            );
-                        })}
+                                        </Stack>
+                                    </Grid>
+                                );
+                            })}
                     </Grid>
                 </Stack>
             </Stack>
