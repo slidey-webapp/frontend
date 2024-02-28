@@ -40,6 +40,7 @@ export interface IPresentationShowContext {
     questions: QuestionDto[];
     isSeenNewestQuestion: boolean;
     messages: MessageDto[];
+    wordCloudResults: WordCloudResult[];
     setState: React.Dispatch<React.SetStateAction<State>>;
     onFullScreen: () => void;
     onExitFullScreen: () => void;
@@ -52,6 +53,12 @@ export const PresentationShowContext = createContext<IPresentationShowContext>({
 export const usePresentationShowContext = () => useContext<IPresentationShowContext>(PresentationShowContext);
 
 interface Props {}
+
+interface WordCloudResult {
+    slideID: Id;
+    value: string;
+    participantID: Id;
+}
 
 interface State {
     presentation: PresentationDto;
@@ -66,6 +73,7 @@ interface State {
     isSeenNewestQuestion: boolean;
     messages: MessageDto[];
     backgroundColor: string;
+    wordCloudResults: WordCloudResult[];
 }
 
 const PresentationHostShow: React.FC<Props> = () => {
@@ -93,6 +101,7 @@ const PresentationHostShow: React.FC<Props> = () => {
         isSeenNewestQuestion: true,
         messages: [],
         backgroundColor: '#ffffff',
+        wordCloudResults: [],
     });
 
     useEffect(() => {
@@ -198,14 +207,22 @@ const PresentationHostShow: React.FC<Props> = () => {
                 setState(pre => ({
                     ...pre,
                     slides: pre.slides.map(sl => {
-                        if (sl.type !== 'MULTIPLE_CHOICE' || sl.slideID !== option.slideID) return sl;
+                        if (sl.slideID !== option.slideID) return sl;
+                        if (sl.type !== 'MULTIPLE_CHOICE' && sl.type !== 'WORD_CLOUD') return sl;
+                        if (sl.type === 'MULTIPLE_CHOICE') {
+                            sl.options = sl.options.map(opt => {
+                                if (opt.optionID !== option.optionID) return opt;
 
-                        sl.options = sl.options.map(opt => {
-                            if (opt.optionID !== option.optionID) return opt;
+                                opt.chosenAmount = (opt.chosenAmount ?? 0) + 1;
+                                return opt;
+                            });
 
-                            opt.chosenAmount = (opt.chosenAmount ?? 0) + 1;
-                            return opt;
-                        });
+                            return sl;
+                        }
+
+                        console.log(sl.words);
+
+                        sl.words = [...(sl.words || []), option.option];
 
                         return sl;
                     }),
@@ -382,6 +399,7 @@ const PresentationHostShow: React.FC<Props> = () => {
                 messages: state.messages,
                 questions: state.questions,
                 isSeenNewestQuestion: state.isSeenNewestQuestion,
+                wordCloudResults: state.wordCloudResults,
                 onFullScreen: async () => await fullScreenRef.current?.open(),
                 onExitFullScreen: async () => await fullScreenRef.current?.exit(),
                 onSlideChange: handleSlideChange,

@@ -1,15 +1,16 @@
-import { motion } from 'framer-motion';
 import React, { CSSProperties, useMemo } from 'react';
+import ReactWordcloud from 'react-wordcloud';
 import { ShowFontSizeConstant } from '~/configs/constants';
 import { HorizontalAlignment, TextSize, VerticalAlignment } from '~/types/shared';
 import { SlideDto } from '../../types/slide';
+import _ from 'lodash';
 
 interface Props {
     slide: SlideDto;
 }
 
-const ShowHeadingSlide: React.FC<Props> = ({ slide }) => {
-    if (slide.type !== 'HEADING') return null;
+const ShowWordCloudSlide: React.FC<Props> = ({ slide }) => {
+    if (slide.type !== 'WORD_CLOUD') return null;
 
     const verticalAlignment = useMemo<CSSProperties | undefined>(() => {
         if (slide.verticalAlignment === VerticalAlignment.Top)
@@ -87,6 +88,54 @@ const ShowHeadingSlide: React.FC<Props> = ({ slide }) => {
         }
     }, [slide.textSize]);
 
+    const renderWordCloud = () => {
+        if (!slide.words || slide.words.length === 0)
+            return (
+                <div
+                    style={{
+                        fontSize: secondarySize,
+                        ...horizontalAlignment,
+                    }}
+                    className="flex items-center"
+                >
+                    <span className="mr-1">Chờ câu trả lời</span>
+                    <div className="dot-wave">
+                        <span className="dot text-indigo-500">.</span>
+                        <span className="dot text-indigo-500">.</span>
+                        <span className="dot text-indigo-500">.</span>
+                    </div>
+                </div>
+            );
+
+        const wordGrouped: Record<string, number> = _.reduce(
+            slide.words,
+            (acc, val) => {
+                // @ts-ignore
+                acc[val] = (acc[val] || 0) + 1;
+                return acc;
+            },
+            {},
+        );
+
+        const words = Object.keys(wordGrouped).map(key => {
+            return {
+                text: key,
+                value: wordGrouped[key],
+            };
+        });
+
+        return (
+            <div className="flex-1 h-full">
+                <ReactWordcloud
+                    words={words}
+                    options={{
+                        fontSizes: [28, 72],
+                    }}
+                />
+            </div>
+        );
+    };
+
     return (
         <div
             className="w-full h-full flex flex-col"
@@ -102,41 +151,11 @@ const ShowHeadingSlide: React.FC<Props> = ({ slide }) => {
                     ...horizontalAlignment,
                 }}
             >
-                {slide.heading.split(' ').map((el, i) => (
-                    <motion.span
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{
-                            duration: 1,
-                            delay: i / 20,
-                        }}
-                        key={i}
-                    >
-                        {el}{' '}
-                    </motion.span>
-                ))}
+                {slide.question}
             </div>
-            <div
-                style={{
-                    fontSize: secondarySize,
-                }}
-            >
-                {slide.subHeading.split(' ').map((el, i) => (
-                    <motion.span
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{
-                            duration: 0.05,
-                            delay: i / 20,
-                        }}
-                        key={i}
-                    >
-                        {el}{' '}
-                    </motion.span>
-                ))}
-            </div>
+            {renderWordCloud()}
         </div>
     );
 };
 
-export default ShowHeadingSlide;
+export default ShowWordCloudSlide;

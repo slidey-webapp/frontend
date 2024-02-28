@@ -110,7 +110,7 @@ const ShowParagraphSlide: React.FC<Props> = ({ slide }) => {
                         animate={{ opacity: 1 }}
                         transition={{
                             duration: 1,
-                            delay: i / 10,
+                            delay: i / 20,
                         }}
                         key={i}
                     >

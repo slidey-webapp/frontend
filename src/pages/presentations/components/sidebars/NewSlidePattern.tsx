@@ -2,9 +2,12 @@ import { Popover } from '@mui/material';
 import clsx from 'clsx';
 import React from 'react';
 import { ButtonBase } from '~/components/buttons/ButtonBase';
+import bulletSrc from '~/images/slide/bullet.svg';
 import headingSrc from '~/images/slide/heading.svg';
 import multipleChoiceSrc from '~/images/slide/multiple-choice.svg';
 import paragraphSrc from '~/images/slide/paragraph.svg';
+import quoteSrc from '~/images/slide/quote.svg';
+import wordCloudSrc from '~/images/slide/word-cloud.svg';
 import { requestApi } from '~/libs/axios';
 import { ChartType, HorizontalAlignment, TextSize, VerticalAlignment } from '~/types/shared';
 import { usePresentationContext } from '../../PresentationDetailPage';
@@ -38,6 +41,16 @@ const slidesGroup: {
                 type: 'PARAGRAPH',
                 src: paragraphSrc,
             },
+            {
+                name: 'Bullets',
+                type: 'BULLET_LIST',
+                src: bulletSrc,
+            },
+            {
+                name: 'Quote',
+                type: 'QUOTE',
+                src: quoteSrc,
+            },
         ],
     },
     {
@@ -47,6 +60,11 @@ const slidesGroup: {
                 name: 'Multiple Choice',
                 type: 'MULTIPLE_CHOICE',
                 src: multipleChoiceSrc,
+            },
+            {
+                name: 'Word cloud',
+                type: 'WORD_CLOUD',
+                src: wordCloudSrc,
             },
         ],
     },

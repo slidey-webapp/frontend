@@ -7,15 +7,18 @@ import ParticipantSendQuestion from './ParticipantSendQuestion';
 import ParticipationShowHeadingSlide from './ParticipationShowHeadingSlide';
 import ParticipationShowMultipleChoiceSlide from './ParticipationShowMultipleChoiceSlide';
 import ParticipationShowParagraphSlide from './ParticipationShowParagraphSlide';
+import ParticipantShowQuoteSlide from './ParticipantShowQuoteSlide';
+import ParticipantShowWordCloudSlide from './ParticipantShowWordCloudSlide';
+import ParticipantShowBulletSlide from './ParticipantShowBulletSlide';
 
 interface Props {}
 
 const ParticipationShowContainer: React.FC<Props> = () => {
-    const { sessionID, participantID ,slide} = usePresentationJoinSessionContext();
+    const { sessionID, participantID, slide } = usePresentationJoinSessionContext();
     const modalRef = useRef<ModalBaseRef>(null);
 
     const renderSlide = () => {
-        if (!slide )return null;
+        if (!slide) return null;
 
         switch (slide.type) {
             case 'HEADING':
@@ -30,6 +33,14 @@ const ParticipationShowContainer: React.FC<Props> = () => {
                         sessionID={sessionID}
                     />
                 );
+            case 'QUOTE':
+                return <ParticipantShowQuoteSlide slide={slide} />;
+            case 'WORD_CLOUD':
+                return (
+                    <ParticipantShowWordCloudSlide slide={slide} participantID={participantID} sessionID={sessionID} />
+                );
+            case 'BULLET_LIST':
+                return <ParticipantShowBulletSlide slide={slide} />;
             default:
                 return null;
         }

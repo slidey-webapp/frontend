@@ -1,28 +1,32 @@
 import { motion } from 'framer-motion';
 import React, { CSSProperties, useMemo } from 'react';
-import { ShowFontSizeConstant } from '~/configs/constants';
+import { PreviewFontSizeConstant } from '~/configs/constants';
 import { HorizontalAlignment, TextSize, VerticalAlignment } from '~/types/shared';
+import { IPresentationContext } from '../../PresentationDetailPage';
 import { SlideDto } from '../../types/slide';
 
 interface Props {
     slide: SlideDto;
+    hover?: IPresentationContext['hover'];
 }
 
-const ShowHeadingSlide: React.FC<Props> = ({ slide }) => {
-    if (slide.type !== 'HEADING') return null;
+const PreviewWordCloudSlide: React.FC<Props> = ({ slide, hover }) => {
+    if (slide.type !== 'WORD_CLOUD') return null;
 
     const verticalAlignment = useMemo<CSSProperties | undefined>(() => {
-        if (slide.verticalAlignment === VerticalAlignment.Top)
+        const verAlign = hover?.verticalAlignment || slide.verticalAlignment;
+
+        if (verAlign === VerticalAlignment.Top)
             return {
                 justifyContent: 'flex-start',
             };
 
-        if (slide.verticalAlignment === VerticalAlignment.Middle)
+        if (verAlign === VerticalAlignment.Middle)
             return {
                 justifyContent: 'center',
             };
 
-        if (slide.verticalAlignment === VerticalAlignment.Bottom)
+        if (verAlign === VerticalAlignment.Bottom)
             return {
                 justifyContent: 'flex-end',
             };
@@ -30,28 +34,34 @@ const ShowHeadingSlide: React.FC<Props> = ({ slide }) => {
         return {
             justifyContent: 'flex-start',
         };
-    }, [slide.verticalAlignment]);
+    }, [slide.verticalAlignment, hover]);
 
     const horizontalAlignment = useMemo<CSSProperties | undefined>(() => {
-        if (slide.horizontalAlignment === HorizontalAlignment.Left)
+        const horAlign = hover?.horizontalAlignment || slide.horizontalAlignment;
+
+        if (horAlign === HorizontalAlignment.Left)
             return {
                 textAlign: 'left',
+                justifyContent: 'flex-start',
             };
 
-        if (slide.horizontalAlignment === HorizontalAlignment.Center)
+        if (horAlign === HorizontalAlignment.Center)
             return {
                 textAlign: 'center',
+                justifyContent: 'center',
             };
 
-        if (slide.horizontalAlignment === HorizontalAlignment.Right)
+        if (horAlign === HorizontalAlignment.Right)
             return {
                 textAlign: 'right',
+                justifyContent: 'flex-end',
             };
 
         return {
             textAlign: 'left',
+            justifyContent: 'flex-start',
         };
-    }, [slide.horizontalAlignment]);
+    }, [slide.horizontalAlignment, hover]);
 
     const { headingSize, secondarySize } = useMemo<{
         headingSize: string;
@@ -60,29 +70,29 @@ const ShowHeadingSlide: React.FC<Props> = ({ slide }) => {
         switch (slide.textSize) {
             case TextSize.ExtraSmall:
                 return {
-                    headingSize: ShowFontSizeConstant.HEADING_EXTRA_SMALL,
-                    secondarySize: ShowFontSizeConstant.SECONDARY_EXTRA_SMALL,
+                    headingSize: PreviewFontSizeConstant.HEADING_EXTRA_SMALL,
+                    secondarySize: PreviewFontSizeConstant.SECONDARY_EXTRA_SMALL,
                 };
             case TextSize.Small:
                 return {
-                    headingSize: ShowFontSizeConstant.HEADING_SMALL,
-                    secondarySize: ShowFontSizeConstant.SECONDARY_SMALL,
+                    headingSize: PreviewFontSizeConstant.HEADING_SMALL,
+                    secondarySize: PreviewFontSizeConstant.SECONDARY_SMALL,
                 };
             case TextSize.Large:
                 return {
-                    headingSize: ShowFontSizeConstant.HEADING_LARGE,
-                    secondarySize: ShowFontSizeConstant.SECONDARY_LARGE,
+                    headingSize: PreviewFontSizeConstant.HEADING_LARGE,
+                    secondarySize: PreviewFontSizeConstant.SECONDARY_LARGE,
                 };
             case TextSize.ExtraLarge:
                 return {
-                    headingSize: ShowFontSizeConstant.HEADING_EXTRA_LARGE,
-                    secondarySize: ShowFontSizeConstant.SECONDARY_EXTRA_LARGE,
+                    headingSize: PreviewFontSizeConstant.HEADING_EXTRA_LARGE,
+                    secondarySize: PreviewFontSizeConstant.SECONDARY_EXTRA_LARGE,
                 };
             case TextSize.Medium:
             default:
                 return {
-                    headingSize: ShowFontSizeConstant.HEADING_MEDIUM,
-                    secondarySize: ShowFontSizeConstant.SECONDARY_MEDIUM,
+                    headingSize: PreviewFontSizeConstant.HEADING_MEDIUM,
+                    secondarySize: PreviewFontSizeConstant.SECONDARY_MEDIUM,
                 };
         }
     }, [slide.textSize]);
@@ -102,7 +112,7 @@ const ShowHeadingSlide: React.FC<Props> = ({ slide }) => {
                     ...horizontalAlignment,
                 }}
             >
-                {slide.heading.split(' ').map((el, i) => (
+                {slide.question.split(' ').map((el, i) => (
                     <motion.span
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
@@ -119,24 +129,19 @@ const ShowHeadingSlide: React.FC<Props> = ({ slide }) => {
             <div
                 style={{
                     fontSize: secondarySize,
+                    ...horizontalAlignment,
                 }}
+                className="flex items-center"
             >
-                {slide.subHeading.split(' ').map((el, i) => (
-                    <motion.span
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{
-                            duration: 0.05,
-                            delay: i / 20,
-                        }}
-                        key={i}
-                    >
-                        {el}{' '}
-                    </motion.span>
-                ))}
+                <span className="mr-1">Chờ câu trả lời</span>
+                <div className="dot-wave">
+                    <span className="dot text-indigo-500">.</span>
+                    <span className="dot text-indigo-500">.</span>
+                    <span className="dot text-indigo-500">.</span>
+                </div>
             </div>
         </div>
     );
 };
 
-export default ShowHeadingSlide;
+export default PreviewWordCloudSlide;

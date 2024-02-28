@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import React, { CSSProperties, useMemo } from 'react';
+import BaseIcon from '~/components/icons/BaseIcon';
 import { ShowFontSizeConstant } from '~/configs/constants';
 import { HorizontalAlignment, TextSize, VerticalAlignment } from '~/types/shared';
 import { SlideDto } from '../../types/slide';
@@ -8,8 +9,8 @@ interface Props {
     slide: SlideDto;
 }
 
-const ShowHeadingSlide: React.FC<Props> = ({ slide }) => {
-    if (slide.type !== 'HEADING') return null;
+const ShowBulletSlide: React.FC<Props> = ({ slide }) => {
+    if (slide.type !== 'BULLET_LIST') return null;
 
     const verticalAlignment = useMemo<CSSProperties | undefined>(() => {
         if (slide.verticalAlignment === VerticalAlignment.Top)
@@ -33,23 +34,29 @@ const ShowHeadingSlide: React.FC<Props> = ({ slide }) => {
     }, [slide.verticalAlignment]);
 
     const horizontalAlignment = useMemo<CSSProperties | undefined>(() => {
-        if (slide.horizontalAlignment === HorizontalAlignment.Left)
+        const horAlign = slide.horizontalAlignment;
+
+        if (horAlign === HorizontalAlignment.Left)
             return {
+                alignItems: 'flex-start',
                 textAlign: 'left',
             };
 
-        if (slide.horizontalAlignment === HorizontalAlignment.Center)
+        if (horAlign === HorizontalAlignment.Center)
             return {
+                alignItems: 'center',
                 textAlign: 'center',
             };
 
-        if (slide.horizontalAlignment === HorizontalAlignment.Right)
+        if (horAlign === HorizontalAlignment.Right)
             return {
+                alignItems: 'flex-end',
                 textAlign: 'right',
             };
 
         return {
             textAlign: 'left',
+            alignItems: 'flex-start',
         };
     }, [slide.horizontalAlignment]);
 
@@ -93,10 +100,11 @@ const ShowHeadingSlide: React.FC<Props> = ({ slide }) => {
             style={{
                 color: slide.textColor,
                 ...verticalAlignment,
+                ...horizontalAlignment,
             }}
         >
             <div
-                className={'font-semibold mb-2'}
+                className={'font-semibold mb-5'}
                 style={{
                     fontSize: headingSize,
                     ...horizontalAlignment,
@@ -116,27 +124,34 @@ const ShowHeadingSlide: React.FC<Props> = ({ slide }) => {
                     </motion.span>
                 ))}
             </div>
-            <div
-                style={{
-                    fontSize: secondarySize,
-                }}
-            >
-                {slide.subHeading.split(' ').map((el, i) => (
-                    <motion.span
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{
-                            duration: 0.05,
-                            delay: i / 20,
-                        }}
-                        key={i}
-                    >
-                        {el}{' '}
-                    </motion.span>
-                ))}
+            <div className="w-fit">
+                {slide.items?.map((item, index) => {
+                    return (
+                        <div
+                            key={item.bulletListSlideItemID}
+                            style={{
+                                fontSize: secondarySize,
+                            }}
+                            className="flex items-center"
+                        >
+                            <motion.span
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{
+                                    duration: 2,
+                                    delay: index / 3,
+                                }}
+                                key={index}
+                            >
+                                <BaseIcon type="dot" size={12} className="mr-2.5" />
+                                {item.value}
+                            </motion.span>
+                        </div>
+                    );
+                })}
             </div>
         </div>
     );
 };
 
-export default ShowHeadingSlide;
+export default ShowBulletSlide;
