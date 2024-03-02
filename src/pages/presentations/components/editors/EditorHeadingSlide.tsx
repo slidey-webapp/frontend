@@ -1,7 +1,9 @@
 import { FormControl, FormLabel, TextField } from '@mui/material';
 import _ from 'lodash';
 import React from 'react';
-import { IPresentationContext } from '../../PresentationDetailPage';
+import { useNavigate } from 'react-router-dom';
+import HistoryUtil from '~/utils/HistoryUtil';
+import { IPresentationContext, usePresentationContext } from '../../PresentationDetailPage';
 import { SlideDto } from '../../types/slide';
 
 interface Props {
@@ -12,6 +14,9 @@ interface Props {
 
 const EditorHeadingSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentation }) => {
     if (slide.type !== 'HEADING') return null;
+
+    const navigate = useNavigate();
+    const { increaseBackStep } = usePresentationContext();
 
     const handleChange = _.debounce((name: string, value: any) => {
         const currentSlideIndex = slides.findIndex(x => x.slideID === slide.slideID);
@@ -45,6 +50,17 @@ const EditorHeadingSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentati
                     placeholder="Heading"
                     defaultValue={slide.heading}
                     onChange={event => handleChange('heading', event.target.value)}
+                    autoFocus={HistoryUtil.getSearchParam('focus') === 'heading'}
+                    onFocus={() => {
+                        HistoryUtil.pushSearchParams(navigate, {
+                            focus: 'heading',
+                        });
+                        increaseBackStep();
+                    }}
+                    onBlur={() => {
+                        HistoryUtil.clearSearchParamWithKeys(navigate, ['focus']);
+                        increaseBackStep();
+                    }}
                 />
             </FormControl>
             <div className="my-2" />

@@ -1,8 +1,10 @@
 import { FormControl, FormLabel, TextField } from '@mui/material';
 import _ from 'lodash';
 import React from 'react';
-import { IPresentationContext } from '../../PresentationDetailPage';
+import { IPresentationContext, usePresentationContext } from '../../PresentationDetailPage';
 import { SlideDto } from '../../types/slide';
+import { useNavigate } from 'react-router-dom';
+import HistoryUtil from '~/utils/HistoryUtil';
 
 interface Props {
     slide: SlideDto;
@@ -12,6 +14,9 @@ interface Props {
 
 const EditorParagraphSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentation }) => {
     if (slide.type !== 'PARAGRAPH') return null;
+
+    const navigate = useNavigate();
+    const { increaseBackStep } = usePresentationContext();
 
     const handleChange = _.debounce((name: string, value: any) => {
         const currentSlideIndex = slides.findIndex(x => x.slideID === slide.slideID);
@@ -42,9 +47,20 @@ const EditorParagraphSlide: React.FC<Props> = ({ slide, slides, onUpdatePresenta
                 <TextField
                     variant="outlined"
                     size="small"
-                    placeholder="Paragraph"
+                    placeholder="Heading"
                     defaultValue={slide.heading}
                     onChange={event => handleChange('heading', event.target.value)}
+                    autoFocus={HistoryUtil.getSearchParam('focus') === 'heading'}
+                    onFocus={() => {
+                        HistoryUtil.pushSearchParams(navigate, {
+                            focus: 'heading',
+                        });
+                        increaseBackStep();
+                    }}
+                    onBlur={() => {
+                        HistoryUtil.clearSearchParamWithKeys(navigate, ['focus']);
+                        increaseBackStep();
+                    }}
                 />
             </FormControl>
             <div className="my-2" />

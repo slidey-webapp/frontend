@@ -7,25 +7,6 @@ import { NotificationConstant } from '~/configs/constants';
 import { setLogout } from '~/store/authSlice';
 import NotifyUtil from '~/utils/NotifyUtil';
 
-Axios.interceptors.response.use(
-    function (response) {
-        return response;
-    },
-    function (error) {
-        if (401 === _.get(error, 'response.status')) {
-            console.log(error)
-            const dispatch = useDispatch();
-            if (_.get(error, 'response.config.url') !== '/api/auth') {
-                NotifyUtil.error('Hết phiên làm việc');
-                Cookies.remove('token');
-                Cookies.remove('refresh-token');
-                dispatch(setLogout());
-            }
-            return true;
-        }
-    },
-);
-
 const mockAxios = new MockAdapter(Axios, { delayResponse: 500, onNoMatch: 'passthrough' });
 export const MockAxios = mockAxios;
 

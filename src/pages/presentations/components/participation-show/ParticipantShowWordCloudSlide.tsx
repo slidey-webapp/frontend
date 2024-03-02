@@ -1,7 +1,7 @@
-import { FormControl, TextField } from '@mui/material';
+import { TextField } from '@mui/material';
+import clsx from 'clsx';
 import { motion } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
-import { ButtonBase } from '~/components/buttons/ButtonBase';
 import { requestApi } from '~/libs/axios';
 import { Id } from '~/types/shared';
 import NotifyUtil from '~/utils/NotifyUtil';
@@ -46,7 +46,7 @@ const ParticipantShowWordCloudSlide: React.FC<Props> = ({ slide, participantID, 
         if (isSubmitted)
             return (
                 <div
-                    className="mt-6 text-lg"
+                    className="mt-7 text-lg"
                     style={{
                         textShadow: '0px 2px 4px #000000',
                     }}
@@ -56,20 +56,26 @@ const ParticipantShowWordCloudSlide: React.FC<Props> = ({ slide, participantID, 
             );
 
         return (
-            <div className="mt-6">
+            <div className="mt-7">
                 <TextField
                     variant="outlined"
                     label="Nhập một từ"
                     onChange={event => setValue(event.target.value)}
                     fullWidth
                 />
-                <div className="w-full mt-4">
-                    <ButtonBase
-                        className="w-full h-10 flex items-center "
-                        title="Gửi"
+                <div className="w-full mt-7 flex justify-center">
+                    <div
+                        className={clsx(
+                            'h-14 rounded-full flex items-center justify-center bg-neutral-700 text-white font-semibold',
+                            'cursor-pointer transition-all duration-300 ease-in-out hover:bg-black',
+                        )}
+                        style={{
+                            width: 100,
+                        }}
                         onClick={handleSubmit}
-                        disabled={!value}
-                    />
+                    >
+                        Gửi
+                    </div>
                 </div>
             </div>
         );
