@@ -58,7 +58,7 @@ const colorInputSx: SxProps<Theme> = {
 };
 
 const EditorDesign: React.FC<Props> = () => {
-    const { currentSlideId, slides, onUpdatePresentation, setHoverState } = usePresentationContext();
+    const { currentSlideId, slides, onUpdatePresentation, setHoverState, mask, unmask } = usePresentationContext();
     const currentSlideIndex = slides.findIndex(x => x.slideID === currentSlideId);
     const currentSlide = slides.find(x => x.slideID === currentSlideId);
     if (!currentSlide || currentSlideIndex === -1) return null;
@@ -76,7 +76,7 @@ const EditorDesign: React.FC<Props> = () => {
     let textColor = slide.textColor;
     let textBackground = slide.textBackground;
 
-    const handleUpdatePresentation = ({ field, newValue }: { field: keyof SlideDto; newValue: any }) => {
+    const handleUpdatePresentation = async ({ field, newValue }: { field: keyof SlideDto; newValue: any }) => {
         const oldValue = _.get(slide, field);
         if (_.isEqual(oldValue, newValue)) return;
 
@@ -103,9 +103,11 @@ const EditorDesign: React.FC<Props> = () => {
             };
         }
 
-        onUpdatePresentation({
+        mask();
+        await onUpdatePresentation({
             slides: slidesCloned,
         });
+        unmask();
     };
 
     const configs: Config[] = [

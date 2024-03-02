@@ -1,9 +1,11 @@
 import { FormControl, FormLabel, TextField } from '@mui/material';
 import _ from 'lodash';
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ButtonBase } from '~/components/buttons/ButtonBase';
 import { ButtonIconBase } from '~/components/buttons/ButtonIconBase';
-import { IPresentationContext } from '../../PresentationDetailPage';
+import HistoryUtil from '~/utils/HistoryUtil';
+import { IPresentationContext, usePresentationContext } from '../../PresentationDetailPage';
 import { BulletSlideItem, SlideDto } from '../../types/slide';
 
 interface Props {
@@ -15,14 +17,19 @@ interface Props {
 const EditorBulletSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentation }) => {
     if (slide.type !== 'BULLET_LIST') return null;
 
-    const handleUpdateSlide = (newSlide: SlideDto) => {
+    const navigate = useNavigate();
+    const { mask, unmask, increaseBackStep } = usePresentationContext();
+
+    const handleUpdateSlide = async (newSlide: SlideDto) => {
         const currentSlideIndex = slides.findIndex(x => x.slideID === slide.slideID);
 
         slides[currentSlideIndex] = newSlide;
 
-        onUpdatePresentation({
+        mask();
+        await onUpdatePresentation({
             slides: slides,
         });
+        unmask();
     };
 
     const handleChangeHeading = _.debounce((value: string) => {
@@ -75,7 +82,7 @@ const EditorBulletSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentatio
     const renderItems = () => {
         return (slide.items || []).map((item, index) => {
             return (
-                <div key={index} className="w-full">
+                <div key={index} className="w-full flex items-center justify-between">
                     <FormControl sx={{ minWidth: 150 }} size="small">
                         <TextField
                             variant="outlined"
@@ -83,6 +90,17 @@ const EditorBulletSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentatio
                             placeholder={'Lựa chọn ' + index}
                             defaultValue={item.value}
                             onChange={event => handleUpdateItem(index, event.target.value)}
+                            autoFocus={HistoryUtil.getSearchParam('focus') === `item-${item.bulletListSlideItemID}`}
+                            onFocus={() => {
+                                HistoryUtil.pushSearchParams(navigate, {
+                                    focus:`item-${item.bulletListSlideItemID}`,
+                                });
+                                increaseBackStep();
+                            }}
+                            onBlur={() => {
+                                HistoryUtil.clearSearchParamWithKeys(navigate, ['focus']);
+                                increaseBackStep();
+                            }}
                         />
                     </FormControl>
                     <ButtonIconBase
@@ -112,6 +130,17 @@ const EditorBulletSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentatio
                     size="small"
                     placeholder="Tiêu đề"
                     defaultValue={slide.heading}
+                    autoFocus={HistoryUtil.getSearchParam('focus') === 'heading'}
+                    onFocus={() => {
+                        HistoryUtil.pushSearchParams(navigate, {
+                            focus: 'heading',
+                        });
+                        increaseBackStep();
+                    }}
+                    onBlur={() => {
+                        HistoryUtil.clearSearchParamWithKeys(navigate, ['focus']);
+                        increaseBackStep();
+                    }}
                     onChange={event => handleChangeHeading(event.target.value)}
                 />
             </FormControl>
@@ -125,7 +154,7 @@ const EditorBulletSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentatio
                 >
                     Các lựa chọn
                 </FormLabel>
-                <div className="w-full flex flex-col gap-y-2">
+                <div className="w-full flex flex-col gap-y-3">
                     {renderItems()}
                     <ButtonBase title="Thêm lựa chọn" startIcon="add" color="primary" onClick={handleAddItem} />
                 </div>

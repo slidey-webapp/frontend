@@ -1,9 +1,11 @@
 import { FormControl, FormLabel, TextField } from '@mui/material';
 import _ from 'lodash';
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ButtonBase } from '~/components/buttons/ButtonBase';
 import ButtonIconBase from '~/components/buttons/ButtonIconBase';
-import { IPresentationContext } from '../../PresentationDetailPage';
+import HistoryUtil from '~/utils/HistoryUtil';
+import { IPresentationContext, usePresentationContext } from '../../PresentationDetailPage';
 import { MultipleChoiceSlideOption, SlideDto } from '../../types/slide';
 
 interface Props {
@@ -15,14 +17,19 @@ interface Props {
 const EditorMultipleChoiceSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentation }) => {
     if (slide.type !== 'MULTIPLE_CHOICE') return null;
 
-    const handleUpdateSlide = (newSlide: SlideDto) => {
+    const navigate = useNavigate();
+    const { mask, unmask, increaseBackStep } = usePresentationContext();
+
+    const handleUpdateSlide = async (newSlide: SlideDto) => {
         const currentSlideIndex = slides.findIndex(x => x.slideID === slide.slideID);
 
         slides[currentSlideIndex] = newSlide;
 
-        onUpdatePresentation({
+        mask();
+        await onUpdatePresentation({
             slides: slides,
         });
+        unmask();
     };
 
     const handleChangeQuestion = _.debounce((value: string) => {
@@ -75,7 +82,7 @@ const EditorMultipleChoiceSlide: React.FC<Props> = ({ slide, slides, onUpdatePre
     const renderOptions = () => {
         return (slide.options || []).map((option, index) => {
             return (
-                <div key={index} className="w-full">
+                <div key={index} className="w-full flex items-center justify-between">
                     <FormControl sx={{ minWidth: 150 }} size="small">
                         <TextField
                             variant="outlined"
@@ -83,6 +90,17 @@ const EditorMultipleChoiceSlide: React.FC<Props> = ({ slide, slides, onUpdatePre
                             placeholder={'Lựa chọn ' + index}
                             defaultValue={option.option}
                             onChange={event => handleUpdateOption(index, event.target.value)}
+                            autoFocus={HistoryUtil.getSearchParam('focus') === `option-${option.optionID}`}
+                            onFocus={() => {
+                                HistoryUtil.pushSearchParams(navigate, {
+                                    focus:`option-${option.optionID}`,
+                                });
+                                increaseBackStep();
+                            }}
+                            onBlur={() => {
+                                HistoryUtil.clearSearchParamWithKeys(navigate, ['focus']);
+                                increaseBackStep();
+                            }}
                         />
                     </FormControl>
                     <ButtonIconBase
@@ -113,6 +131,18 @@ const EditorMultipleChoiceSlide: React.FC<Props> = ({ slide, slides, onUpdatePre
                     placeholder="Câu hỏi"
                     defaultValue={slide.question}
                     onChange={event => handleChangeQuestion(event.target.value)}
+                    autoFocus={HistoryUtil.getSearchParam('focus') === 'question'}
+                    onFocus={() => {
+                        HistoryUtil.pushSearchParams(navigate, {
+                            focus: 'question',
+                        });
+                        increaseBackStep();
+                    }}
+                    onBlur={() => {
+                        HistoryUtil.clearSearchParamWithKeys(navigate, ['focus']);
+                        increaseBackStep();
+                    }}
+  
                 />
             </FormControl>
             <div className="my-2" />
@@ -125,9 +155,8 @@ const EditorMultipleChoiceSlide: React.FC<Props> = ({ slide, slides, onUpdatePre
                 >
                     Các lựa chọn
                 </FormLabel>
-                <div className="w-full flex flex-col gap-y-2">
+                <div className="w-full flex flex-col gap-y-3">
                     {renderOptions()}
-
                     <ButtonBase title="Thêm lựa chọn" startIcon="add" color="primary" onClick={handleAddOption} />
                 </div>
             </FormControl>
