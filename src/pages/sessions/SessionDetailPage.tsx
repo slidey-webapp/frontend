@@ -65,8 +65,11 @@ const SessionDetailPage: React.FC<Props> = () => {
         const defaultBreadcrumbs = _.cloneDeep(breadcrumbRef.current?.getBreadcrumbs() || []);
         defaultBreadcrumbs?.pop();
 
+        const createdRemoveUtc = DateTimeUtil.convertDateFromUtcDate(session.createdAt);
+        const createdAtFormatted = DateTimeUtil.formatDateTime(createdRemoveUtc, DateTimeUtil.VN_DATE_TIME_FORMAT);
+
         defaultBreadcrumbs.push({
-            title: 'Report',
+            title: `${session.name} (${createdAtFormatted})`,
         });
 
         breadcrumbRef.current?.setBreadcrumbs(defaultBreadcrumbs);
@@ -87,7 +90,7 @@ const SessionDetailPage: React.FC<Props> = () => {
     return (
         <AppContainer breadcrumbRef={breadcrumbRef}>
             <div className="w-full h-full flex flex-col">
-                <div className="w-2/4 flex h-10 items-center flex-row justify-between mt-5 mb-7">
+                {/* <div className="w-2/4 flex h-10 items-center flex-row justify-between mt-5 mb-7">
                     <div className="flex-col flex w-full gap-2">
                         <div>Phiên: {session?.name}</div>
                         <div>Mã: {session?.code}</div>
@@ -102,8 +105,8 @@ const SessionDetailPage: React.FC<Props> = () => {
                             )}
                         </div>
                     </div>
-                </div>
-                <Tabs value={tab} onChange={handleChange} aria-label="basic tabs example">
+                </div> */}
+                <Tabs value={tab} onChange={handleChange} className="mb-[15px]">
                     <Tab
                         label={`Người tham gia (${participantGridController.paginatedList.totalCount})`}
                         {...a11yProps(0)}

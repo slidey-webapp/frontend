@@ -16,7 +16,7 @@ export const sessionParticipantGridColDef: BaseGridColDef[] = [
         cellRenderer: (params: any) => {
             const data = _.get(params, 'data') as ParticipantDto;
             const { email } = data;
-            if (!status) return <>Ẩn danh</>;
+            if (!email) return <>Ẩn danh</>;
             return <>{email}</>;
         },
     },

@@ -8,6 +8,7 @@ import { SESSION_MESSAGE_API } from '../api/session.api';
 import useInfiniteScroll from '../hooks/useInfiniteScroll';
 import { Box, CircularProgress, Stack } from '@mui/material';
 import MessageItem from './MessageItem';
+import Empty from '~/components/layouts/Empty';
 
 interface MessageListProps {
     sessionID: Id;
@@ -61,6 +62,12 @@ const MessageList = ({ sessionID, isVisible }: MessageListProps) => {
         }
     }, [isFetching, isVisible]);
 
+    if (messageList.length === 0)
+        return (
+            <div className="base-grid w-full h-full">
+                <Empty />
+            </div>
+        );
     return (
         <Box
             sx={{
@@ -85,41 +92,37 @@ const MessageList = ({ sessionID, isVisible }: MessageListProps) => {
                         width: '100%',
                     }}
                 >
-                    {messageList.length ? (
-                        <Stack
-                            direction="column"
-                            spacing={1}
-                            paddingX={1}
-                            alignItems="flex-start"
-                            sx={{
-                                paddingBottom: '4rem',
-                                paddingTop: !isOver ? 0 : '1rem',
-                                marginLeft: '0.5rem',
-                                marginRight: '0.5rem',
-                            }}
-                        >
-                            {!isOver && (
-                                <Stack
-                                    direction="row"
-                                    alignItems="center"
-                                    justifyContent="center"
-                                    sx={{
-                                        width: '100%',
-                                        visibility: isFetching ? 'visible' : 'hidden',
-                                        marginY: '1rem',
-                                    }}
-                                >
-                                    <CircularProgress size={20} />
-                                </Stack>
-                            )}
+                    <Stack
+                        direction="column"
+                        spacing={1}
+                        paddingX={1}
+                        alignItems="flex-start"
+                        sx={{
+                            paddingBottom: '4rem',
+                            paddingTop: !isOver ? 0 : '1rem',
+                            marginLeft: '0.5rem',
+                            marginRight: '0.5rem',
+                        }}
+                    >
+                        {!isOver && (
+                            <Stack
+                                direction="row"
+                                alignItems="center"
+                                justifyContent="center"
+                                sx={{
+                                    width: '100%',
+                                    visibility: isFetching ? 'visible' : 'hidden',
+                                    marginY: '1rem',
+                                }}
+                            >
+                                <CircularProgress size={20} />
+                            </Stack>
+                        )}
 
-                            {messageList.map(item => {
-                                return <MessageItem key={item.messageID} message={item} />;
-                            })}
-                        </Stack>
-                    ) : (
-                        <div>Không có tin nhắn</div>
-                    )}
+                        {messageList.map(item => {
+                            return <MessageItem key={item.messageID} message={item} />;
+                        })}
+                    </Stack>
                 </Box>
             </Box>
         </Box>

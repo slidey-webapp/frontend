@@ -51,14 +51,14 @@ const TopNav: React.FC<Props> = ({ onNavOpen }) => {
                                 <BaseIcon type="menu" size={24} />
                             </IconButton>
                         )}
-                        <Tooltip title="Search">
+                        {/* <Tooltip title="Search">
                             <IconButton>
                                 <BaseIcon type="search" size={24} />
                             </IconButton>
-                        </Tooltip>
+                        </Tooltip> */}
                     </Stack>
                     <Stack alignItems="center" direction="row" spacing={2}>
-                        <Tooltip title="Contacts">
+                        {/* <Tooltip title="Contacts">
                             <IconButton>
                                 <SvgIcon fontSize="small">
                                     <BaseIcon type="users" size={24} />
@@ -73,7 +73,7 @@ const TopNav: React.FC<Props> = ({ onNavOpen }) => {
                                     </SvgIcon>
                                 </Badge>
                             </IconButton>
-                        </Tooltip>
+                        </Tooltip> */}
                         {authUser?.user && (
                             <div
                                 className="cursor-pointer w-fit h-fit rounded-full"

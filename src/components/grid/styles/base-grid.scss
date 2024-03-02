@@ -78,6 +78,12 @@ $grid-radius: 10px;
                     border-right: 1px solid var(--ag-border-color);
                 }
             }
+
+            .cell-not-overflow {
+                .ag-cell-value {
+                    overflow: unset;
+                }
+            }
         }
 
         .ag-header-cell-resize::after {
