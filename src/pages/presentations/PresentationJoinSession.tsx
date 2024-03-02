@@ -238,7 +238,7 @@ const PresentationJoinSession: React.FC<Props> = () => {
                 messages: state.messages,
             }}
         >
-            <div className="w-full h-screen relative flex items-center justify-center">
+            <div className="w-full h-screen overflow-hidden relative flex items-center justify-center">
                 {renderBody()}
                 <Overlay ref={overlayRef} />
             </div>

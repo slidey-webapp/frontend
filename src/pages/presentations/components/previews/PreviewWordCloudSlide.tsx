@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import React, { CSSProperties, useMemo } from 'react';
 import { PreviewFontSizeConstant } from '~/configs/constants';
 import { HorizontalAlignment, TextSize, VerticalAlignment } from '~/types/shared';
@@ -112,19 +111,7 @@ const PreviewWordCloudSlide: React.FC<Props> = ({ slide, hover }) => {
                     ...horizontalAlignment,
                 }}
             >
-                {slide.question.split(' ').map((el, i) => (
-                    <motion.span
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{
-                            duration: 1,
-                            delay: i / 20,
-                        }}
-                        key={i}
-                    >
-                        {el}{' '}
-                    </motion.span>
-                ))}
+                {slide.question}
             </div>
             <div
                 style={{

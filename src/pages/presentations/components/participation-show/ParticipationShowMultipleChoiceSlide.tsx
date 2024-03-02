@@ -1,8 +1,10 @@
-import { FormControl, FormControlLabel, Radio, RadioGroup } from '@mui/material';
+import clsx from 'clsx';
 import { motion } from 'framer-motion';
+import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
-import { ButtonBase } from '~/components/buttons/ButtonBase';
+import BaseIcon from '~/components/icons/BaseIcon';
 import { requestApi } from '~/libs/axios';
+import { indigo } from '~/themes/colors';
 import { Id } from '~/types/shared';
 import NotifyUtil from '~/utils/NotifyUtil';
 import { SESSION_SLIDE_MULTIPLE_CHOICE_SUBMIT_API } from '../../api/presentation.api';
@@ -46,7 +48,7 @@ const ParticipationShowMultipleChoiceSlide: React.FC<Props> = ({ slide, particip
         if (isSubmitted)
             return (
                 <div
-                    className="mt-6 text-lg"
+                    className="text-lg"
                     style={{
                         textShadow: '0px 2px 4px #000000',
                     }}
@@ -57,27 +59,51 @@ const ParticipationShowMultipleChoiceSlide: React.FC<Props> = ({ slide, particip
 
         return (
             <>
-                <FormControl className="mt-6">
-                    <RadioGroup>
-                        {(slide.options || []).map(opt => {
-                            return (
-                                <FormControlLabel
-                                    onChange={() => setOptSelected(opt)}
-                                    key={opt.optionID}
-                                    value={opt.optionID}
-                                    control={<Radio />}
-                                    label={opt.option}
-                                />
-                            );
-                        })}
-                    </RadioGroup>
-                </FormControl>
-                <ButtonBase
-                    className="w-full h-10 flex items-center"
-                    title="Gửi"
-                    onClick={handleSubmit}
-                    disabled={!optSelected}
-                />
+                <div className="w-full flex flex-col gap-y-4">
+                    {(slide.options || []).map(opt => {
+                        const active = opt.optionID === optSelected?.optionID;
+
+                        return (
+                            <div
+                                key={opt.optionID}
+                                className={clsx(
+                                    'w-full rounded-full border-2 border-neutral-200 h-16 flex items-center justify-between px-7',
+                                    'text-neutral-500 hover:text-indigo-main',
+                                    'cursor-pointer transition-all duration-150 ease-in-out hover:border-indigo-main',
+                                    {
+                                        'border-indigo-main': active,
+                                    },
+                                )}
+                                onClick={() => setOptSelected(opt)}
+                            >
+                                <div className="flex-1 line-clamp-1 !text-neutral-700">{opt.option}</div>
+                                <div className="">
+                                    <BaseIcon
+                                        type={active ? 'radio-checked' : 'radio-unchecked'}
+                                        size={24}
+                                        style={{
+                                            color: active ? _.get(indigo, 'main') : 'inherit',
+                                        }}
+                                    />
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+                <div className="w-full mt-7 flex justify-center">
+                    <div
+                        className={clsx(
+                            'h-14 rounded-full flex items-center justify-center bg-neutral-700 text-white font-semibold',
+                            'cursor-pointer transition-all duration-300 ease-in-out hover:bg-black',
+                        )}
+                        style={{
+                            width: 100,
+                        }}
+                        onClick={handleSubmit}
+                    >
+                        Gửi
+                    </div>
+                </div>
             </>
         );
     };
@@ -85,7 +111,7 @@ const ParticipationShowMultipleChoiceSlide: React.FC<Props> = ({ slide, particip
     return (
         <div className="w-full h-full flex flex-col">
             <div
-                className="text-left"
+                className="text-left mb-7"
                 style={{
                     fontSize: 28,
                 }}

@@ -1,15 +1,16 @@
+import clsx from 'clsx';
 import React, { useRef } from 'react';
-import ButtonIconBase from '~/components/buttons/ButtonIconBase';
 import ModalBase, { ModalBaseRef } from '~/components/modals/ModalBase';
 import { usePresentationJoinSessionContext } from '../../PresentationJoinSession';
 import ParticipantSendMessage from './ParticipantSendMessage';
 import ParticipantSendQuestion from './ParticipantSendQuestion';
+import ParticipantShowBulletSlide from './ParticipantShowBulletSlide';
+import ParticipantShowQuoteSlide from './ParticipantShowQuoteSlide';
+import ParticipantShowWordCloudSlide from './ParticipantShowWordCloudSlide';
 import ParticipationShowHeadingSlide from './ParticipationShowHeadingSlide';
 import ParticipationShowMultipleChoiceSlide from './ParticipationShowMultipleChoiceSlide';
 import ParticipationShowParagraphSlide from './ParticipationShowParagraphSlide';
-import ParticipantShowQuoteSlide from './ParticipantShowQuoteSlide';
-import ParticipantShowWordCloudSlide from './ParticipantShowWordCloudSlide';
-import ParticipantShowBulletSlide from './ParticipantShowBulletSlide';
+import logoSrc from '~/images/logo.png';
 
 interface Props {}
 
@@ -63,36 +64,66 @@ const ParticipationShowContainer: React.FC<Props> = () => {
     };
 
     return (
-        <div
-            className="h-full"
-            style={{
-                maxWidth: 600,
-                minWidth: 360,
-                padding: 16,
-            }}
-        >
-            <div className="h-full w-full flex flex-col">
-                <div className="w-full h-fit">{renderSlide()}</div>
-                <div className="flex-1 flex flex-col justify-end items-center">
-                    <div className="flex items-center justify-center gap-x-2" style={{ minHeight: 80 }}>
-                        <ButtonIconBase
-                            icon={'message-outlined'}
-                            tooltip="Gửi tin nhắn"
-                            color={'primary'}
-                            size="large"
-                            onClick={handleOpenMessageList}
-                        />
-                        <ButtonIconBase
-                            icon={'question-answer'}
-                            tooltip="Mở Q&A"
-                            color={'primary'}
-                            size="large"
-                            onClick={handleOpenQuestionList}
-                        />
+        <div className="w-full h-full flex flex-col">
+            <div className="w-full mt-6 mb-8 flex items-center justify-center">
+                <img
+                    src={logoSrc}
+                    style={{
+                        objectFit: 'cover',
+                        height: 40,
+                    }}
+                />
+            </div>
+            <div className="flex-1 overflow-y-auto overflow-x-hidden flex justify-center">
+                <div
+                    className="h-full"
+                    style={{
+                        width: 600,
+                        padding: 16,
+                    }}
+                >
+                    <div className="h-full w-full flex flex-col gap-y-16">
+                        <div className="w-full h-fit">{renderSlide()}</div>
+                        <div className="flex-1 flex flex-col justify-end items-center">
+                            <div className="w-full">
+                                <div
+                                    className={clsx(
+                                        'mb-4 w-full h-14 flex items-center justify-center rounded-full bg-neutral-50 text-neutral-600 font-semibold',
+                                        'cursor-pointer transition-all duration-300 ease-in-out hover:bg-neutral-100',
+                                    )}
+                                    onClick={handleOpenMessageList}
+                                >
+                                    Gửi tin nhắn
+                                </div>
+                                <div
+                                    className={clsx(
+                                        'w-full h-14 flex items-center justify-center rounded-full bg-neutral-50 text-neutral-600 font-semibold',
+                                        'cursor-pointer transition-all duration-300 ease-in-out hover:bg-neutral-100',
+                                    )}
+                                    onClick={handleOpenQuestionList}
+                                >
+                                    Mở Q&A
+                                </div>
+                            </div>
+                            <div className="mt-6 text-neutral-500">
+                                Tạo bài trình chiếu của riêng bạn tại{' '}
+                                <a
+                                    href={`${window.location.origin}/dashboard/presentation`}
+                                    target="_blank"
+                                    className={clsx(
+                                        'border-b border-neutral-700 text-neutral-700',
+                                        'transition-all duration-300 ease-in-out hover:text-neutral-500 hover:border-neutral-500',
+                                    )}
+                                >
+                                    {window.location.origin}
+                                </a>
+                            </div>
+                            <div className="w-full h-10" />
+                        </div>
                     </div>
+                    <ModalBase ref={modalRef} className="!p-0" />
                 </div>
             </div>
-            <ModalBase ref={modalRef} className="!p-0" />
         </div>
     );
 };

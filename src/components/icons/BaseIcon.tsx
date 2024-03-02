@@ -62,11 +62,13 @@ const IconsMap = {
     'pie-chart': loadable(() => import('@mui/icons-material/PieChart')),
     'donut-chart': loadable(() => import('@mui/icons-material/DonutLarge')),
     'line-chart': loadable(() => import('@mui/icons-material/ShowChart')),
-    'reload': loadable(() => import('@mui/icons-material/Replay')),
-    'logout': loadable(() => import('@mui/icons-material/Logout')),
+    reload: loadable(() => import('@mui/icons-material/Replay')),
+    logout: loadable(() => import('@mui/icons-material/Logout')),
+    'radio-unchecked': loadable(() => import('@mui/icons-material/RadioButtonUnchecked')),
+    'radio-checked': loadable(() => import('@mui/icons-material/RadioButtonChecked')),
 };
 
-type Size = 8 | 10 | 12 | 14 | 16 | 18 | 20 | 22 | 24 |26 | 28;
+type Size = 8 | 10 | 12 | 14 | 16 | 18 | 20 | 22 | 24 | 26 | 28;
 
 export interface BaseIconProps {
     type: keyof typeof IconsMap;
