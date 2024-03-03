@@ -1,35 +1,26 @@
 import { FormControl, FormLabel, TextField } from '@mui/material';
 import _ from 'lodash';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { ButtonBase } from '~/components/buttons/ButtonBase';
 import { ButtonIconBase } from '~/components/buttons/ButtonIconBase';
-import HistoryUtil from '~/utils/HistoryUtil';
-import { IPresentationContext, usePresentationContext } from '../../PresentationDetailPage';
 import { BulletSlideItem, SlideDto } from '../../types/slide';
+import { EditorSlideProps } from './EditorContent';
 
-interface Props {
-    slide: SlideDto;
-    slides: SlideDto[];
-    onUpdatePresentation: IPresentationContext['onUpdatePresentation'];
-}
+interface Props extends EditorSlideProps {}
 
-const EditorBulletSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentation }) => {
+const EditorBulletSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentation, increaseBackStep, mask, unmask }) => {
     if (slide.type !== 'BULLET_LIST') return null;
-
-    const navigate = useNavigate();
-    const { mask, unmask, increaseBackStep } = usePresentationContext();
 
     const handleUpdateSlide = async (newSlide: SlideDto) => {
         const currentSlideIndex = slides.findIndex(x => x.slideID === slide.slideID);
 
         slides[currentSlideIndex] = newSlide;
 
-        mask();
+        mask?.();
         await onUpdatePresentation({
             slides: slides,
         });
-        unmask();
+        unmask?.();
     };
 
     const handleChangeHeading = _.debounce((value: string) => {
@@ -41,7 +32,7 @@ const EditorBulletSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentatio
     }, 350);
 
     const handleAddItem = () => {
-        const items = _.cloneDeep(slide.items);
+        const items = _.cloneDeep(slide.items) || [];
         items.push({
             value: 'Lựa chọn ' + items.length,
         } as BulletSlideItem);
@@ -90,17 +81,6 @@ const EditorBulletSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentatio
                             placeholder={'Lựa chọn ' + index}
                             defaultValue={item.value}
                             onChange={event => handleUpdateItem(index, event.target.value)}
-                            autoFocus={HistoryUtil.getSearchParam('focus') === `item-${item.bulletListSlideItemID}`}
-                            onFocus={() => {
-                                HistoryUtil.pushSearchParams(navigate, {
-                                    focus:`item-${item.bulletListSlideItemID}`,
-                                });
-                                increaseBackStep();
-                            }}
-                            onBlur={() => {
-                                HistoryUtil.clearSearchParamWithKeys(navigate, ['focus']);
-                                increaseBackStep();
-                            }}
                         />
                     </FormControl>
                     <ButtonIconBase
@@ -130,17 +110,6 @@ const EditorBulletSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentatio
                     size="small"
                     placeholder="Tiêu đề"
                     defaultValue={slide.heading}
-                    autoFocus={HistoryUtil.getSearchParam('focus') === 'heading'}
-                    onFocus={() => {
-                        HistoryUtil.pushSearchParams(navigate, {
-                            focus: 'heading',
-                        });
-                        increaseBackStep();
-                    }}
-                    onBlur={() => {
-                        HistoryUtil.clearSearchParamWithKeys(navigate, ['focus']);
-                        increaseBackStep();
-                    }}
                     onChange={event => handleChangeHeading(event.target.value)}
                 />
             </FormControl>

@@ -35,7 +35,7 @@ const PresentationPage: React.FC<Props> = () => {
             presentation: PresentationDto;
             slides: [];
         }>('post', PRESENTATION_CREATE_API, {
-            name: 'Bản trình bày chưa có tiêu đề',
+            name: 'Bài trình chiếu chưa có tiêu đề',
         });
 
         gridRef.current?.api.hideOverlay();

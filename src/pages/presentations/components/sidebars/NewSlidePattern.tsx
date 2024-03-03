@@ -14,17 +14,17 @@ import { usePresentationContext } from '../../PresentationDetailPage';
 import { PRESENTATION_CREATE_SLIDE_API } from '../../api/presentation.api';
 import { SlideDto, SlideType } from '../../types/slide';
 
-export interface Props {}
+interface Props {}
 
 type SlideGroup = 'Slide tương tác' | 'Slide nội dung';
 
-interface SlidePattern {
+export interface SlidePattern {
     name: string;
     type: SlideType;
     src: string;
 }
 
-const slidesGroup: {
+export const slidesGroup: {
     title: SlideGroup;
     patterns: SlidePattern[];
 }[] = [
@@ -70,7 +70,7 @@ const slidesGroup: {
     },
 ];
 
-const SlidePatternItem = ({
+export const SlidePatternItem = ({
     item,
     className,
     onClick,

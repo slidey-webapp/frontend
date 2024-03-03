@@ -2,29 +2,20 @@ import { FormControl, FormLabel, MenuItem, Select } from '@mui/material';
 import _ from 'lodash';
 import React from 'react';
 import { ComboOptionConstant } from '~/configs/constants';
-import { ITemplateCreateContext } from '~/pages/templates/TemplateCreatePage';
-import { IPresentationContext, usePresentationContext } from '../../PresentationDetailPage';
-import { SlideDto, SlideType } from '../../types/slide';
-import EditorBulletSlide from './EditorBulletSlide';
-import EditorHeadingSlide from './EditorHeadingSlide';
-import EditorMultipleChoiceSlide from './EditorMultipleChoice';
-import EditorParagraphSlide from './EditorParagraphSlide';
-import EditorQuoteSlide from './EditorQuoteSlide';
-import EditorWordCloud from './EditorWordCloud';
+import EditorBulletSlide from '~/pages/presentations/components/editors/EditorBulletSlide';
+import EditorHeadingSlide from '~/pages/presentations/components/editors/EditorHeadingSlide';
+import EditorMultipleChoiceSlide from '~/pages/presentations/components/editors/EditorMultipleChoice';
+import EditorParagraphSlide from '~/pages/presentations/components/editors/EditorParagraphSlide';
+import EditorQuoteSlide from '~/pages/presentations/components/editors/EditorQuoteSlide';
+import EditorWordCloud from '~/pages/presentations/components/editors/EditorWordCloud';
+import { SlideDto, SlideType } from '~/pages/presentations/types/slide';
+import { useTemplateCreateContext } from '../TemplateCreatePage';
+import { EditorSlideProps } from '~/pages/presentations/components/editors/EditorContent';
 
 interface Props {}
 
-export interface EditorSlideProps {
-    slide: SlideDto;
-    slides: SlideDto[];
-    onUpdatePresentation: IPresentationContext['onUpdatePresentation'] | ITemplateCreateContext['onUpdatePresentation'];
-    mask?: () => void;
-    unmask?: () => void;
-    increaseBackStep: () => void;
-}
-
-const EditorContent: React.FC<Props> = () => {
-    const { currentSlideId, slides, onUpdatePresentation, mask, increaseBackStep, unmask } = usePresentationContext();
+const TemplateCreateEditorContent: React.FC<Props> = () => {
+    const { currentSlideId, slides, onUpdatePresentation, increaseBackStep } = useTemplateCreateContext();
     const slide = slides.find(x => x.slideID === currentSlideId) || ({} as SlideDto);
 
     const renderEditorType = () => {
@@ -33,8 +24,6 @@ const EditorContent: React.FC<Props> = () => {
             slides,
             onUpdatePresentation,
             increaseBackStep,
-            mask,
-            unmask,
         };
 
         switch (slide?.type) {
@@ -116,4 +105,4 @@ const EditorContent: React.FC<Props> = () => {
     );
 };
 
-export default EditorContent;
+export default TemplateCreateEditorContent;

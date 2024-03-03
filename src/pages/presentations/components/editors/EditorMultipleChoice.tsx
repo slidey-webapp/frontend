@@ -1,35 +1,32 @@
 import { FormControl, FormLabel, TextField } from '@mui/material';
 import _ from 'lodash';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { ButtonBase } from '~/components/buttons/ButtonBase';
 import ButtonIconBase from '~/components/buttons/ButtonIconBase';
-import HistoryUtil from '~/utils/HistoryUtil';
-import { IPresentationContext, usePresentationContext } from '../../PresentationDetailPage';
 import { MultipleChoiceSlideOption, SlideDto } from '../../types/slide';
+import { EditorSlideProps } from './EditorContent';
+interface Props extends EditorSlideProps {}
 
-interface Props {
-    slide: SlideDto;
-    slides: SlideDto[];
-    onUpdatePresentation: IPresentationContext['onUpdatePresentation'];
-}
-
-const EditorMultipleChoiceSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentation }) => {
+const EditorMultipleChoiceSlide: React.FC<Props> = ({
+    slide,
+    slides,
+    onUpdatePresentation,
+    increaseBackStep,
+    mask,
+    unmask,
+}) => {
     if (slide.type !== 'MULTIPLE_CHOICE') return null;
-
-    const navigate = useNavigate();
-    const { mask, unmask, increaseBackStep } = usePresentationContext();
 
     const handleUpdateSlide = async (newSlide: SlideDto) => {
         const currentSlideIndex = slides.findIndex(x => x.slideID === slide.slideID);
 
         slides[currentSlideIndex] = newSlide;
 
-        mask();
+        mask?.();
         await onUpdatePresentation({
             slides: slides,
         });
-        unmask();
+        unmask?.();
     };
 
     const handleChangeQuestion = _.debounce((value: string) => {
@@ -90,17 +87,6 @@ const EditorMultipleChoiceSlide: React.FC<Props> = ({ slide, slides, onUpdatePre
                             placeholder={'Lựa chọn ' + index}
                             defaultValue={option.option}
                             onChange={event => handleUpdateOption(index, event.target.value)}
-                            autoFocus={HistoryUtil.getSearchParam('focus') === `option-${option.optionID}`}
-                            onFocus={() => {
-                                HistoryUtil.pushSearchParams(navigate, {
-                                    focus:`option-${option.optionID}`,
-                                });
-                                increaseBackStep();
-                            }}
-                            onBlur={() => {
-                                HistoryUtil.clearSearchParamWithKeys(navigate, ['focus']);
-                                increaseBackStep();
-                            }}
                         />
                     </FormControl>
                     <ButtonIconBase
@@ -131,18 +117,6 @@ const EditorMultipleChoiceSlide: React.FC<Props> = ({ slide, slides, onUpdatePre
                     placeholder="Câu hỏi"
                     defaultValue={slide.question}
                     onChange={event => handleChangeQuestion(event.target.value)}
-                    autoFocus={HistoryUtil.getSearchParam('focus') === 'question'}
-                    onFocus={() => {
-                        HistoryUtil.pushSearchParams(navigate, {
-                            focus: 'question',
-                        });
-                        increaseBackStep();
-                    }}
-                    onBlur={() => {
-                        HistoryUtil.clearSearchParamWithKeys(navigate, ['focus']);
-                        increaseBackStep();
-                    }}
-  
                 />
             </FormControl>
             <div className="my-2" />

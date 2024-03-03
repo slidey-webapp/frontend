@@ -42,7 +42,7 @@ export interface IPresentationContext {
     onShowPresentation: (groupID?: Id) => void;
 }
 
-interface PlacementHover {
+export interface PlacementHover {
     verticalAlignment: VerticalAlignment | null;
     horizontalAlignment: HorizontalAlignment | null;
     chartType: ChartType | null;
