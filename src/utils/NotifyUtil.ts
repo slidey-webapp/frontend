@@ -2,7 +2,7 @@ import { toast } from 'react-toastify';
 import swal from 'sweetalert2';
 
 export default class NotifyUtil {
-    static confirmDialog(title: string, description: string) {
+    static confirmDialog(title: string, description?: string) {
         return swal.fire({
             title,
             text: description,

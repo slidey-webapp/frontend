@@ -26,9 +26,14 @@ const PresentationHostShow = React.lazy(() => import('~/pages/presentations/Pres
 const PresentationJoinSession = React.lazy(() => import('~/pages/presentations/PresentationJoinSession'));
 // #endregion
 
-// #region presentation
+// #region session
 const SessionDashboardPage = React.lazy(() => import('~/pages/sessions/SessionDashboardPage'));
 
+// #endregion
+
+// #region template
+const TemplatePage = React.lazy(() => import('~/pages/templates/TemplatePage'));
+const TemplateCreatePage = React.lazy(() => import('~/pages/templates/TemplateCreatePage'));
 // #endregion
 
 export type RouteDefinition = Omit<RouteObject, 'children'> & {
@@ -186,6 +191,7 @@ export const routeList: RouteDefinition[] = [
                 title: 'Phiên trình chiếu của tôi',
                 path: 'present-session',
                 icon: 'slide-outlined',
+                divider: true,
                 children: [
                     {
                         title: 'Phiên trình chiếu của tôi',
@@ -210,6 +216,25 @@ export const routeList: RouteDefinition[] = [
                     },
                 ],
             },
+            {
+                title: 'Mẫu',
+                path: 'template',
+                icon: 'collections-outlined',
+                children: [
+                    {
+                        title: '',
+                        path: '',
+                        hide: true,
+                        hideBreadcrumb: true,
+                        element: (
+                            <Suspense>
+                                <TemplatePage />
+                            </Suspense>
+                        ),
+                    },
+                    
+                ],
+            },
         ],
     },
     {
@@ -230,7 +255,15 @@ export const routeList: RouteDefinition[] = [
             </Suspense>
         ),
     },
-
+    {
+        title: 'Tạo mẫu',
+        path: '/template/create',
+        element: (
+            <Suspense>
+                <TemplateCreatePage />
+            </Suspense>
+        ),
+    },
     {
         title: 'Tham gia phiên trình chiếu',
         path: 'join/:code',
