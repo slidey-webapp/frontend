@@ -64,7 +64,7 @@ export const groupGridColDef: BaseGridColDef[] = [
         },
     },
     {
-        headerName: 'Người tạo',
+        headerName: 'Trưởng nhóm',
         field: nameof.full<GroupDto>(x => x.creator),
         width: 100,
         minWidth: 100,

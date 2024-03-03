@@ -68,7 +68,7 @@ const DashboardHomePage: React.FC<Props> = () => {
             >
                 <Loading />
             </Box>,
-            'Đang tạo bài thuyết trình',
+            'Đang tạo bài trình chiếu',
             '50%',
         );
         const response = await requestApi<{
@@ -174,7 +174,7 @@ const DashboardHomePage: React.FC<Props> = () => {
                         <ButtonBase
                             onClick={handleCreateNewPresentation}
                             color={'success'}
-                            title="Tạo bài thuyết trình mới"
+                            title="Tạo bài trình chiếu mới"
                             startIcon={'add'}
                             className="!mx-1"
                             size="large"

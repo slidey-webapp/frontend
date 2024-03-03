@@ -28,7 +28,7 @@ const JoinPresentation: React.FC<Props> = () => {
         setLoading(false);
 
         if (response?.status === 200) {
-            NotifyUtil.success('Tham gia bài thuyết trình thành công!');
+            NotifyUtil.success('Tham gia bài trình chiếu thành công!');
             navigate('/');
             return;
         }
@@ -55,7 +55,7 @@ const JoinPresentation: React.FC<Props> = () => {
                     className=""
                 />
                 <div className="w-[440px] bg-white rounded-md shadow p-5 flex flex-col">
-                    <div className="text-orange-400 font-bold text-xl mb-5">Tham gia bài thuyết trình</div>
+                    <div className="text-orange-400 font-bold text-xl mb-5">Tham gia bài trình chiếu</div>
                     <div className="w-full h-full flex flex-col items-center justify-center text-sm">
                         <div className="flex items-center">
                             <BaseIcon type="do-disturb" style={{ fontSize: 72, color: '#F04438' }} />

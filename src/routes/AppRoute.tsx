@@ -86,7 +86,7 @@ export const routeList: RouteDefinition[] = [
         ),
     },
     {
-        title: 'Tham bài thuyết trình bằng liên kết',
+        title: 'Tham bài trình chiếu bằng liên kết',
         hide: true,
         path: '/presentation/collab/join/:token',
         element: (
@@ -165,14 +165,14 @@ export const routeList: RouteDefinition[] = [
                 icon: 'groups-outlined',
             },
             {
-                title: 'Bài thuyết trình của tôi',
+                title: 'Bài trình chiếu của tôi',
                 path: 'presentation',
                 children: [
                     {
                         hide: true,
                         path: '',
                         hideBreadcrumb: true,
-                        title: 'Bài thuyết trình của tôi',
+                        title: 'Bài trình chiếu của tôi',
                         element: (
                             <Suspense>
                                 <PresentationPage />
@@ -213,7 +213,7 @@ export const routeList: RouteDefinition[] = [
         ],
     },
     {
-        title: 'Chi tiết bài thuyết trình',
+        title: 'Chi tiết bài trình chiếu',
         path: '/presentation/edit/:presentationID',
         element: (
             <Suspense>
@@ -222,7 +222,7 @@ export const routeList: RouteDefinition[] = [
         ),
     },
     {
-        title: 'Trình chiếu bài thuyết trình',
+        title: 'Trình chiếu bài trình chiếu',
         path: '/presentation/show/:sessionID',
         element: (
             <Suspense>
