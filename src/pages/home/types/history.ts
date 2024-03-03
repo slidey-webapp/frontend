@@ -1,5 +1,5 @@
+import { PresentationDto } from '~/pages/presentations/types/presentation';
 import { FullAuditedDto, Id } from '~/types/shared';
-import { PresentationDto } from './presentation';
 
 export enum ASSET_TYPE_ENUM {
     PRESENTATION = 'PRESENTATION',

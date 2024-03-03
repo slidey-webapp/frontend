@@ -6,12 +6,11 @@ import { DragDropContext, Draggable, Droppable, OnDragEndResponder } from 'react
 import { ContextMenu, ContextMenuTrigger, MenuItem } from 'react-contextmenu';
 import BaseIcon from '~/components/icons/BaseIcon';
 import { requestApi } from '~/libs/axios';
-import { MultipleChoiceSlideOption } from '~/pages/home/types/slide';
 import { ChartType, HorizontalAlignment, TextSize, VerticalAlignment } from '~/types/shared';
 import NotifyUtil from '~/utils/NotifyUtil';
 import { usePresentationContext } from '../../PresentationDetailPage';
 import { PRESENTATION_CREATE_SLIDE_API } from '../../api/presentation.api';
-import { SlideDto, SlideType } from '../../types/slide';
+import { MultipleChoiceSlideOption, SlideDto, SlideType } from '../../types/slide';
 import NewSlidePattern from './NewSlidePattern';
 import OverviewBulletSlide from './OverviewBulletSlide';
 import OverviewHeadingSlide from './OverviewHeadingSlide';

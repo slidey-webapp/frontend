@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import { BaseGridColDef } from '~/components/grid/BaseGrid';
-
-import { ParticipantDto } from '../types/participant';
+import { ParticipantDto } from '~/pages/presentations/types/participant';
 
 export const sessionParticipantGridColDef: BaseGridColDef[] = [
     {

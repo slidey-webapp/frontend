@@ -1,14 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-
 import { Id } from '~/types/shared';
-
-import { MessageDto } from '../types/message';
 import { requestApi } from '~/libs/axios';
 import { SESSION_MESSAGE_API } from '../api/session.api';
 import useInfiniteScroll from '../hooks/useInfiniteScroll';
 import { Box, CircularProgress, Stack } from '@mui/material';
 import MessageItem from './MessageItem';
 import Empty from '~/components/layouts/Empty';
+import { MessageDto } from '~/pages/presentations/types/message';
 
 interface MessageListProps {
     sessionID: Id;

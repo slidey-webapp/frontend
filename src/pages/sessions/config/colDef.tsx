@@ -1,8 +1,7 @@
 import _ from 'lodash';
 import { BaseGridColDef } from '~/components/grid/BaseGrid';
+import { SessionDto } from '~/pages/presentations/types/session';
 import DateTimeUtil from '~/utils/DateTimeUtil';
-
-import { SessionDto } from '../types/session';
 
 export const sessionGridColDef: BaseGridColDef[] = [
     {

@@ -1,3 +1,5 @@
+import { Box, Grid, Stack, Typography } from '@mui/material';
+import _ from 'lodash';
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { RootState, useAppSelector } from '~/AppStore';
@@ -5,26 +7,21 @@ import { ButtonBase } from '~/components/buttons/ButtonBase';
 import { AppContainer } from '~/components/layouts/AppContainer';
 import Loading from '~/components/loadings/Loading';
 import ModalBase, { ModalBaseRef } from '~/components/modals/ModalBase';
+import headingSrc from '~/images/slide/heading.svg';
+import multipleChoiceSrc from '~/images/slide/multiple-choice.svg';
+import paragraphSrc from '~/images/slide/paragraph.svg';
 import { PaginatedList, requestApi } from '~/libs/axios';
+import { indigo, neutral } from '~/themes/colors';
 import { Id } from '~/types/shared';
 import DateTimeUtil from '~/utils/DateTimeUtil';
 import NotifyUtil from '~/utils/NotifyUtil';
-import { Box, Grid, Stack, Typography } from '@mui/material';
 import GroupForm from '../groups/components/GroupForm';
 import { PRESENTATION_CREATE_API } from '../presentations/api/presentation.api';
-import OverviewHeadingSlide from '../presentations/components/sidebars/OverviewHeadingSlide';
-import OverviewMultipleChoiceSlide from '../presentations/components/sidebars/OverviewMultipleChoiceSlide';
-import OverviewParagraphSlide from '../presentations/components/sidebars/OverviewParagraphSlide';
 import { PresentationDto } from '../presentations/types/presentation';
+import { SlideDto } from '../presentations/types/slide';
 import { VISIT_HISTORY_API } from './api/home.api';
 import SkeletonGrids from './components/SkeletonGrids';
 import { HistoryDto } from './types/history';
-import { SlideDto } from './types/slide';
-import headingSrc from '~/images/slide/heading.svg';
-import paragraphSrc from '~/images/slide/paragraph.svg';
-import multipleChoiceSrc from '~/images/slide/multiple-choice.svg';
-import { indigo, neutral } from '~/themes/colors';
-import _ from 'lodash';
 
 export interface Props {}
 
@@ -122,7 +119,8 @@ const DashboardHomePage: React.FC<Props> = () => {
         setIsLoading(false);
     };
 
-    const renderSlide = (slide: SlideDto) => {
+    const renderSlide = (slide?: SlideDto) => {
+        if (!slide) return null;
         let src = headingSrc;
         let heading = slide.heading;
 

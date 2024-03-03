@@ -11,13 +11,13 @@ import TabPanel from './components/TabPanel';
 import ParticipantGrid from './components/ParticipantGrid';
 import { BaseGridRef } from '~/components/grid/BaseGrid';
 import { useBaseGrid } from '~/hooks/useBaseGrid';
-import { ParticipantDto } from './types/participant';
 import { SESSION_PARTICIPANT_API, SESSION_QUESTION_API } from './api/session.api';
-import { QuestionDto } from './types/question';
 import QuestionGrid from './components/QuestionGrid';
 import DateTimeUtil from '~/utils/DateTimeUtil';
 import PresentationViewer from './components/PresentationViewer';
 import MessageList from './components/MessageList';
+import { ParticipantDto } from '../presentations/types/participant';
+import { QuestionDto } from '../presentations/types/question';
 
 interface Props {}
 

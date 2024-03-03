@@ -4,9 +4,9 @@ import BaseGrid, { BaseGridProps, BaseGridRef } from '~/components/grid/BaseGrid
 import GridToolbar from '~/components/grid/components/GridToolbar';
 import { useBaseGrid } from '~/hooks/useBaseGrid';
 import { SESSION_INDEX_API } from '~/pages/sessions/api/session.api';
-import { SessionDto } from '~/pages/sessions/types/session';
 import { Id } from '~/types/shared';
 import { sessionGridColDef } from '../config/colDef';
+import { SessionDto } from '~/pages/presentations/types/session';
 
 interface Props {
     presentationID?: Id;
