@@ -16,7 +16,7 @@ const LandingSection: React.FC<Props> = () => {
                             <div className="text-xl font-normal pl-6">
                                 <div className="relative before:absolute before:top-2 before:-left-5 before:w-2 before:h-2 before:bg-[#10b882]">
                                     Xây dựng kết nối ngay lập tức với khán giả và biến họ trở thành một phần trong bài
-                                    thuyết trình của bạn.
+                                    trình chiếu của bạn.
                                 </div>
                                 <div className="mt-8 relative before:absolute before:top-2 before:-left-5 before:w-2 before:h-2 before:bg-[#10b882]">
                                     Tạo trải nghiệm tương tác cho phép mọi người bỏ phiếu, đặt câu hỏi và tương tác

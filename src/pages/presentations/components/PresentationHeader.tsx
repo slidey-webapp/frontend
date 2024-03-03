@@ -105,7 +105,7 @@ const PresentationHeader: React.FC<Props> = () => {
                             <TextField
                                 variant="standard"
                                 size="small"
-                                placeholder="Tên bài thuyết trình..."
+                                placeholder="Tên bài trình chiếu..."
                                 defaultValue={presentation.name}
                                 onChange={_.debounce(
                                     event =>
@@ -129,7 +129,7 @@ const PresentationHeader: React.FC<Props> = () => {
                                             px: 2,
                                         }}
                                     >
-                                        <Typography variant="overline">Người cộng tác</Typography>
+                                        <Typography variant="overline">Cộng tác viên</Typography>
                                         <div className="w-full flex items-center justify-between mt-2">
                                             <BaseForm
                                                 className="w-full"

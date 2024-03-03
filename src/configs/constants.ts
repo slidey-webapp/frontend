@@ -39,7 +39,7 @@ export class ComboOptionConstant {
     static ROLE: ComboOption<GroupMemberRole>[] = [
         {
             value: 'COOWNER',
-            label: 'Đồng sở hữu',
+            label: 'Phó nhóm',
         },
         {
             value: 'MEMBER',
@@ -50,23 +50,23 @@ export class ComboOptionConstant {
     static SLIDE_TYPE: ComboOption<SlideType>[] = [
         {
             value: 'HEADING',
-            label: 'Heading',
+            label: 'Tiêu đề',
         },
         {
             value: 'PARAGRAPH',
-            label: 'Paragraph',
+            label: 'Văn bản',
         },
         {
             value: 'BULLET_LIST',
-            label: 'Bullets',
+            label: 'Danh sách',
         },
         {
             value: 'QUOTE',
-            label: 'Quote',
+            label: 'Trích dẫn',
         },
         {
             value: 'MULTIPLE_CHOICE',
-            label: 'Multiple choice',
+            label: 'Lựa chọn',
         },
         {
             value: 'WORD_CLOUD',
