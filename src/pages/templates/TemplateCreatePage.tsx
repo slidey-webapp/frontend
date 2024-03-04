@@ -81,7 +81,7 @@ const TemplateCreatePage: React.FC<Props> = () => {
     };
 
     const handleCreateTemplate = async () => {
-        overlayRef.current?.open()
+        overlayRef.current?.open();
         const response = await requestApi('post', TEMPLATE_CREATE_API, {
             name: state.presentation.name,
             slides: state.slides.map(x => {
@@ -92,10 +92,10 @@ const TemplateCreatePage: React.FC<Props> = () => {
                 return cloned;
             }),
         });
-        overlayRef.current?.close()
+        overlayRef.current?.close();
 
         if (response.status === 200) {
-            NotifyUtil.success('Tạo mẫu thành công!')
+            NotifyUtil.success('Tạo mẫu thành công!');
             return;
         }
 

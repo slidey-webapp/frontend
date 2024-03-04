@@ -10,6 +10,9 @@ import ModalBase, { ModalBaseRef } from '~/components/modals/ModalBase';
 import headingSrc from '~/images/slide/heading.svg';
 import multipleChoiceSrc from '~/images/slide/multiple-choice.svg';
 import paragraphSrc from '~/images/slide/paragraph.svg';
+import quoteSrc from '~/images/slide/quote.svg';
+import wordCloudSrc from '~/images/slide/word-cloud.svg';
+import bulletSrc from '~/images/slide/bullet.svg';
 import { PaginatedList, requestApi } from '~/libs/axios';
 import { indigo, neutral } from '~/themes/colors';
 import { Id } from '~/types/shared';
@@ -124,11 +127,32 @@ const DashboardHomePage: React.FC<Props> = () => {
         let src = headingSrc;
         let heading = slide.heading;
 
-        if (slide.type === 'MULTIPLE_CHOICE') {
-            src = multipleChoiceSrc;
-            heading = slide.question;
-        } else if (slide.type === 'PARAGRAPH') {
-            src = paragraphSrc;
+        switch (slide.type) {
+            case 'MULTIPLE_CHOICE':
+                src = multipleChoiceSrc;
+                heading = slide.question;
+                break;
+            case 'PARAGRAPH':
+                src = paragraphSrc;
+                heading = slide.heading;
+                break;
+            case 'BULLET_LIST':
+                src = bulletSrc;
+                heading = slide.heading;
+                break;
+            case 'WORD_CLOUD':
+                src = wordCloudSrc;
+                heading = slide.question;
+                break;
+            case 'QUOTE':
+                src = quoteSrc;
+                heading = slide.quote;
+                break;
+            case 'HEADING':
+            default:
+                src = headingSrc;
+                heading = slide.heading;
+                break;
         }
 
         return (

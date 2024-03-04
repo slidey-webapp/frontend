@@ -10,4 +10,5 @@ export interface PresentationDto extends FullAuditedDto {
     sessionID?: Id;
     collaborators?: CollaborationDto[];
     firstSlide?: SlideDto;
+    slides?: SlideDto[]
 }

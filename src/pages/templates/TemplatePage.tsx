@@ -1,62 +1,26 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import BaseGrid, { BaseGridRef } from '~/components/grid/BaseGrid';
-import GridToolbar from '~/components/grid/components/GridToolbar';
+import { ButtonBase } from '~/components/buttons/ButtonBase';
 import { AppContainer } from '~/components/layouts/AppContainer';
-import { useBaseGrid } from '~/hooks/useBaseGrid';
-import { requestApi } from '~/libs/axios';
-import NotifyUtil from '~/utils/NotifyUtil';
-import { PRESENTATION_CREATE_API } from '../presentations/api/presentation.api';
-import { PresentationDto } from '../presentations/types/presentation';
-import { TEMPLATE_INDEX_API } from './api/template.api';
-import { presentationGridColDef } from './configs/colDef';
+import TemplateList from './components/TemplateList';
 
 interface Props {}
 
 const TemplatePage: React.FC<Props> = () => {
-    const gridRef = useRef<BaseGridRef>(null);
-
     const navigate = useNavigate();
 
-    const gridController = useBaseGrid<PresentationDto>({
-        url: TEMPLATE_INDEX_API,
-        gridRef: gridRef,
-    });
-
-    const handleCreate = async () => {
+    const handleCreate = () => {
         navigate('/template/create');
     };
 
-    const handleDetail = async (data: PresentationDto) => {
-        ///
-        // navigate('/presentation/edit/' + data.presentationID)
-    };
-
     return (
-        <AppContainer>
-            <BaseGrid
-                {...gridController}
-                columnDefs={presentationGridColDef}
-                ref={gridRef}
-                actionRowsList={{
-                    hasDetailBtn: true,
-                    onClickDetailBtn: handleDetail,
-                }}
-                defaultColDef={{
-                    autoHeight: true,
-                }}
-                actionRowsWidth={100}
-                toolbar={{
-                    rightToolbar: (
-                        <GridToolbar
-                            hasCreateButton
-                            hasRefreshButton
-                            onClickCreateButton={handleCreate}
-                            onClickRefreshButton={gridController?.reloadData}
-                        />
-                    ),
-                }}
-            />
+        <AppContainer className="flex flex-col overflow-hidden">
+            <div className="flex items-center justify-end gap-x-2.5 w-full h-fit min-h-[40px] mb-7">
+                <ButtonBase onClick={handleCreate} color={'success'} title="Tạo mới" startIcon={'add'} />
+            </div>
+            <div className="base-grid p-7 flex-1 relative overflow-x-hidden overflow-y-auto">
+                <TemplateList />
+            </div>
         </AppContainer>
     );
 };

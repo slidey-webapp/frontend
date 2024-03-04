@@ -217,7 +217,7 @@ export const routeList: RouteDefinition[] = [
                 ],
             },
             {
-                title: 'Mẫu',
+                title: 'Tất cả mẫu',
                 path: 'template',
                 icon: 'collections-outlined',
                 children: [
