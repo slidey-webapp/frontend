@@ -1,3 +1,5 @@
+import { Box, Grid, Stack, Typography } from '@mui/material';
+import _ from 'lodash';
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { RootState, useAppSelector } from '~/AppStore';
@@ -5,26 +7,24 @@ import { ButtonBase } from '~/components/buttons/ButtonBase';
 import { AppContainer } from '~/components/layouts/AppContainer';
 import Loading from '~/components/loadings/Loading';
 import ModalBase, { ModalBaseRef } from '~/components/modals/ModalBase';
+import headingSrc from '~/images/slide/heading.svg';
+import multipleChoiceSrc from '~/images/slide/multiple-choice.svg';
+import paragraphSrc from '~/images/slide/paragraph.svg';
+import quoteSrc from '~/images/slide/quote.svg';
+import wordCloudSrc from '~/images/slide/word-cloud.svg';
+import bulletSrc from '~/images/slide/bullet.svg';
 import { PaginatedList, requestApi } from '~/libs/axios';
+import { indigo, neutral } from '~/themes/colors';
 import { Id } from '~/types/shared';
 import DateTimeUtil from '~/utils/DateTimeUtil';
 import NotifyUtil from '~/utils/NotifyUtil';
-import { Box, Grid, Stack, Typography } from '@mui/material';
 import GroupForm from '../groups/components/GroupForm';
 import { PRESENTATION_CREATE_API } from '../presentations/api/presentation.api';
-import OverviewHeadingSlide from '../presentations/components/sidebars/OverviewHeadingSlide';
-import OverviewMultipleChoiceSlide from '../presentations/components/sidebars/OverviewMultipleChoiceSlide';
-import OverviewParagraphSlide from '../presentations/components/sidebars/OverviewParagraphSlide';
 import { PresentationDto } from '../presentations/types/presentation';
+import { SlideDto } from '../presentations/types/slide';
 import { VISIT_HISTORY_API } from './api/home.api';
 import SkeletonGrids from './components/SkeletonGrids';
 import { HistoryDto } from './types/history';
-import { SlideDto } from './types/slide';
-import headingSrc from '~/images/slide/heading.svg';
-import paragraphSrc from '~/images/slide/paragraph.svg';
-import multipleChoiceSrc from '~/images/slide/multiple-choice.svg';
-import { indigo, neutral } from '~/themes/colors';
-import _ from 'lodash';
 
 export interface Props {}
 
@@ -68,14 +68,14 @@ const DashboardHomePage: React.FC<Props> = () => {
             >
                 <Loading />
             </Box>,
-            'Đang tạo bài thuyết trình',
+            'Đang tạo bài trình chiếu',
             '50%',
         );
         const response = await requestApi<{
             presentation: PresentationDto;
             slides: [];
         }>('post', PRESENTATION_CREATE_API, {
-            name: 'Bản trình bày chưa có tiêu đề',
+            name: 'Bài trình chiếu chưa có tiêu đề',
         });
 
         if (response.status !== 200) {
@@ -122,15 +122,37 @@ const DashboardHomePage: React.FC<Props> = () => {
         setIsLoading(false);
     };
 
-    const renderSlide = (slide: SlideDto) => {
+    const renderSlide = (slide?: SlideDto) => {
+        if (!slide) return null;
         let src = headingSrc;
         let heading = slide.heading;
 
-        if (slide.type === 'MULTIPLE_CHOICE') {
-            src = multipleChoiceSrc;
-            heading = slide.question;
-        } else if (slide.type === 'PARAGRAPH') {
-            src = paragraphSrc;
+        switch (slide.type) {
+            case 'MULTIPLE_CHOICE':
+                src = multipleChoiceSrc;
+                heading = slide.question;
+                break;
+            case 'PARAGRAPH':
+                src = paragraphSrc;
+                heading = slide.heading;
+                break;
+            case 'BULLET_LIST':
+                src = bulletSrc;
+                heading = slide.heading;
+                break;
+            case 'WORD_CLOUD':
+                src = wordCloudSrc;
+                heading = slide.question;
+                break;
+            case 'QUOTE':
+                src = quoteSrc;
+                heading = slide.quote;
+                break;
+            case 'HEADING':
+            default:
+                src = headingSrc;
+                heading = slide.heading;
+                break;
         }
 
         return (
@@ -174,7 +196,7 @@ const DashboardHomePage: React.FC<Props> = () => {
                         <ButtonBase
                             onClick={handleCreateNewPresentation}
                             color={'success'}
-                            title="Tạo bài thuyết trình mới"
+                            title="Tạo bài trình chiếu mới"
                             startIcon={'add'}
                             className="!mx-1"
                             size="large"

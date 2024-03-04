@@ -26,9 +26,14 @@ const PresentationHostShow = React.lazy(() => import('~/pages/presentations/Pres
 const PresentationJoinSession = React.lazy(() => import('~/pages/presentations/PresentationJoinSession'));
 // #endregion
 
-// #region presentation
+// #region session
 const SessionDashboardPage = React.lazy(() => import('~/pages/sessions/SessionDashboardPage'));
 
+// #endregion
+
+// #region template
+const TemplatePage = React.lazy(() => import('~/pages/templates/TemplatePage'));
+const TemplateCreatePage = React.lazy(() => import('~/pages/templates/TemplateCreatePage'));
 // #endregion
 
 export type RouteDefinition = Omit<RouteObject, 'children'> & {
@@ -86,7 +91,7 @@ export const routeList: RouteDefinition[] = [
         ),
     },
     {
-        title: 'Tham bài thuyết trình bằng liên kết',
+        title: 'Tham bài trình chiếu bằng liên kết',
         hide: true,
         path: '/presentation/collab/join/:token',
         element: (
@@ -165,14 +170,14 @@ export const routeList: RouteDefinition[] = [
                 icon: 'groups-outlined',
             },
             {
-                title: 'Bài thuyết trình của tôi',
+                title: 'Bài trình chiếu của tôi',
                 path: 'presentation',
                 children: [
                     {
                         hide: true,
                         path: '',
                         hideBreadcrumb: true,
-                        title: 'Bài thuyết trình của tôi',
+                        title: 'Bài trình chiếu của tôi',
                         element: (
                             <Suspense>
                                 <PresentationPage />
@@ -186,6 +191,7 @@ export const routeList: RouteDefinition[] = [
                 title: 'Phiên trình chiếu của tôi',
                 path: 'present-session',
                 icon: 'slide-outlined',
+                divider: true,
                 children: [
                     {
                         title: 'Phiên trình chiếu của tôi',
@@ -210,10 +216,29 @@ export const routeList: RouteDefinition[] = [
                     },
                 ],
             },
+            {
+                title: 'Tất cả mẫu',
+                path: 'template',
+                icon: 'collections-outlined',
+                children: [
+                    {
+                        title: '',
+                        path: '',
+                        hide: true,
+                        hideBreadcrumb: true,
+                        element: (
+                            <Suspense>
+                                <TemplatePage />
+                            </Suspense>
+                        ),
+                    },
+                    
+                ],
+            },
         ],
     },
     {
-        title: 'Chi tiết bài thuyết trình',
+        title: 'Chi tiết bài trình chiếu',
         path: '/presentation/edit/:presentationID',
         element: (
             <Suspense>
@@ -222,7 +247,7 @@ export const routeList: RouteDefinition[] = [
         ),
     },
     {
-        title: 'Trình chiếu bài thuyết trình',
+        title: 'Trình chiếu bài trình chiếu',
         path: '/presentation/show/:sessionID',
         element: (
             <Suspense>
@@ -230,7 +255,15 @@ export const routeList: RouteDefinition[] = [
             </Suspense>
         ),
     },
-
+    {
+        title: 'Tạo mẫu',
+        path: '/template/create',
+        element: (
+            <Suspense>
+                <TemplateCreatePage />
+            </Suspense>
+        ),
+    },
     {
         title: 'Tham gia phiên trình chiếu',
         path: 'join/:code',

@@ -1,10 +1,10 @@
 import _ from 'lodash';
 import { BaseGridColDef } from '~/components/grid/BaseGrid';
 
-import { QuestionDto } from '../types/question';
 import { Badge, SvgIcon } from '@mui/material';
 import BaseIcon from '~/components/icons/BaseIcon';
 import { indigo } from '~/themes/colors';
+import { QuestionDto } from '~/pages/presentations/types/question';
 
 export const sessionQuestionGridColDef: BaseGridColDef[] = [
     {

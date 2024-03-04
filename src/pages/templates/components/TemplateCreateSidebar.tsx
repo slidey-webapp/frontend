@@ -5,23 +5,18 @@ import React from 'react';
 import { DragDropContext, Draggable, Droppable, OnDragEndResponder } from 'react-beautiful-dnd';
 import { ContextMenu, ContextMenuTrigger, MenuItem } from 'react-contextmenu';
 import BaseIcon from '~/components/icons/BaseIcon';
-import { requestApi } from '~/libs/axios';
-import { ChartType, HorizontalAlignment, TextSize, VerticalAlignment } from '~/types/shared';
+import OverviewBulletSlide from '~/pages/presentations/components/sidebars/OverviewBulletSlide';
+import OverviewHeadingSlide from '~/pages/presentations/components/sidebars/OverviewHeadingSlide';
+import OverviewMultipleChoiceSlide from '~/pages/presentations/components/sidebars/OverviewMultipleChoiceSlide';
+import OverviewParagraphSlide from '~/pages/presentations/components/sidebars/OverviewParagraphSlide';
+import OverviewQuoteSlide from '~/pages/presentations/components/sidebars/OverviewQuoteSlide';
+import OverviewWordCloudSlide from '~/pages/presentations/components/sidebars/OverviewWordCloudSlide';
+import { SlideDto } from '~/pages/presentations/types/slide';
 import NotifyUtil from '~/utils/NotifyUtil';
-import { usePresentationContext } from '../../PresentationDetailPage';
-import { PRESENTATION_CREATE_SLIDE_API } from '../../api/presentation.api';
-import { MultipleChoiceSlideOption, SlideDto, SlideType } from '../../types/slide';
-import NewSlidePattern from './NewSlidePattern';
-import OverviewBulletSlide from './OverviewBulletSlide';
-import OverviewHeadingSlide from './OverviewHeadingSlide';
-import OverviewMultipleChoiceSlide from './OverviewMultipleChoiceSlide';
-import OverviewParagraphSlide from './OverviewParagraphSlide';
-import OverviewQuoteSlide from './OverviewQuoteSlide';
-import OverviewWordCloudSlide from './OverviewWordCloudSlide';
+import { useTemplateCreateContext } from '../TemplateCreatePage';
+import TemplateCreateNewSlidePattern from './TemplateCreateNewSlidePattern';
 
-interface Props {
-    isReadonly?: boolean;
-}
+interface Props {}
 
 const reorder = (list: SlideDto[], startIndex: number, endIndex: number) => {
     const slides = _.cloneDeep(list);
@@ -31,19 +26,13 @@ const reorder = (list: SlideDto[], startIndex: number, endIndex: number) => {
     return slides.map((slide, index) => ({ ...slide, slideOrder: index + 1 }));
 };
 
-const PresentationSidebar: React.FC<Props> = ({ isReadonly }) => {
-    const { currentSlideId, presentationID, slides, onUpdatePresentation, setCurrentSlideId, setState } =
-        usePresentationContext();
+const TemplateCreateSidebar: React.FC<Props> = () => {
+    const { slides, onUpdatePresentation, currentSlideId, setCurrentSlideId } = useTemplateCreateContext();
 
     const onDragEnd: OnDragEndResponder = async result => {
         if (!result.destination || result.destination?.index === result.source.index) return;
 
         const newSlides = reorder(slides, result.source.index, result.destination.index);
-
-        setState(pre => ({
-            ...pre,
-            slides: newSlides,
-        }));
 
         onUpdatePresentation({
             slides: newSlides,
@@ -71,10 +60,7 @@ const PresentationSidebar: React.FC<Props> = ({ isReadonly }) => {
     };
 
     const handleDeleteSlide = async (slide: SlideDto) => {
-        const confirm = await NotifyUtil.confirmDialog(
-            'Bạn có chắc muốn xóa?',
-            'Thao tác này sẽ xóa vĩnh viễn slide và mọi dữ liệu phản hồi liên quan sẽ bị mất',
-        );
+        const confirm = await NotifyUtil.confirmDialog('Bạn có chắc muốn xóa?');
 
         if (confirm.isDismissed) return;
 
@@ -83,12 +69,7 @@ const PresentationSidebar: React.FC<Props> = ({ isReadonly }) => {
 
         newSlides.splice(slideIndex, 1);
 
-        setState(pre => ({
-            ...pre,
-            slides: newSlides,
-        }));
-
-        await onUpdatePresentation({
+        onUpdatePresentation({
             slides: newSlides,
         });
 
@@ -102,63 +83,23 @@ const PresentationSidebar: React.FC<Props> = ({ isReadonly }) => {
     };
 
     const handleDuplicateSlide = async (slide: SlideDto) => {
-        const newSlide = await createSlide(slide.type, _.cloneDeep(slide));
-        if (!newSlide) return;
-
-        const newSlides = _.cloneDeep(slides);
-        const slideCloned = _.cloneDeep(slide);
-        // @ts-ignore
-        delete slideCloned.slideID;
-
-        newSlides.push({
-            ...newSlide,
-            heading: slideCloned.heading,
-            subHeading: slideCloned.subHeading,
-            paragraph: slideCloned.paragraph,
-            question: slideCloned.question,
-            options: slideCloned.options?.map(
-                x =>
-                    ({
-                        slideID: newSlide.slideID,
-                        option: x.option,
-                        chosenAmount: 0,
-                    } as MultipleChoiceSlideOption),
-            ),
+        onUpdatePresentation({
+            slides: [
+                ...slides,
+                {
+                    ...slide,
+                    slideID: Math.random(),
+                    slideOrder: slides.length + 1,
+                } as SlideDto,
+            ],
         });
-
-        setState(pre => ({
-            ...pre,
-            slides: newSlides,
-        }));
-
-        await onUpdatePresentation({
-            slides: newSlides,
-        });
-    };
-
-    const createSlide = async (type: SlideType, rootSlide?: SlideDto) => {
-        const response = await requestApi<SlideDto>('post', PRESENTATION_CREATE_SLIDE_API, {
-            presentationID,
-            type,
-            horizontalAlignment: rootSlide?.horizontalAlignment || HorizontalAlignment.Left,
-            verticalAlignment: rootSlide?.verticalAlignment || VerticalAlignment.Top,
-            textSize: rootSlide?.textSize || TextSize.Medium,
-            textColor: rootSlide?.textColor || '#000000',
-            textBackground: rootSlide?.textBackground || '#ffffff',
-            chartType: rootSlide?.chartType || ChartType.Bar,
-        });
-
-        if (response.status === 200) return response.data.result;
     };
 
     return (
         <div className="w-44 h-full overflow-hidden flex flex-col">
-            {!isReadonly && (
-                <div className="w-full h-14 flex items-center px-4">
-                    <NewSlidePattern />
-                </div>
-            )}
-
+            <div className="w-full h-14 flex items-center px-4">
+                <TemplateCreateNewSlidePattern />{' '}
+            </div>
             <div className="flex-1 w-full overflow-x-hidden overflow-y-auto pr-4">
                 <DragDropContext onDragEnd={onDragEnd}>
                     <Droppable droppableId="droppable">
@@ -238,4 +179,4 @@ const PresentationSidebar: React.FC<Props> = ({ isReadonly }) => {
     );
 };
 
-export default PresentationSidebar;
+export default TemplateCreateSidebar;

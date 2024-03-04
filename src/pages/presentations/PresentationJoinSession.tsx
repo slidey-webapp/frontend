@@ -170,7 +170,7 @@ const PresentationJoinSession: React.FC<Props> = () => {
                             {
                                 name: 'code',
                                 classNameCol: 'col-span-12',
-                                label: 'Mã bài thuyết trình',
+                                label: 'Mã bài trình chiếu',
                                 type: 'text',
                                 required: true,
                             },

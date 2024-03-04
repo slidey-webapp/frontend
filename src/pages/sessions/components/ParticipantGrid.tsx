@@ -4,7 +4,7 @@ import BaseGrid, { BaseGridRef } from '~/components/grid/BaseGrid';
 import { BaseGridResponse } from '~/hooks/useBaseGrid';
 
 import { sessionParticipantGridColDef } from '../config/participantColDef';
-import { ParticipantDto } from '../types/participant';
+import { ParticipantDto } from '~/pages/presentations/types/participant';
 
 interface ParticipantGridProps {
     gridController: BaseGridResponse<ParticipantDto>;

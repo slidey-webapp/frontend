@@ -1,8 +1,8 @@
 import { Box, Stack } from '@mui/system';
 import { useMemo } from 'react';
 import { RootState, useAppSelector } from '~/AppStore';
+import { MessageDto } from '~/pages/presentations/types/message';
 import DateTimeUtil from '~/utils/DateTimeUtil';
-import { MessageDto } from '../types/message';
 
 interface MessageItemProps {
     message: MessageDto;

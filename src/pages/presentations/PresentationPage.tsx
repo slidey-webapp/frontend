@@ -1,3 +1,5 @@
+import { Box, Grid, Stack } from '@mui/material';
+import _ from 'lodash';
 import React, { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '~/AppStore';
@@ -8,8 +10,10 @@ import { AppContainer } from '~/components/layouts/AppContainer';
 import ModalBase, { ModalBaseRef } from '~/components/modals/ModalBase';
 import { useBaseGrid } from '~/hooks/useBaseGrid';
 import { baseDeleteWithoutIdApi, requestApi } from '~/libs/axios';
+import { indigo, neutral } from '~/themes/colors';
 import NotifyUtil from '~/utils/NotifyUtil';
 import SessionGrid from '../sessions/components/SessionGrid';
+import TemplateList from '../templates/components/TemplateList';
 import { PRESENTATION_CREATE_API, PRESENTATION_DELETE_API, PRESENTATION_INDEX_API } from './api/presentation.api';
 import { presentationGridColDef } from './config/colDef';
 import { PresentationDto } from './types/presentation';
@@ -29,21 +33,58 @@ const PresentationPage: React.FC<Props> = () => {
     });
 
     const handleCreate = async () => {
-        gridRef.current?.api.showLoadingOverlay();
+        modalRef.current?.onOpen(
+            <TemplateList
+                renderAddonBeforeItem={() => {
+                    return (
+                        <Grid item xs={12} sm={6} md={4}>
+                            <Stack direction="column">
+                                <div className="cursor-pointer select-none relative group" onClick={handleCreateEmpty}>
+                                    <Box
+                                        sx={{
+                                            padding: '1rem',
+                                            borderRadius: '8px',
+                                            transition: 'all .3s',
+                                            borderWidth: 2,
+                                            borderColor: _.get(neutral, '100'),
+                                            borderStyle: 'solid',
+                                            '&:hover': {
+                                                borderColor: _.get(indigo, 'main'),
+                                            },
+                                            aspectRatio: '16 / 9',
+                                            position: 'relative',
+                                        }}
+                                    >
+                                        <div className={'w-full h-full flex flex-col items-center justify-center'} />
+                                    </Box>
+                                    <div className="mt-2">
+                                        <div className="text-neutral-800 text-lg line-clamp-1">
+                                            Bài trình chiếu trống
+                                        </div>
+                                        <div className="text-sm text-neutral-500 line-clamp-1 text-transparent">0</div>
+                                    </div>
+                                </div>
+                            </Stack>
+                        </Grid>
+                    );
+                }}
+            />,
+            'Tất cả mẫu',
+            '80%',
+        );
+    };
 
+    const handleCreateEmpty = async () => {
         const response = await requestApi<{
             presentation: PresentationDto;
             slides: [];
         }>('post', PRESENTATION_CREATE_API, {
-            name: 'Bản trình bày chưa có tiêu đề',
+            name: 'Bài trình chiếu chưa có tiêu đề',
         });
-
-        gridRef.current?.api.hideOverlay();
+        modalRef.current?.onClose();
 
         if (response.status !== 200) {
-            // todo: error handling ...
-            NotifyUtil.error('Có lỗi xảy ra');
-
+            NotifyUtil.error(response.data.message || 'Có lỗi xảy ra');
             return;
         }
 

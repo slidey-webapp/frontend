@@ -41,7 +41,7 @@ const PresentationShowWaiting: React.FC<Props> = ({ code }) => {
             >
                 <div className="h-full flex-1 flex flex-col justify-center">
                     <div className="font-medium text-2xl">
-                        Tham gia bài thuyết trình tại
+                        Tham gia bài trình chiếu tại
                         <span className="font-extrabold ml-2">{`${window.location.origin}`}</span>
                     </div>
                     <div className="mt-4" onClick={async () => await navigator.clipboard.writeText(joiningUrl)}>

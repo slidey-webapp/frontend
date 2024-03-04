@@ -10,4 +10,5 @@ export interface SessionDto extends FullAuditedTimeDto {
     groupID?: Id;
     name: string;
     code: string;
+    totalParticipant?: number;
 }

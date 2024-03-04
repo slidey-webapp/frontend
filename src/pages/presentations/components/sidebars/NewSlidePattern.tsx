@@ -14,17 +14,17 @@ import { usePresentationContext } from '../../PresentationDetailPage';
 import { PRESENTATION_CREATE_SLIDE_API } from '../../api/presentation.api';
 import { SlideDto, SlideType } from '../../types/slide';
 
-export interface Props {}
+interface Props {}
 
 type SlideGroup = 'Slide tương tác' | 'Slide nội dung';
 
-interface SlidePattern {
+export interface SlidePattern {
     name: string;
     type: SlideType;
     src: string;
 }
 
-const slidesGroup: {
+export const slidesGroup: {
     title: SlideGroup;
     patterns: SlidePattern[];
 }[] = [
@@ -32,22 +32,22 @@ const slidesGroup: {
         title: 'Slide nội dung',
         patterns: [
             {
-                name: 'Heading',
+                name: 'Tiêu đề',
                 type: 'HEADING',
                 src: headingSrc,
             },
             {
-                name: 'Paragraph',
+                name: 'Văn bản',
                 type: 'PARAGRAPH',
                 src: paragraphSrc,
             },
             {
-                name: 'Bullets',
+                name: 'Danh sách',
                 type: 'BULLET_LIST',
                 src: bulletSrc,
             },
             {
-                name: 'Quote',
+                name: 'Trích dẫn',
                 type: 'QUOTE',
                 src: quoteSrc,
             },
@@ -57,12 +57,12 @@ const slidesGroup: {
         title: 'Slide tương tác',
         patterns: [
             {
-                name: 'Multiple Choice',
+                name: 'Lựa chọn',
                 type: 'MULTIPLE_CHOICE',
                 src: multipleChoiceSrc,
             },
             {
-                name: 'Word cloud',
+                name: 'Word Cloud',
                 type: 'WORD_CLOUD',
                 src: wordCloudSrc,
             },
@@ -70,7 +70,7 @@ const slidesGroup: {
     },
 ];
 
-const SlidePatternItem = ({
+export const SlidePatternItem = ({
     item,
     className,
     onClick,

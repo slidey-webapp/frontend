@@ -5,10 +5,10 @@ import { ExtractFnReturnType, QueryConfig } from '~/libs/react-query';
 import { User } from '~/types/auth';
 import { Id } from '~/types/shared';
 
-import { PresentationDto } from '../types/presentation';
-import { SessionDto } from '../types/session';
 import { SESSION_DETAIL_API } from './session.api';
 import { SlideDto } from '~/pages/presentations/types/slide';
+import { PresentationDto } from '~/pages/presentations/types/presentation';
+import { SessionDto } from '~/pages/presentations/types/session';
 
 export const getSessionDetail = async (
     id?: Id,

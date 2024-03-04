@@ -1,20 +1,11 @@
 import { FormControl, FormLabel, TextField } from '@mui/material';
 import _ from 'lodash';
 import React from 'react';
-import { IPresentationContext } from '../../PresentationDetailPage';
-import { SlideDto } from '../../types/slide';
+import { EditorSlideProps } from './EditorContent';
 
-interface Props {
-    slide: SlideDto;
-    slides: SlideDto[];
-    onUpdatePresentation: IPresentationContext['onUpdatePresentation'];
-}
+interface Props extends EditorSlideProps {}
 
-const EditorQuoteSlide: React.FC<Props> = ({
-    slide,
-    slides,
-    onUpdatePresentation
-}) => {
+const EditorQuoteSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentation, increaseBackStep }) => {
     if (slide.type !== 'QUOTE') return null;
 
     const handleChange = _.debounce((name: string, value: any) => {

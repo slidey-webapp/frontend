@@ -5,4 +5,5 @@ export interface ParticipantDto {
     sessionID: Id;
     accountID?: Id;
     name: string;
+    email?: string;
 }

@@ -66,6 +66,7 @@ const IconsMap = {
     logout: loadable(() => import('@mui/icons-material/Logout')),
     'radio-unchecked': loadable(() => import('@mui/icons-material/RadioButtonUnchecked')),
     'radio-checked': loadable(() => import('@mui/icons-material/RadioButtonChecked')),
+    'collections-outlined': loadable(() => import('@mui/icons-material/CollectionsOutlined')),
 };
 
 type Size = 8 | 10 | 12 | 14 | 16 | 18 | 20 | 22 | 24 | 26 | 28;
