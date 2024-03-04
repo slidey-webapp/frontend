@@ -19,6 +19,10 @@ module.exports = {
                 18: '72px',
                 30: '120px',
             },
+            flex: {
+                2: '2 2',
+                3: '3 3',
+            },
             keyframes: {
                 ripple: {
                     '0%': {
