@@ -1,7 +1,9 @@
 import React, { Suspense } from 'react';
 import { Navigate, RouteObject, useRoutes } from 'react-router-dom';
 import { BaseIconProps } from '~/components/icons/BaseIcon';
+import { Permission } from '~/configs/constants';
 import SessionDetailPage from '~/pages/sessions/SessionDetailPage';
+import { PermissionUtil } from '~/utils/PermissionUtil';
 
 const NotFound = React.lazy(() => import('~/components/errors/NotFound'));
 const LoginView = React.lazy(() => import('~/components/layouts/LoginView'));
@@ -36,6 +38,10 @@ const TemplatePage = React.lazy(() => import('~/pages/templates/TemplatePage'));
 const TemplateCreatePage = React.lazy(() => import('~/pages/templates/TemplateCreatePage'));
 // #endregion
 
+// #region template
+const RolePage = React.lazy(() => import('~/pages/roles/RolePage'));
+// #endregion
+
 export type RouteDefinition = Omit<RouteObject, 'children'> & {
     title: string;
     hideTitle?: boolean;
@@ -49,7 +55,7 @@ export type RouteDefinition = Omit<RouteObject, 'children'> & {
     group?: boolean;
     divider?: boolean;
     hide?: boolean;
-    permission?: string[]; //todo: check permission later
+    permissions?: string[];
 };
 
 export const routeList: RouteDefinition[] = [
@@ -232,8 +238,27 @@ export const routeList: RouteDefinition[] = [
                             </Suspense>
                         ),
                     },
-                    
                 ],
+                permissions: [Permission.ReadTemplate],
+            },
+            {
+                title: 'Vai trò',
+                path: 'role',
+                icon: 'shield-outlined',
+                children: [
+                    {
+                        title: '',
+                        path: '',
+                        hide: true,
+                        hideBreadcrumb: true,
+                        element: (
+                            <Suspense>
+                                <RolePage />
+                            </Suspense>
+                        ),
+                    },
+                ],
+                permissions: [Permission.ReadRole],
             },
         ],
     },
@@ -289,9 +314,32 @@ export const routeList: RouteDefinition[] = [
     },
 ];
 
+export const filterRoutesWithPermissions = (routes: RouteDefinition[]) => {
+    const newRoutes: RouteDefinition[] = [];
+
+    routes.forEach(route => {
+        const hasPermission = PermissionUtil.checkMultiPermission(route.permissions);
+        if (!hasPermission) return;
+
+        if (route.children && route.children.length > 0) {
+            const filteredChildren = filterRoutesWithPermissions(route.children);
+            if (filteredChildren.length > 0) {
+                const routeWithFilteredChildren = { ...route, children: filteredChildren };
+                newRoutes.push(routeWithFilteredChildren);
+            }
+        } else {
+            newRoutes.push(route);
+        }
+    });
+
+    return newRoutes;
+};
+
 const AppRoute: React.FC = () => {
+    const filteredRoutes = filterRoutesWithPermissions(routeList);
+
     // @ts-ignore
-    const elements = useRoutes(routeList);
+    const elements = useRoutes(filteredRoutes);
     return <>{elements}</>;
 };
 
