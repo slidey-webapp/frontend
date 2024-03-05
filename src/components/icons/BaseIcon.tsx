@@ -67,6 +67,8 @@ const IconsMap = {
     'radio-unchecked': loadable(() => import('@mui/icons-material/RadioButtonUnchecked')),
     'radio-checked': loadable(() => import('@mui/icons-material/RadioButtonChecked')),
     'collections-outlined': loadable(() => import('@mui/icons-material/CollectionsOutlined')),
+    'shield-outlined': loadable(() => import('@mui/icons-material/GppGoodOutlined')),
+    'person-add-outlined': loadable(() => import('@mui/icons-material/PersonAddOutlined')),
 };
 
 type Size = 8 | 10 | 12 | 14 | 16 | 18 | 20 | 22 | 24 | 26 | 28;

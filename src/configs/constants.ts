@@ -132,3 +132,9 @@ export class SocketEvent {
     static REMOVE_COLLAB = 'remove_collab';
     static JOIN_COLLAB = 'join_collab';
 }
+
+export class Permission {
+    static SystemAdmin = 'System.Admin';
+    static ReadRole = 'Role.Read';
+    static ReadTemplate = 'Template.Read';
+}

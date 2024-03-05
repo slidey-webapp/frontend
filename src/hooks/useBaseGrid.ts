@@ -10,8 +10,8 @@ export interface BaseGridResponse<TData> {
     paginatedList: PaginatedList<TData>;
     reloadData: () => void;
     onChangePage: (pageNumber: number) => void;
-    mask:()=>void;
-    unmask:()=>void;
+    mask: () => void;
+    unmask: () => void;
 }
 
 interface Props<TData> {
@@ -62,7 +62,10 @@ export function useBaseGrid<TData>(props: Props<TData>): BaseGridResponse<TData>
         );
 
         if (response.status === 200 && response.data?.result) {
-            setPaginatedList(response.data?.result);
+            setPaginatedList({
+                ...response.data?.result,
+                items: props.customData?.(response.data?.result.items || []) || response.data?.result.items,
+            });
         }
         props.gridRef?.current?.api?.sizeColumnsToFit();
         props.gridRef?.current?.api?.hideOverlay();
@@ -72,10 +75,9 @@ export function useBaseGrid<TData>(props: Props<TData>): BaseGridResponse<TData>
         paginatedList: paginatedList,
         reloadData: fetchData,
         onChangePage,
-        mask: ()=>  props.gridRef?.current?.api?.showLoadingOverlay?.(),
+        mask: () => props.gridRef?.current?.api?.showLoadingOverlay?.(),
         unmask: () => {
-            setTimeout(() => props.gridRef?.current?.api?.hideOverlay, 250)
-        }
-
+            setTimeout(() => props.gridRef?.current?.api?.hideOverlay, 250);
+        },
     };
 }
