@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Scrollbar from '~/components/scrollbar/Scrollbar';
 import logo from '~/images/logo.png';
-import { routeList } from '~/routes/AppRoute';
+import { filterRoutesWithPermissions, routeList } from '~/routes/AppRoute';
 import SideNavItem from './SideNavItem';
 
 interface Props {
@@ -16,6 +16,7 @@ const SideNav: React.FC<Props> = ({ open, onClose }) => {
     const lgUp = useMediaQuery(theme.breakpoints.up('lg'));
 
     const dashboardRoutes = routeList.filter(x => x.layout === 'dashboard');
+    const filteredRoutes = filterRoutesWithPermissions(dashboardRoutes);
 
     const content = (
         <Scrollbar
@@ -48,7 +49,7 @@ const SideNav: React.FC<Props> = ({ open, onClose }) => {
                         />
                     </Box>
                 </Box>
-                {dashboardRoutes.map(item => (
+                {filteredRoutes.map(item => (
                     <SideNavItem key={item.path} routeDefinition={item} />
                 ))}
             </Box>

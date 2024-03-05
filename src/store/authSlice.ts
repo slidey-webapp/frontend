@@ -48,9 +48,22 @@ export const { setAuthData, setLoading, setLogout, setLoadingCheckLogin } = auth
 export const fetchAuthDataAsync = (): AppThunk => async dispatch => {
     dispatch(setLoadingCheckLogin(true));
     try {
-        const response = await requestApi('get', CHECK_AUTH_API);
+        const response = await requestApi<
+            Omit<AuthUser, 'claims'> & {
+                claims: {
+                    code: string;
+                }[];
+            }
+        >('get', CHECK_AUTH_API);
         if (response.status === 200) {
-            dispatch(setAuthData(response.data.result));
+            const result = response.data.result;
+            if (!result) return;
+
+            const authUser: AuthUser = {
+                ...result,
+                claims: result?.claims?.map(x => x.code) || [],
+            };
+            dispatch(setAuthData(authUser));
         }
     } catch (err) {
         console.error(err);
@@ -73,17 +86,30 @@ export const loginAsync =
     ): AppThunk =>
     async dispatch => {
         dispatch(setLoading(true));
-        const response = await requestApi<AuthUser>('post', type === 'login' ? LOGIN_API : GOOGLE_LOGIN_API, params);
+        const response = await requestApi<
+            Omit<AuthUser, 'claims'> & {
+                claims: {
+                    code: string;
+                }[];
+            }
+        >('post', type === 'login' ? LOGIN_API : GOOGLE_LOGIN_API, params);
         dispatch(setLoading(false));
         if (response?.status === 200 || response?.status === 400) {
             if (response.status === 200) {
-                dispatch(setAuthData(response.data.result));
-                loginSuccessFullCallback(response.data.result);
-                if (!response.data.result) return;
-                Cookies.set('token', response.data.result.token, {
+                const result = response.data.result;
+                if (!result) return;
+
+                const authUser: AuthUser = {
+                    ...result,
+                    claims: result?.claims?.map(x => x.code) || [],
+                };
+
+                dispatch(setAuthData(authUser));
+                loginSuccessFullCallback(authUser);
+                Cookies.set('token', authUser.token, {
                     expires: 1,
                 });
-                Cookies.set('refresh-token', response.data.result.refreshToken, {
+                Cookies.set('refresh-token', authUser.refreshToken, {
                     expires: 1,
                 });
             } else {
