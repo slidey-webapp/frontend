@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { motion } from 'framer-motion';
 import _ from 'lodash';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import BaseIcon from '~/components/icons/BaseIcon';
 import { requestApi } from '~/libs/axios';
 import { indigo } from '~/themes/colors';
@@ -9,6 +9,8 @@ import { Id } from '~/types/shared';
 import NotifyUtil from '~/utils/NotifyUtil';
 import { SESSION_SLIDE_MULTIPLE_CHOICE_SUBMIT_API } from '../../api/presentation.api';
 import { MultipleChoiceSlideOption, SlideDto } from '../../types/slide';
+import AlreadyResponse from './AlreadyResponse';
+import WaitingNextSlide from './WaitingNextSlide';
 
 interface Props {
     slide: SlideDto;
@@ -19,12 +21,11 @@ interface Props {
 const ParticipationShowMultipleChoiceSlide: React.FC<Props> = ({ slide, participantID, sessionID }) => {
     if (slide.type !== 'MULTIPLE_CHOICE') return null;
 
+    const isAnswered = slide.options?.some(opt =>
+        _.get(opt, 'result', [])?.some(x => _.get(x, 'participantID') === participantID),
+    );
     const [optSelected, setOptSelected] = useState<MultipleChoiceSlideOption | undefined>();
     const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
-
-    useEffect(() => {
-        setIsSubmitted(false);
-    }, [slide.slideID]);
 
     const handleSubmit = async () => {
         if (!optSelected) return;
@@ -45,17 +46,8 @@ const ParticipationShowMultipleChoiceSlide: React.FC<Props> = ({ slide, particip
     };
 
     const renderBody = () => {
-        if (isSubmitted)
-            return (
-                <div
-                    className="text-lg"
-                    style={{
-                        textShadow: '0px 2px 4px #000000',
-                    }}
-                >
-                    Câu trả lời của bạn đã được ghi lại!
-                </div>
-            );
+        if (isAnswered) return <AlreadyResponse />;
+        if (isSubmitted) return <WaitingNextSlide />;
 
         return (
             <>
@@ -71,7 +63,7 @@ const ParticipationShowMultipleChoiceSlide: React.FC<Props> = ({ slide, particip
                                     'text-neutral-500 hover:text-indigo-main',
                                     'cursor-pointer transition-all duration-150 ease-in-out hover:border-indigo-main',
                                     {
-                                        'border-indigo-main': active,
+                                        '!border-indigo-main': active,
                                     },
                                 )}
                                 onClick={() => setOptSelected(opt)}

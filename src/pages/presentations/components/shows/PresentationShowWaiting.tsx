@@ -6,6 +6,7 @@ import { ButtonBase } from '~/components/buttons/ButtonBase';
 import { requestApi } from '~/libs/axios';
 import { usePresentationShowContext } from '../../PresentationHostShow';
 import { SESSION_START_API } from '../../api/presentation.api';
+import ComponentUtil from '~/utils/ComponentUtil';
 
 interface Props {
     code: string;
@@ -31,7 +32,7 @@ const PresentationShowWaiting: React.FC<Props> = ({ code }) => {
     };
 
     return (
-        <div className="w-full h-full flex flex-col justify-center items-center">
+        <div className="w-full h-full flex flex-col justify-start items-center">
             <div
                 className="w-fit flex items-center justify-between gap-x-8 p-4 rounded-2xl bg-white"
                 style={{
@@ -89,16 +90,44 @@ const PresentationShowWaiting: React.FC<Props> = ({ code }) => {
             </div>
             <div className="mt-10">
                 <div className="w-full h-full flex flex-wrap gap-6">
-                    {participants.map(participant => {
-                        return (
-                            <div
-                                key={participant.participantID}
-                                className="bg-indigo-500 rounded text-white text-3xl font-bold px-4 py-3 flex items-center justify-center"
-                            >
-                                {participant.name}
+                    {!participants || participants.length === 0 ? (
+                        <div
+                            style={{}}
+                            className="flex items-center text-3xl py-2 px-4 rounded bg-indigo-main text-white font-bold"
+                        >
+                            <span className="mr-1">Chờ người tham gia</span>
+                            <div className="dot-wave">
+                                <span className="dot text-white">.</span>
+                                <span className="dot text-white">.</span>
+                                <span className="dot text-white">.</span>
                             </div>
-                        );
-                    })}
+                        </div>
+                    ) : (
+                        participants.map(participant => {
+                            const index = ComponentUtil.generateRandom(participant.name);
+                            const background = ComponentUtil.ARRAY_COLOR_CONSTANT[index];
+
+                            return (
+                                <div
+                                    key={participant.participantID}
+                                    className="flex items-center gap-x-3 text-2xl font-bold px-4 py-3 rounded"
+                                    style={{
+                                        background: `${background}20`,
+                                        color: background,
+                                    }}
+                                >
+                                    {ComponentUtil.renderAvatarUser({
+                                        fullName: participant.name,
+                                        size: 48,
+                                        style: {
+                                            fontSize: 24,
+                                        },
+                                    })}
+                                    <div>{participant.name}</div>
+                                </div>
+                            );
+                        })
+                    )}
                 </div>
             </div>
         </div>

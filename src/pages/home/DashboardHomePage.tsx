@@ -5,14 +5,13 @@ import { useNavigate } from 'react-router-dom';
 import { RootState, useAppSelector } from '~/AppStore';
 import { ButtonBase } from '~/components/buttons/ButtonBase';
 import { AppContainer } from '~/components/layouts/AppContainer';
-import Loading from '~/components/loadings/Loading';
 import ModalBase, { ModalBaseRef } from '~/components/modals/ModalBase';
+import bulletSrc from '~/images/slide/bullet.svg';
 import headingSrc from '~/images/slide/heading.svg';
 import multipleChoiceSrc from '~/images/slide/multiple-choice.svg';
 import paragraphSrc from '~/images/slide/paragraph.svg';
 import quoteSrc from '~/images/slide/quote.svg';
 import wordCloudSrc from '~/images/slide/word-cloud.svg';
-import bulletSrc from '~/images/slide/bullet.svg';
 import { PaginatedList, requestApi } from '~/libs/axios';
 import { indigo, neutral } from '~/themes/colors';
 import { Id } from '~/types/shared';
@@ -22,6 +21,7 @@ import GroupForm from '../groups/components/GroupForm';
 import { PRESENTATION_CREATE_API } from '../presentations/api/presentation.api';
 import { PresentationDto } from '../presentations/types/presentation';
 import { SlideDto } from '../presentations/types/slide';
+import TemplateList from '../templates/components/TemplateList';
 import { VISIT_HISTORY_API } from './api/home.api';
 import SkeletonGrids from './components/SkeletonGrids';
 import { HistoryDto } from './types/history';
@@ -58,36 +58,64 @@ const DashboardHomePage: React.FC<Props> = () => {
 
     const handleDetailPresentation = async (presentationID: Id) => navigate('/presentation/edit/' + presentationID);
 
-    const handleCreateNewPresentation = async () => {
+    const handleCreatePresentation = async () => {
         modalRef.current?.onOpen(
-            <Box
-                sx={{
-                    position: 'relative',
-                    minHeight: '100px',
+            <TemplateList
+                renderAddonBeforeItem={() => {
+                    return (
+                        <Grid item xs={12} sm={6} md={4}>
+                            <Stack direction="column">
+                                <div className="cursor-pointer select-none relative group" onClick={handleCreateEmpty}>
+                                    <Box
+                                        sx={{
+                                            padding: '1rem',
+                                            borderRadius: '8px',
+                                            transition: 'all .3s',
+                                            borderWidth: 2,
+                                            borderColor: _.get(neutral, '100'),
+                                            borderStyle: 'solid',
+                                            '&:hover': {
+                                                borderColor: _.get(indigo, 'main'),
+                                            },
+                                            aspectRatio: '16 / 9',
+                                            position: 'relative',
+                                        }}
+                                    >
+                                        <div className={'w-full h-full flex flex-col items-center justify-center'} />
+                                    </Box>
+                                    <div className="mt-2">
+                                        <div className="text-neutral-800 text-lg line-clamp-1">
+                                            Bài trình chiếu trống
+                                        </div>
+                                        <div className="text-sm text-neutral-500 line-clamp-1 text-transparent">0</div>
+                                    </div>
+                                </div>
+                            </Stack>
+                        </Grid>
+                    );
                 }}
-            >
-                <Loading />
-            </Box>,
-            'Đang tạo bài trình chiếu',
-            '50%',
+            />,
+            'Tất cả mẫu',
+            '80%',
         );
+    };
+
+    const handleCreateEmpty = async () => {
         const response = await requestApi<{
             presentation: PresentationDto;
             slides: [];
         }>('post', PRESENTATION_CREATE_API, {
             name: 'Bài trình chiếu chưa có tiêu đề',
         });
+        modalRef.current?.onClose();
 
         if (response.status !== 200) {
-            // todo: error handling ...
-            NotifyUtil.error('Có lỗi xảy ra');
-
+            NotifyUtil.error(response.data.message || 'Có lỗi xảy ra');
             return;
         }
-        modalRef.current?.onClose();
-        if (response.data.result?.presentation.presentationID) {
-            handleDetailPresentation(response.data.result?.presentation.presentationID);
-        }
+
+        response.data.result?.presentation?.presentationID &&
+            handleDetailPresentation(response.data.result?.presentation?.presentationID);
     };
 
     const handleCreateNewGroup = () => {
@@ -194,7 +222,7 @@ const DashboardHomePage: React.FC<Props> = () => {
                     </Typography>
                     <Stack direction="row" justifyContent="flex-start" gap={2} useFlexGap>
                         <ButtonBase
-                            onClick={handleCreateNewPresentation}
+                            onClick={handleCreatePresentation}
                             color={'success'}
                             title="Tạo bài trình chiếu mới"
                             startIcon={'add'}
