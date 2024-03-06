@@ -220,8 +220,6 @@ const PresentationHostShow: React.FC<Props> = () => {
                             return sl;
                         }
 
-                        console.log(sl.words);
-
                         sl.words = [...(sl.words || []), option.option];
 
                         return sl;

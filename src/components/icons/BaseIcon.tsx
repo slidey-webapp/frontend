@@ -69,6 +69,7 @@ const IconsMap = {
     'collections-outlined': loadable(() => import('@mui/icons-material/CollectionsOutlined')),
     'shield-outlined': loadable(() => import('@mui/icons-material/GppGoodOutlined')),
     'person-add-outlined': loadable(() => import('@mui/icons-material/PersonAddOutlined')),
+    'person-outlined': loadable(() => import('@mui/icons-material/PersonOutline')),
 };
 
 type Size = 8 | 10 | 12 | 14 | 16 | 18 | 20 | 22 | 24 | 26 | 28;

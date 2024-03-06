@@ -105,7 +105,7 @@ const ParticipationShowContainer: React.FC<Props> = () => {
                                     Mở Q&A
                                 </div>
                             </div>
-                            <div className="mt-6 text-neutral-500">
+                            <div className="mt-6 text-neutral-500 text-center">
                                 Tạo bài trình chiếu của riêng bạn tại{' '}
                                 <a
                                     href={`${window.location.origin}/dashboard/presentation`}

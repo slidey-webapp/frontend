@@ -40,8 +40,8 @@ export default class ComponentUtil {
             );
         }
 
-        const index = generateRandom(fullName);
-        const background = ARRAY_COLOR_CONSTANT[index];
+        const index = this.generateRandom(fullName);
+        const background = this.ARRAY_COLOR_CONSTANT[index];
 
         const matches = _.words(fullName);
         const firstWord = matches[0].substring(0, 1).toUpperCase();
@@ -97,62 +97,62 @@ export default class ComponentUtil {
             </Tooltip>
         );
     };
+
+    static hashCode = (input: string) => {
+        return [...input].reduce((hash, chr) => {
+            return hash * 33 + chr.charCodeAt(0);
+        }, 0);
+    };
+
+    static generateRandom = (stringParam: string) => {
+        return this.hashCode(stringParam) % this.ARRAY_COLOR_CONSTANT.length;
+    };
+
+    static ARRAY_COLOR_CONSTANT = [
+        '#dbae58',
+        '#3c6478',
+        '#43abc9',
+        '#7e909a',
+        '#d3b53d',
+        '#f26d21',
+        '#c02f1d',
+        '#FFB6C1',
+        '#1c4e80',
+        '#0091D5',
+        '#488a99',
+        '#FFB6C1',
+        '#ac3e31',
+        '#6ab187',
+        '#b081e7',
+        '#dbae58',
+        '#3c6478',
+        '#43abc9',
+        '#7e909a',
+        '#d3b53d',
+        '#f26d21',
+        '#c02f1d',
+        '#a3b86c',
+        '#1c4e80',
+        '#0091D5',
+        '#488a99',
+        '#0091d5',
+        '#ac3e31',
+        '#FFB6C1',
+        '#b081e7',
+        '#dbae58',
+        '#3c6478',
+        '#43abc9',
+        '#7e909a',
+        '#d3b53d',
+        '#f26d21',
+        '#c02f1d',
+        '#a3b86c',
+        '#1c4e80',
+        '#0091D5',
+        '#488a99',
+        '#FFB6C1',
+        '#ac3e31',
+        '#6ab187',
+        '#b081e7',
+    ];
 }
-
-const hashCode = (input: string) => {
-    return [...input].reduce((hash, chr) => {
-        return hash * 33 + chr.charCodeAt(0);
-    }, 0);
-};
-
-const generateRandom = (stringParam: string) => {
-    return hashCode(stringParam) % ARRAY_COLOR_CONSTANT.length;
-};
-
-const ARRAY_COLOR_CONSTANT = [
-    '#dbae58',
-    '#3c6478',
-    '#43abc9',
-    '#7e909a',
-    '#d3b53d',
-    '#f26d21',
-    '#c02f1d',
-    '#FFB6C1',
-    '#1c4e80',
-    '#0091D5',
-    '#488a99',
-    '#FFB6C1',
-    '#ac3e31',
-    '#6ab187',
-    '#b081e7',
-    '#dbae58',
-    '#3c6478',
-    '#43abc9',
-    '#7e909a',
-    '#d3b53d',
-    '#f26d21',
-    '#c02f1d',
-    '#a3b86c',
-    '#1c4e80',
-    '#0091D5',
-    '#488a99',
-    '#0091d5',
-    '#ac3e31',
-    '#FFB6C1',
-    '#b081e7',
-    '#dbae58',
-    '#3c6478',
-    '#43abc9',
-    '#7e909a',
-    '#d3b53d',
-    '#f26d21',
-    '#c02f1d',
-    '#a3b86c',
-    '#1c4e80',
-    '#0091D5',
-    '#488a99',
-    '#FFB6C1',
-    '#ac3e31',
-    '#6ab187',
-    '#b081e7',
-];
