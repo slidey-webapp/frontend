@@ -28,7 +28,16 @@ export interface Props {
     renderAdditionBeforeButton?: () => JSX.Element;
 }
 
-type FormFieldType = 'text' | 'textArea' | 'number' | 'positive' | 'email' | 'password' | 'select' | 'date' | 'image';
+type FormFieldType =
+    | 'text'
+    | 'textArea'
+    | 'number'
+    | 'positive'
+    | 'email'
+    | 'password'
+    | 'select'
+    | 'date'
+    | 'image'
 
 export interface FormField {
     name: string;
