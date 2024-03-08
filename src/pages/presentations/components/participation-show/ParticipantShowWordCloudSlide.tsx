@@ -1,12 +1,15 @@
 import { TextField } from '@mui/material';
 import clsx from 'clsx';
 import { motion } from 'framer-motion';
-import React, { useEffect, useState } from 'react';
+import _ from 'lodash';
+import React, { useState } from 'react';
 import { requestApi } from '~/libs/axios';
 import { Id } from '~/types/shared';
 import NotifyUtil from '~/utils/NotifyUtil';
 import { SESSION_SLIDE_MULTIPLE_CHOICE_SUBMIT_API } from '../../api/presentation.api';
 import { SlideDto } from '../../types/slide';
+import WaitingNextSlide from './WaitingNextSlide';
+import AlreadyResponse from './AlreadyResponse';
 
 interface Props {
     slide: SlideDto;
@@ -17,12 +20,9 @@ interface Props {
 const ParticipantShowWordCloudSlide: React.FC<Props> = ({ slide, participantID, sessionID }) => {
     if (slide.type !== 'WORD_CLOUD') return null;
 
+    const isAnswered = slide.options?.some(x => _.get(x, 'participantID') === participantID);
     const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
     const [value, setValue] = useState<string | null>(null);
-
-    useEffect(() => {
-        setIsSubmitted(false);
-    }, [slide.slideID]);
 
     const handleSubmit = async () => {
         if (!value) return;
@@ -43,17 +43,8 @@ const ParticipantShowWordCloudSlide: React.FC<Props> = ({ slide, participantID, 
     };
 
     const renderBody = () => {
-        if (isSubmitted)
-            return (
-                <div
-                    className="mt-7 text-lg"
-                    style={{
-                        textShadow: '0px 2px 4px #000000',
-                    }}
-                >
-                    Câu trả lời của bạn đã được ghi lại!
-                </div>
-            );
+        if (isAnswered) return <AlreadyResponse />;
+        if (isSubmitted) return <WaitingNextSlide />;
 
         return (
             <div className="mt-7">

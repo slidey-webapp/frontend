@@ -6,6 +6,7 @@ import ModalBase, { ModalBaseRef } from '~/components/modals/ModalBase';
 import { usePresentationShowContext } from '../../PresentationHostShow';
 import PresentationMessageList from './PresentationMessageList';
 import PresentationQuestionList from './PresentationQuestionList';
+import BaseIcon from '~/components/icons/BaseIcon';
 
 interface Props {}
 
@@ -30,6 +31,7 @@ const PresentationShowFooter = React.forwardRef<PresentShowFooterRef, Props>((pr
         messages,
         questions,
         isSeenNewestQuestion,
+        participants,
         onFullScreen,
         onExitFullScreen,
         onSlideChange,
@@ -39,6 +41,9 @@ const PresentationShowFooter = React.forwardRef<PresentShowFooterRef, Props>((pr
 
     const modalQuestionRef = useRef<ModalBaseRef>(null);
     const modalMessageRef = useRef<ModalBaseRef>(null);
+
+    const slideCount = slides.length;
+    const currentSlidePosition = slides.findIndex(x => x.slideID === currentSlideId) + 1;
 
     const openQuestionModal = () => {
         setState(pre => ({
@@ -65,7 +70,7 @@ const PresentationShowFooter = React.forwardRef<PresentShowFooterRef, Props>((pr
             <div className="flex-1 px-4 text-black  flex items-center justify-center ">
                 <div className="w-full h-full flex items-center justify-between">
                     <div className="flex-1 flex justify-start ">
-                        <div className="rounded-full w-fit bg-[#ededf099]">
+                        <div className="rounded-full w-fit bg-[#ededf099] flex items-center">
                             <ButtonIconBase
                                 icon={'arrow-back'}
                                 tooltip="Slide trước"
@@ -140,7 +145,29 @@ const PresentationShowFooter = React.forwardRef<PresentShowFooterRef, Props>((pr
                             />
                         </div>
                     </div>
+                    <div
+                        style={{
+                            margin: 0,
+                            height: 48,
+                        }}
+                        className="w-fit flex items-center justify-center font-semibold text-xl"
+                    >
+                        Trang {currentSlidePosition} / {slideCount}
+                    </div>
                     <div className="flex-1 flex justify-end items-center">
+                        <div className="mx-1 bg-[#ededf099] rounded-full cursor-default select-none">
+                            <div
+                                color={'inherit'}
+                                style={{
+                                    margin: 0,
+                                    height: 48,
+                                }}
+                                className="flex items-center justify-center px-4 text-xl"
+                            >
+                                <div className="mr-1">{participants.length}</div>
+                                <BaseIcon type="person-outlined" size={20} />
+                            </div>
+                        </div>
                         <div className="mx-1 bg-[#ededf099] rounded-full">
                             <Badge
                                 badgeContent={messageCount}

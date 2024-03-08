@@ -14,6 +14,7 @@ import RoleForm from './components/RoleForm';
 import { roleGridColDef } from './configs/colDef';
 import { RoleDto } from './types/role';
 import ButtonIconBase from '~/components/buttons/ButtonIconBase';
+import RoleAccountForm from './components/RoleAccountForm';
 
 export interface Props {}
 
@@ -69,6 +70,21 @@ const RolePage: React.FC<Props> = () => {
         );
     };
 
+    const handleChangeAccountRole = (data: RoleDto) => {
+        modalRef.current?.onOpen(
+            <RoleAccountForm
+                rowData={data}
+                onClose={modalRef.current.onClose}
+                onSuccess={() => {
+                    NotifyUtil.success('Gán vai trò thành công');
+                    gridController?.reloadData();
+                }}
+            />,
+            'Cập nhật vai trò',
+            '50%',
+        );
+    }
+
     const handleDelete = async (data: RoleDto) => {
         await baseDeleteWithoutIdApi(ROLE_DELETE_API, { roleID: data.roleID }, 'post');
         gridController?.reloadData();
@@ -94,11 +110,8 @@ const RolePage: React.FC<Props> = () => {
                         return (
                             <ButtonIconBase
                                 icon={'person-add-outlined'}
-                                onClick={() => {
-                                    //
-                                    NotifyUtil.warn('Tính năng này đang được phát triển!');
-                                }}
-                                tooltip="Gán phân quyền"
+                                onClick={() => handleChangeAccountRole(data)}
+                                tooltip="Gán vai trò"
                                 color="primary"
                             />
                         );
