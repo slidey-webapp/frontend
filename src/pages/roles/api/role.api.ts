@@ -5,3 +5,4 @@ export const ROLE_CREATE_API = APP_API_PATH + '/role/create';
 export const ROLE_UPDATE_API = APP_API_PATH + '/role/update';
 export const ROLE_DELETE_API = APP_API_PATH + '/role/delete';
 export const ROLE_DETAIL_API = APP_API_PATH + '/role/detail';
+export const ROLE_ASSIGN_API = APP_API_PATH + '/role/assign-role';
