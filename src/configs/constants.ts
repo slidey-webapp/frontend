@@ -136,5 +136,6 @@ export class SocketEvent {
 export class Permission {
     static SystemAdmin = 'System.Admin';
     static ReadRole = 'Role.Read';
+    static ReadAccount = 'Account.Read';
     static ReadTemplate = 'Template.Read';
 }

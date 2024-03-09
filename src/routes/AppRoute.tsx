@@ -38,8 +38,12 @@ const TemplatePage = React.lazy(() => import('~/pages/templates/TemplatePage'));
 const TemplateCreatePage = React.lazy(() => import('~/pages/templates/TemplateCreatePage'));
 // #endregion
 
-// #region template
+// #region role
 const RolePage = React.lazy(() => import('~/pages/roles/RolePage'));
+// #endregion
+
+// #region account management
+const AccountManagement = React.lazy(() => import('~/pages/account-management/AccountManagement'));
 // #endregion
 
 export type RouteDefinition = Omit<RouteObject, 'children'> & {
@@ -259,6 +263,25 @@ export const routeList: RouteDefinition[] = [
                     },
                 ],
                 permissions: [Permission.ReadRole],
+            },
+            {
+                title: 'Quản lý tài khoản',
+                path: 'account-management',
+                icon: 'manage-account-outlined',
+                children: [
+                    {
+                        title: '',
+                        path: '',
+                        hide: true,
+                        hideBreadcrumb: true,
+                        element: (
+                            <Suspense>
+                                <AccountManagement />
+                            </Suspense>
+                        ),
+                    },
+                ],
+                permissions: [Permission.ReadAccount],
             },
         ],
     },
