@@ -1,6 +1,6 @@
 import { FormField } from '~/components/forms/BaseForm';
 import { BaseFormModalProps } from '~/types/shared';
-import { RoleCreateDto } from './role';
+import { RoleCreateDto } from '../types/role';
 
 export const getRoleFields = (modalType: BaseFormModalProps['modalType']): FormField[] => {
     return [
