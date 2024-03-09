@@ -5,14 +5,15 @@ export interface AuthUser {
     refreshToken: string;
 }
 
-export type AccountStatus = 'UNVERIFIED' | 'ACTIVE';
-export type AccountSource = 'UNVERIFIED' | 'ACTIVE';
+export type AccountStatus = 'UNVERIFIED' | 'ACTIVE' | 'INACTIVE';
+export type AccountSource = 'normal' | 'google';
 
 export interface Account {
     accountID: number;
     email: string;
     status: AccountStatus;
     source: AccountSource;
+    isBlocked?: boolean;
 }
 
 export interface Person {

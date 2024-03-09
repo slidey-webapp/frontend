@@ -22,7 +22,7 @@ const RolePage: React.FC<Props> = () => {
     const gridRef = useRef<BaseGridRef>(null);
     const modalRef = useRef<ModalBaseRef>(null);
 
-    const gridController = useBaseGrid<any>({
+    const gridController = useBaseGrid<RoleDto>({
         url: ROLE_INDEX_API,
         gridRef: gridRef,
         customData: (roles: RoleDto[]) => {
@@ -83,7 +83,7 @@ const RolePage: React.FC<Props> = () => {
             'Cập nhật vai trò',
             '50%',
         );
-    }
+    };
 
     const handleDelete = async (data: RoleDto) => {
         await baseDeleteWithoutIdApi(ROLE_DELETE_API, { roleID: data.roleID }, 'post');

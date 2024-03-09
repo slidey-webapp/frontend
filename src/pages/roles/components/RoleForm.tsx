@@ -5,7 +5,7 @@ import { requestApi } from '~/libs/axios';
 import { BaseFormModalProps } from '~/types/shared';
 import NotifyUtil from '~/utils/NotifyUtil';
 import { ROLE_CREATE_API, ROLE_UPDATE_API } from '../api/role.api';
-import { getRoleFields } from '../types/form-fields';
+import { getRoleFields } from '../configs/form-fields';
 import { RoleCreateDto, RoleDto } from '../types/role';
 
 interface Props extends BaseFormModalProps {
