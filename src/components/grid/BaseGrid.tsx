@@ -176,7 +176,7 @@ const BaseGrid = React.forwardRef<BaseGridRef, BaseGridProps>((props, ref) => {
             },
             resizable: false,
             suppressMovable: true,
-            pinned: 'right',
+            // pinned: 'right',
             cellRenderer: (params: any) => {
                 const data = _.get(params, 'data');
                 return (

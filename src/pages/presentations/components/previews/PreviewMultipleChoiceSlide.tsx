@@ -1,5 +1,5 @@
 import { EChartsOption } from 'echarts';
-import React, { CSSProperties, useMemo, useRef } from 'react';
+import React, { CSSProperties, useEffect, useMemo, useRef } from 'react';
 import { ReactECharts, ReactEChartsRef } from '~/components/charts/ReactECharts';
 import { COLORS, PreviewFontSizeConstant } from '~/configs/constants';
 import { ChartType, HorizontalAlignment, TextSize, VerticalAlignment } from '~/types/shared';
@@ -55,9 +55,9 @@ const PreviewMultipleChoiceSlide: React.FC<Props> = ({ slide, hover }) => {
                 textAlign: 'right',
             };
 
-            return {
-                textAlign: 'left',
-            };
+        return {
+            textAlign: 'left',
+        };
     }, [slide.horizontalAlignment, hover]);
 
     const { headingSize, secondarySize } = useMemo<{
@@ -204,7 +204,7 @@ const PreviewMultipleChoiceSlide: React.FC<Props> = ({ slide, hover }) => {
             ...getOptions(),
         };
 
-        return <ReactECharts ref={chartRef} option={options} style={{ height: 300 }} />;
+        return <ReactECharts ref={chartRef} option={options} style={{ height: 250 }} />;
     };
 
     return (
