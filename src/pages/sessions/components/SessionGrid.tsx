@@ -1,12 +1,16 @@
 import React, { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ButtonIconBase from '~/components/buttons/ButtonIconBase';
 import BaseGrid, { BaseGridProps, BaseGridRef } from '~/components/grid/BaseGrid';
 import GridToolbar from '~/components/grid/components/GridToolbar';
 import { useBaseGrid } from '~/hooks/useBaseGrid';
+import { requestApi } from '~/libs/axios';
+import { SESSION_END_API } from '~/pages/presentations/api/presentation.api';
+import { SessionDto } from '~/pages/presentations/types/session';
 import { SESSION_INDEX_API } from '~/pages/sessions/api/session.api';
 import { Id } from '~/types/shared';
+import NotifyUtil from '~/utils/NotifyUtil';
 import { sessionGridColDef } from '../config/colDef';
-import { SessionDto } from '~/pages/presentations/types/session';
 
 interface Props {
     presentationID?: Id;
@@ -45,6 +49,26 @@ const SessionGrid: React.FC<Props> = ({ presentationID, groupID, toolbar, hideTo
         };
     };
 
+    const handleEndSession = async (session: SessionDto) => {
+        NotifyUtil.confirmDialog('Thông báo', 'Bạn có chắc muốn kết thúc phiên ?').then(async confirm => {
+            if (confirm.isConfirmed) {
+                gridController.mask();
+                const response = await requestApi('post', SESSION_END_API, {
+                    sessionID: session.sessionID,
+                });
+                gridController.unmask();
+
+                if (response.status === 200) {
+                    NotifyUtil.success('Kết thúc phiên thành công!');
+                    gridController.reloadData();
+                    return;
+                }
+
+                response.data.message && NotifyUtil.error(response.data.message);
+            }
+        });
+    };
+
     return (
         <BaseGrid
             {...gridController}
@@ -54,6 +78,18 @@ const SessionGrid: React.FC<Props> = ({ presentationID, groupID, toolbar, hideTo
                 hasDetailBtn: true,
                 hasDeleteBtn: false,
                 onClickDetailBtn: handleDetail,
+                renderLeftActions: (session: SessionDto) => {
+                    if (session.status === 'ENDED') return <></>;
+
+                    return (
+                        <ButtonIconBase
+                            icon={'power-setting'}
+                            onClick={() => handleEndSession(session)}
+                            tooltip="Kết thúc phiên"
+                            color="error"
+                        />
+                    );
+                },
             }}
             defaultColDef={{
                 autoHeight: true,

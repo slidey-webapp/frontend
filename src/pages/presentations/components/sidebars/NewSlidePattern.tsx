@@ -125,10 +125,17 @@ const NewSlidePattern: React.FC<Props> = () => {
             textBackground: '#ffffff',
             chartType: ChartType.Bar,
         });
+
         if (response.status === 200) {
             const slideId = response.data?.result?.slideID;
-            slideId && setCurrentSlideId(slideId);
+            setTimeout(() => {
+                slideId && setCurrentSlideId(slideId);
+                unmask();
+                handleClose();
+            }, 350);
+            return;
         }
+        
         unmask();
     };
 
