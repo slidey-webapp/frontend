@@ -5,7 +5,7 @@ import { EditorSlideProps } from './EditorContent';
 
 interface Props extends EditorSlideProps {}
 
-const EditorHeadingSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentation, increaseBackStep }) => {
+const EditorHeadingSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentation }) => {
     if (slide.type !== 'HEADING') return null;
 
     const handleChange = _.debounce((name: string, value: any) => {
@@ -21,11 +21,11 @@ const EditorHeadingSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentati
         });
 
         return '';
-    }, 350);
+    }, 200);
 
     return (
         <>
-            <FormControl fullWidth key={slide.heading}>
+            <FormControl fullWidth>
                 <FormLabel
                     style={{
                         marginBottom: 10,
@@ -43,7 +43,7 @@ const EditorHeadingSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentati
                 />
             </FormControl>
             <div className="my-2" />
-            <FormControl fullWidth key={slide.subHeading}>
+            <FormControl fullWidth>
                 <FormLabel
                     style={{
                         marginBottom: 10,

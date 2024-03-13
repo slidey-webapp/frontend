@@ -101,7 +101,7 @@ const PresentationHeader: React.FC<Props> = () => {
                         </div>
                     </Tooltip>
                     <div className="w-56 ml-4" title={presentation.name}>
-                        <FormControl fullWidth key={presentation.name}>
+                        <FormControl fullWidth>
                             <TextField
                                 variant="standard"
                                 size="small"
@@ -112,7 +112,7 @@ const PresentationHeader: React.FC<Props> = () => {
                                         onUpdatePresentation({
                                             name: event.target.value,
                                         }),
-                                    350,
+                                    200,
                                 )}
                             />
                         </FormControl>

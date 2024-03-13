@@ -107,15 +107,7 @@ const TransferList = React.forwardRef<TransferRef, Props>(({ options, value = []
     };
 
     React.useImperativeHandle(ref, () => ({
-        getValue: () => {
-            console.log(checkedList);
-            console.log(rightChecked);
-            console.log(leftChecked);
-            console.log(leftList);
-            console.log(rightList);
-
-            return rightList;
-        },
+        getValue: () => rightList,
     }));
 
     return (

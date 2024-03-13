@@ -34,7 +34,6 @@ const RoleAccountForm: React.FC<Props> = ({ rowData, onClose, onSuccess }) => {
 
     const handleSubmit = async () => {
         const accounts = transferRef.current?.getValue();
-        console.log(transferRef.current?.getValue());
         overlayRef.current?.open();
         try {
             const response = await requestApi('post', ROLE_ASSIGN_API, {

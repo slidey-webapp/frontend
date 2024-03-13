@@ -2,9 +2,9 @@ import { FormControl, TextField, Tooltip } from '@mui/material';
 import _ from 'lodash';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { ButtonBase } from '~/components/buttons/ButtonBase';
 import BaseIcon from '~/components/icons/BaseIcon';
 import { useTemplateCreateContext } from '../TemplateCreatePage';
-import { ButtonBase } from '~/components/buttons/ButtonBase';
 
 interface Props {}
 
@@ -33,7 +33,7 @@ const TemplateCreateHeader: React.FC<Props> = () => {
                         </div>
                     </Tooltip>
                     <div className="w-56 ml-4" title={presentation.name}>
-                        <FormControl fullWidth key={presentation.name}>
+                        <FormControl fullWidth>
                             <TextField
                                 variant="standard"
                                 size="small"
@@ -44,19 +44,14 @@ const TemplateCreateHeader: React.FC<Props> = () => {
                                         onUpdatePresentation({
                                             name: event.target.value,
                                         }),
-                                    350,
+                                    200,
                                 )}
                             />
                         </FormControl>
                     </div>
                 </div>
                 <div className="flex-1 flex items-center justify-end">
-                    <ButtonBase
-                        title={'Lưu mẫu'}
-                        startIcon={'save'}
-                        className="!m-0"
-                        onClick={onCreateTemplate}
-                    />
+                    <ButtonBase title={'Lưu mẫu'} startIcon={'save'} className="!m-0" onClick={onCreateTemplate} />
                 </div>
             </div>
         </div>

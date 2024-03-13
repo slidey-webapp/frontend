@@ -19,11 +19,11 @@ const EditorWordCloud: React.FC<Props> = ({ slide, slides, onUpdatePresentation,
         onUpdatePresentation({
             slides: slides,
         });
-    }, 350);
+    }, 200);
 
     return (
         <>
-            <FormControl fullWidth key={slide.question}>
+            <FormControl fullWidth>
                 <FormLabel
                     style={{
                         marginBottom: 10,
