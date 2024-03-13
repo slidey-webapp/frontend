@@ -12,7 +12,7 @@ export const AppContainer: React.FC<Props> = (props: Props) => {
     return (
         <div
             className={clsx(
-                'px-6 py-16 bg-white h-full relative flex flex-col flex-1 rounded-sm overflow-auto',
+                'p-4 bg-white h-full relative flex flex-col flex-1 rounded-sm overflow-auto',
                 props.className,
             )}
             style={props.style}
