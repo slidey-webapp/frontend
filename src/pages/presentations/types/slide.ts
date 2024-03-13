@@ -10,6 +10,9 @@ export interface SlideDto extends FullAuditedTimeDto {
     textSize: TextSize;
     textColor: string;
     textBackground: string;
+    mediaID?: Id;
+    mediaURL?: string;
+    layout?: SlideLayout;
 
     // #region heading
     heading: string;
@@ -36,8 +39,17 @@ export interface SlideDto extends FullAuditedTimeDto {
     // #endregion
 
     // #region word cloud
-    words: string[]
+    words: string[];
     // #endregion
+}
+
+export enum SlideLayout {
+    Default = 'Default',
+    ImageFull = 'ImageFull',
+    ImageLeft = 'ImageLeft',
+    ImageRight = 'ImageRight',
+    ImageTop = 'ImageTop',
+    ImageBottom = 'ImageBottom',
 }
 
 export interface MultipleChoiceSlideOption {

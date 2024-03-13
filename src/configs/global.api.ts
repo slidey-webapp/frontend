@@ -12,3 +12,5 @@ export const FORGOT_PASSWORD_API = APP_API_PATH + '/account/forgot-password';
 export const RESET_PASSWORD_API = APP_API_PATH + '/account/reset-password';
 
 export const LOGOUT_API = APP_API_PATH + '/account/logout';
+
+export const UPLOAD_FILE_API = APP_API_PATH + '/common/upload/image';
