@@ -7,14 +7,7 @@ import { MultipleChoiceSlideOption, SlideDto } from '../../types/slide';
 import { EditorSlideProps } from './EditorContent';
 interface Props extends EditorSlideProps {}
 
-const EditorMultipleChoiceSlide: React.FC<Props> = ({
-    slide,
-    slides,
-    onUpdatePresentation,
-    increaseBackStep,
-    mask,
-    unmask,
-}) => {
+const EditorMultipleChoiceSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentation, mask, unmask }) => {
     if (slide.type !== 'MULTIPLE_CHOICE') return null;
 
     const handleUpdateSlide = async (newSlide: SlideDto) => {
@@ -35,7 +28,7 @@ const EditorMultipleChoiceSlide: React.FC<Props> = ({
             question: value,
         };
         handleUpdateSlide(newSlide);
-    }, 350);
+    }, 200);
 
     const handleAddOption = () => {
         const options = _.cloneDeep(slide.options);
@@ -74,12 +67,12 @@ const EditorMultipleChoiceSlide: React.FC<Props> = ({
             options,
         };
         handleUpdateSlide(newSlide);
-    }, 350);
+    }, 200);
 
     const renderOptions = () => {
         return (slide.options || []).map((option, index) => {
             return (
-                <div key={index} className="w-full flex items-center justify-between">
+                <div key={option.optionID} className="w-full flex items-center justify-between">
                     <FormControl sx={{ minWidth: 150 }} size="small">
                         <TextField
                             variant="outlined"

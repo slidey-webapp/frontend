@@ -19,11 +19,11 @@ const EditorQuoteSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentation
         onUpdatePresentation({
             slides: slides,
         });
-    }, 350);
+    }, 200);
 
     return (
         <>
-            <FormControl fullWidth key={slide.quote}>
+            <FormControl fullWidth>
                 <FormLabel
                     style={{
                         marginBottom: 10,
@@ -43,7 +43,7 @@ const EditorQuoteSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentation
                 />
             </FormControl>
             <div className="my-2" />
-            <FormControl fullWidth key={slide.author}>
+            <FormControl fullWidth>
                 <FormLabel
                     style={{
                         marginBottom: 10,

@@ -21,11 +21,11 @@ const EditorParagraphSlide: React.FC<Props> = ({ slide, slides, onUpdatePresenta
         });
 
         return '';
-    }, 350);
+    }, 200);
 
     return (
         <>
-            <FormControl fullWidth key={slide.heading}>
+            <FormControl fullWidth>
                 <FormLabel
                     style={{
                         marginBottom: 10,
@@ -43,7 +43,7 @@ const EditorParagraphSlide: React.FC<Props> = ({ slide, slides, onUpdatePresenta
                 />
             </FormControl>
             <div className="my-2" />
-            <FormControl fullWidth key={slide.paragraph}>
+            <FormControl fullWidth>
                 <FormLabel
                     style={{
                         marginBottom: 10,
