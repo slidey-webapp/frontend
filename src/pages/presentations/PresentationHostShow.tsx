@@ -154,10 +154,17 @@ const PresentationHostShow: React.FC<Props> = () => {
             }
         };
 
+        const handleBeforeUnload = (event: any) => {
+            event.preventDefault();
+            event.returnValue = ''; 
+        };
+
         document.addEventListener<'keydown'>('keydown', keyDownHandler);
+        window.addEventListener('beforeunload', handleBeforeUnload);
 
         return () => {
             document.removeEventListener<'keydown'>('keydown', keyDownHandler);
+            window.removeEventListener('beforeunload', handleBeforeUnload);
         };
     }, [state]);
 
