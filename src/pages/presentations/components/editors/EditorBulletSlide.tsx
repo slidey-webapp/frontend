@@ -29,7 +29,7 @@ const EditorBulletSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentatio
             heading: value,
         };
         handleUpdateSlide(newSlide);
-    }, 350);
+    }, 200);
 
     const handleAddItem = () => {
         const items = _.cloneDeep(slide.items) || [];
@@ -68,12 +68,12 @@ const EditorBulletSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentatio
             items,
         };
         handleUpdateSlide(newSlide);
-    }, 350);
+    }, 200);
 
     const renderItems = () => {
         return (slide.items || []).map((item, index) => {
             return (
-                <div key={index} className="w-full flex items-center justify-between">
+                <div key={item.bulletListSlideItemID}className="w-full flex items-center justify-between">
                     <FormControl sx={{ minWidth: 150 }} size="small">
                         <TextField
                             variant="outlined"

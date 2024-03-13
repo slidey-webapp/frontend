@@ -26,6 +26,7 @@ import { PresentationDto } from './types/presentation';
 import { QuestionDto } from './types/question';
 import { SessionDto } from './types/session';
 import { MultipleChoiceSlideOption, SlideDto } from './types/slide';
+import ButtonIconBase from '~/components/buttons/ButtonIconBase';
 
 export interface IPresentationShowContext {
     sessionId: Id;
@@ -153,10 +154,17 @@ const PresentationHostShow: React.FC<Props> = () => {
             }
         };
 
+        const handleBeforeUnload = (event: any) => {
+            event.preventDefault();
+            event.returnValue = ''; 
+        };
+
         document.addEventListener<'keydown'>('keydown', keyDownHandler);
+        window.addEventListener('beforeunload', handleBeforeUnload);
 
         return () => {
             document.removeEventListener<'keydown'>('keydown', keyDownHandler);
+            window.removeEventListener('beforeunload', handleBeforeUnload);
         };
     }, [state]);
 
@@ -428,6 +436,28 @@ const PresentationHostShow: React.FC<Props> = () => {
                             }}
                         >
                             <div className="w-full h-full flex flex-col">
+                                <div className="w-full h-24">
+                                    <div className="w-full h-full flex items-center justify-between px-4">
+                                        <ButtonIconBase
+                                            icon={'close'}
+                                            tooltip="Thoát trình chiếu"
+                                            color={'inherit'}
+                                            size="large"
+                                            style={{
+                                                margin: 0,
+                                                width: 48,
+                                                height: 48,
+                                                fontSize: 20,
+                                                background: '#ededf099',
+                                                color: 'black',
+                                            }}
+                                            onClick={async () => {
+                                                await handleEndSession();
+                                                navigate(-1);
+                                            }}
+                                        />
+                                    </div>
+                                </div>
                                 <PresentationShowBody />
                                 <PresentationShowFooter ref={presentShowFooterRef} />
                             </div>
