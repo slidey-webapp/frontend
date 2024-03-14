@@ -1,14 +1,19 @@
-import { Typography } from '@mui/material';
-import React, { ChangeEvent, DragEventHandler } from 'react';
+import { Tooltip, Typography } from '@mui/material';
+import React, { ChangeEvent, DragEventHandler, useEffect, useRef } from 'react';
 import _ from 'lodash';
 import { Control, Controller } from 'react-hook-form';
 import { FormField } from '../BaseForm';
+import clsx from 'clsx';
+import BaseIcon from '~/components/icons/BaseIcon';
+import ButtonIconBase from '~/components/buttons/ButtonIconBase';
+import ModalBase, { ModalBaseRef } from '~/components/modals/ModalBase';
 
 interface ImagePickerProps extends Partial<FormField> {
     onChange?: (file?: File) => void;
     error?: boolean;
     helperText?: string;
     value?: File;
+    defaultImage?: string;
 }
 
 export const ImagePicker: React.FC<ImagePickerProps> = ({
@@ -18,27 +23,35 @@ export const ImagePicker: React.FC<ImagePickerProps> = ({
     onChange,
     error,
     helperText,
+    defaultImage,
     value,
 }) => {
     const [uploadState, setUploadState] = React.useState('initial');
     const [isOnDraggableZone, setIsOnDraggableZone] = React.useState(false);
-    const [image, setImage] = React.useState<string>('');
+    const [image, setImage] = React.useState<string | undefined>(defaultImage);
+    const [file, setFile] = React.useState<File | undefined>(value);
+
+    // useEffect(() => {
+    //     readAsDataURL(value, true);
+    // }, [value]);
+
+    const modalRef = useRef<ModalBaseRef>(null);
 
     const handleUploadClick = (event: ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         readAsDataURL(file);
     };
 
-    const readAsDataURL = (file?: File) => {
-        onChange?.(file);
+    const readAsDataURL = (file?: File, ignoreChange?: boolean) => {
+        !ignoreChange && onChange?.(file);
+        if (!file) return;
         const reader = new FileReader();
-        if (file) {
-            reader.readAsDataURL(file);
-            reader.onloadend = () => {
-                setImage(reader.result as string);
-                setUploadState('uploaded');
-            };
-        }
+        setFile(file);
+        reader.readAsDataURL(file);
+        reader.onloadend = () => {
+            setImage(reader.result as string);
+            setUploadState('uploaded');
+        };
     };
 
     const handleEnterDraggableZone: DragEventHandler<HTMLLabelElement> = event => {
@@ -55,6 +68,40 @@ export const ImagePicker: React.FC<ImagePickerProps> = ({
         event.preventDefault();
         const file = event.dataTransfer.files?.[0];
         readAsDataURL(file);
+    };
+
+    const handleViewImage = () => {
+        if (!image) return;
+
+        modalRef.current?.onOpen(
+            <div
+                style={{
+                    height: '80vh',
+                }}
+            >
+                <div className="w-full h-full">
+                    <img
+                        src={image}
+                        style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'contain',
+                        }}
+                    />
+                </div>
+            </div>,
+            'Xem hình ảnh',
+            '80%',
+        );
+    };
+
+    const handleDeleteImage = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        setFile(undefined);
+        onChange?.(undefined);
+        setImage(undefined);
     };
 
     return (
@@ -79,7 +126,7 @@ export const ImagePicker: React.FC<ImagePickerProps> = ({
                 />
                 <label
                     htmlFor={`image-picker-field${name}`}
-                    className="w-full h-full flex z-10 relative cursor-pointer"
+                    className={'w-full h-full flex z-10 relative cursor-pointer group'}
                     draggable
                     onDragEnter={handleEnterDraggableZone}
                     onDrop={handleDrop}
@@ -87,16 +134,44 @@ export const ImagePicker: React.FC<ImagePickerProps> = ({
                     onDragOver={handleEnterDraggableZone}
                 >
                     {image ? (
-                        <img
-                            src={image}
-                            alt=""
-                            width={0}
-                            height={0}
-                            style={{
-                                borderRadius: 'inherit',
-                            }}
-                            className="w-full h-full object-contain"
-                        />
+                        <>
+                            <img
+                                src={image}
+                                alt=""
+                                width={0}
+                                height={0}
+                                style={{
+                                    borderRadius: 'inherit',
+                                }}
+                                className="w-full h-full object-contain"
+                            />
+
+                            <div
+                                className={clsx(
+                                    'absolute top-0 left-0 w-full h-full flex opacity-0 items-center justify-center',
+                                    'transition-all duration-200 ease-in-out group-hover:!opacity-100 z-10 cursor-default',
+                                )}
+                                style={{
+                                    background: 'rgba(0, 0, 0, 0.45)',
+                                    color: '#fff',
+                                }}
+                            >
+                                <ButtonIconBase
+                                    icon="eye-outlined"
+                                    tooltip="Xem ảnh"
+                                    color="inherit"
+                                    size={'large'}
+                                    onClick={handleViewImage}
+                                />
+                                <ButtonIconBase
+                                    icon="delete"
+                                    tooltip="Xóa"
+                                    color="inherit"
+                                    size={'large'}
+                                    onClick={e => handleDeleteImage(e)}
+                                />
+                            </div>
+                        </>
                     ) : (
                         <div className="px-[14px] py-[16.5px]">
                             <Typography
@@ -144,6 +219,7 @@ export const ImagePicker: React.FC<ImagePickerProps> = ({
                     {helperText}
                 </p>
             )}
+            <ModalBase ref={modalRef} className="overflow-hidden" />
         </div>
     );
 };

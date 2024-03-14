@@ -13,6 +13,9 @@ import EditorQuoteSlide from './EditorQuoteSlide';
 import EditorWordCloud from './EditorWordCloud';
 import BaseForm from '~/components/forms/BaseForm';
 import { ImagePicker } from '~/components/forms/fields/BaseImagePickerField';
+import { convertToFormData, requestApi } from '~/libs/axios';
+import { UPLOAD_FILE_API } from '~/configs/global.api';
+import { Id } from '~/types/shared';
 
 interface Props {}
 
@@ -75,6 +78,23 @@ const EditorContent: React.FC<Props> = () => {
         });
     };
 
+    const handleUpdateSlideImage = async (params: { mediaID: Id | null; mediaURL: string | null }, cb?: () => void) => {
+        const currentSlideIndex = slides.findIndex(x => x.slideID === slide.slideID);
+        const newSlide = {
+            ..._.cloneDeep(slide),
+            mediaID: params?.mediaID,
+            mediaURL: params?.mediaURL,
+        } as SlideDto;
+
+        slides[currentSlideIndex] = newSlide;
+
+        await onUpdatePresentation({
+            slides: slides,
+        });
+
+        cb?.();
+    };
+
     return (
         <>
             <div className="w-full h-14 px-4 flex items-center justify-between border-b border-neutral-100">
@@ -122,7 +142,36 @@ const EditorContent: React.FC<Props> = () => {
                             >
                                 Hình ảnh
                             </FormLabel>
-                            <ImagePicker />
+                            <ImagePicker
+                                defaultImage={slide.mediaURL}
+                                onChange={async file => {
+                                    if (!file) {
+                                        handleUpdateSlideImage({
+                                            mediaID: null,
+                                            mediaURL: null,
+                                        });
+                                        return;
+                                    }
+
+                                    const formValues = {
+                                        image: file,
+                                    };
+                                    const formData = convertToFormData(formValues);
+
+                                    mask();
+                                    const response = await requestApi<{
+                                        mediaID: Id;
+                                        mediaURL: string;
+                                    }>('post', UPLOAD_FILE_API, formData);
+
+                                    if (response.status !== 200 || !response.data.result) {
+                                        unmask();
+                                        return;
+                                    }
+
+                                    handleUpdateSlideImage(response.data.result, unmask);
+                                }}
+                            />
                         </FormControl>
                     </div>
                 </div>

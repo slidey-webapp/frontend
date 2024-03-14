@@ -9,6 +9,8 @@ import { ReactComponent as ImageDefault } from '~/images/slide/image-default.svg
 import { ReactComponent as ImageFull } from '~/images/slide/image-full.svg';
 import { ReactComponent as ImageLeft } from '~/images/slide/image-left.svg';
 import { ReactComponent as ImageRight } from '~/images/slide/image-right.svg';
+import { ReactComponent as ImageSideBySideLeft } from '~/images/slide/image-side-by-side-left.svg';
+import { ReactComponent as ImageSideBySideRight } from '~/images/slide/image-side-by-side-right.svg';
 import { ReactComponent as ImageTop } from '~/images/slide/image-top.svg';
 import { ChartType, HorizontalAlignment, TextSize, TextSizes, VerticalAlignment } from '~/types/shared';
 import { usePresentationContext } from '../../PresentationDetailPage';
@@ -361,7 +363,7 @@ const EditorDesign: React.FC<Props> = () => {
                 <div className="flex flex-col">
                     <div className={'p-4 border-b border-neutral-200'}>
                         <div className="font-semibold mb-4">Bố cục</div>
-                        <div className="grid grid-cols-3 gap-4">
+                        <div className="grid grid-cols-4 gap-2">
                             {[
                                 {
                                     Svg: ImageDefault,
@@ -375,6 +377,20 @@ const EditorDesign: React.FC<Props> = () => {
                                     key: SlideLayout.ImageFull,
                                     disabled: false,
                                     active: slide.layout === SlideLayout.ImageFull,
+                                },
+                                {
+                                    Svg: ImageSideBySideLeft,
+                                    tooltip: 'Ảnh cạnh bên trái',
+                                    key: SlideLayout.ImageSideLeft,
+                                    disabled: false,
+                                    active: slide.layout === SlideLayout.ImageSideLeft,
+                                },
+                                {
+                                    Svg: ImageSideBySideRight,
+                                    tooltip: 'Ảnh cạnh bên phải',
+                                    key: SlideLayout.ImageSideRight,
+                                    disabled: false,
+                                    active: slide.layout === SlideLayout.ImageSideRight,
                                 },
                                 {
                                     Svg: ImageLeft,
