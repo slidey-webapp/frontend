@@ -50,6 +50,8 @@ export enum SlideLayout {
     ImageRight = 'ImageRight',
     ImageTop = 'ImageTop',
     ImageBottom = 'ImageBottom',
+    ImageSideLeft = 'ImageSideLeft',
+    ImageSideRight = 'ImageSideRight',
 }
 
 export interface MultipleChoiceSlideOption {

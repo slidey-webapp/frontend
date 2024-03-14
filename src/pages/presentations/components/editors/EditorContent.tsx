@@ -78,13 +78,14 @@ const EditorContent: React.FC<Props> = () => {
         });
     };
 
-    const handleUpdateSlideImage = async (params: { mediaID: Id; mediaURL: string } | undefined, cb?: () => void) => {
+    const handleUpdateSlideImage = async (params: { mediaID: Id | null; mediaURL: string | null }, cb?: () => void) => {
         const currentSlideIndex = slides.findIndex(x => x.slideID === slide.slideID);
         const newSlide = {
             ..._.cloneDeep(slide),
             mediaID: params?.mediaID,
             mediaURL: params?.mediaURL,
-        };
+        } as SlideDto;
+
         slides[currentSlideIndex] = newSlide;
 
         await onUpdatePresentation({
@@ -145,7 +146,10 @@ const EditorContent: React.FC<Props> = () => {
                                 defaultImage={slide.mediaURL}
                                 onChange={async file => {
                                     if (!file) {
-                                        handleUpdateSlideImage(undefined);
+                                        handleUpdateSlideImage({
+                                            mediaID: null,
+                                            mediaURL: null,
+                                        });
                                         return;
                                     }
 
