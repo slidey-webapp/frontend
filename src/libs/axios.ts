@@ -152,3 +152,25 @@ export const baseDeleteWithoutIdApi = async (url: string, data?: Record<string, 
         NotifyUtil.error(response.data?.message || NotificationConstant.DESCRIPTION_DELETE_FAIL);
     }
 };
+
+export const convertToFormData = (data: any): FormData => {
+    const formData = new FormData();
+
+    function appendToFormData(key: string, value: any) {
+        if (value instanceof File) {
+            if (value != null && value != undefined) formData.append(key, value, value.name);
+        } else if (Array.isArray(value)) {
+            value.forEach((item, index) => {
+                const keyPath = item instanceof File ? key : `${key}[${index}]`;
+                appendToFormData(keyPath, item);
+            });
+        } else if (value instanceof Object && !(value instanceof Date)) {
+            Object.keys(value).forEach(prop => appendToFormData(`${key}.${prop}`, value[prop]));
+        } else {
+            if (value != null && value != undefined) formData.append(key, value);
+        }
+    }
+    Object.keys(data).forEach(key => appendToFormData(key, data[key]));
+
+    return formData;
+};
