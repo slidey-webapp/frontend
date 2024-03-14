@@ -134,6 +134,8 @@ const PresentationDetailPage: React.FC<Props> = () => {
             SocketEvent.UPDATE_PRESENTATION,
             ({ presentation }: { presentation: PresentationDto & { slides?: SlideDto[] } }) => {
                 const newSlides = _.cloneDeep(presentation.slides) || [];
+                if (_.isEmpty(newSlides)) return;
+
                 delete presentation.slides;
 
                 setState(pre => {

@@ -146,7 +146,8 @@ const PresentationSidebar: React.FC<Props> = ({ isReadonly }) => {
             textColor: rootSlide?.textColor || '#000000',
             textBackground: rootSlide?.textBackground || '#ffffff',
             chartType: rootSlide?.chartType || ChartType.Bar,
-        });
+            layout: 'Default',
+        } as SlideDto);
 
         if (response.status === 200) return response.data.result;
     };
