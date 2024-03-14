@@ -124,7 +124,8 @@ const NewSlidePattern: React.FC<Props> = () => {
             textColor: '#000000',
             textBackground: '#ffffff',
             chartType: ChartType.Bar,
-        });
+            layout: 'Default',
+        } as SlideDto);
 
         if (response.status === 200) {
             const slideId = response.data?.result?.slideID;
@@ -135,7 +136,7 @@ const NewSlidePattern: React.FC<Props> = () => {
             }, 350);
             return;
         }
-        
+
         unmask();
     };
 

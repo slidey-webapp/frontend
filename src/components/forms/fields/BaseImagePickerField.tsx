@@ -11,7 +11,7 @@ interface ImagePickerProps extends Partial<FormField> {
     value?: File;
 }
 
-const ImagePicker: React.FC<ImagePickerProps> = ({
+export const ImagePicker: React.FC<ImagePickerProps> = ({
     disabled,
     required,
     name,
@@ -41,17 +41,17 @@ const ImagePicker: React.FC<ImagePickerProps> = ({
         }
     };
 
-    const handleEnterDraggableZone: DragEventHandler<HTMLLabelElement> = (event) => {
+    const handleEnterDraggableZone: DragEventHandler<HTMLLabelElement> = event => {
         event.preventDefault();
         if (!isOnDraggableZone) setIsOnDraggableZone(true);
     };
 
-    const handleLeaveDraggableZone: DragEventHandler<HTMLLabelElement> = (event) => {
+    const handleLeaveDraggableZone: DragEventHandler<HTMLLabelElement> = event => {
         event.preventDefault();
         if (!!isOnDraggableZone) setIsOnDraggableZone(false);
     };
 
-    const handleDrop: DragEventHandler<HTMLLabelElement> = (event) => {
+    const handleDrop: DragEventHandler<HTMLLabelElement> = event => {
         event.preventDefault();
         const file = event.dataTransfer.files?.[0];
         readAsDataURL(file);
@@ -74,7 +74,7 @@ const ImagePicker: React.FC<ImagePickerProps> = ({
                         borderRadius: 'inherit',
                     }}
                     id={`image-picker-field${name}`}
-                    accept="image/*"
+                    accept="image/png, image/jpg"
                     onChange={handleUploadClick}
                 />
                 <label

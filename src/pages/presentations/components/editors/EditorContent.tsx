@@ -11,6 +11,8 @@ import EditorMultipleChoiceSlide from './EditorMultipleChoice';
 import EditorParagraphSlide from './EditorParagraphSlide';
 import EditorQuoteSlide from './EditorQuoteSlide';
 import EditorWordCloud from './EditorWordCloud';
+import BaseForm from '~/components/forms/BaseForm';
+import { ImagePicker } from '~/components/forms/fields/BaseImagePickerField';
 
 interface Props {}
 
@@ -110,6 +112,19 @@ const EditorContent: React.FC<Props> = () => {
                         </FormControl>
                     </div>
                     <div className="p-4 border-b border-neutral-100">{renderEditorType()}</div>
+                    <div className="p-4 ">
+                        <FormControl fullWidth>
+                            <FormLabel
+                                style={{
+                                    marginBottom: 10,
+                                    fontWeight: 600,
+                                }}
+                            >
+                                Hình ảnh
+                            </FormLabel>
+                            <ImagePicker />
+                        </FormControl>
+                    </div>
                 </div>
             </div>
         </>
