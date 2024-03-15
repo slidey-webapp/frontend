@@ -43,6 +43,7 @@ const TemplateCreateNewSlidePattern: React.FC<Props> = () => {
                 } as SlideDto,
             ],
         });
+        handleClose()
     };
 
     return (

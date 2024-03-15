@@ -1,8 +1,12 @@
 import { FormControl, FormLabel, MenuItem, Select } from '@mui/material';
 import _ from 'lodash';
 import React from 'react';
+import { ImagePicker } from '~/components/forms/fields/BaseImagePickerField';
 import { ComboOptionConstant } from '~/configs/constants';
+import { UPLOAD_FILE_API } from '~/configs/global.api';
+import { convertToFormData, requestApi } from '~/libs/axios';
 import { ITemplateCreateContext } from '~/pages/templates/TemplateCreatePage';
+import { Id } from '~/types/shared';
 import { IPresentationContext, usePresentationContext } from '../../PresentationDetailPage';
 import { SlideDto, SlideType } from '../../types/slide';
 import EditorBulletSlide from './EditorBulletSlide';
@@ -11,11 +15,6 @@ import EditorMultipleChoiceSlide from './EditorMultipleChoice';
 import EditorParagraphSlide from './EditorParagraphSlide';
 import EditorQuoteSlide from './EditorQuoteSlide';
 import EditorWordCloud from './EditorWordCloud';
-import BaseForm from '~/components/forms/BaseForm';
-import { ImagePicker } from '~/components/forms/fields/BaseImagePickerField';
-import { convertToFormData, requestApi } from '~/libs/axios';
-import { UPLOAD_FILE_API } from '~/configs/global.api';
-import { Id } from '~/types/shared';
 
 interface Props {}
 
@@ -25,11 +24,10 @@ export interface EditorSlideProps {
     onUpdatePresentation: IPresentationContext['onUpdatePresentation'] | ITemplateCreateContext['onUpdatePresentation'];
     mask?: () => void;
     unmask?: () => void;
-    increaseBackStep: () => void;
 }
 
 const EditorContent: React.FC<Props> = () => {
-    const { currentSlideId, slides, onUpdatePresentation, mask, increaseBackStep, unmask } = usePresentationContext();
+    const { currentSlideId, slides, onUpdatePresentation, mask, unmask } = usePresentationContext();
     const slide = slides.find(x => x.slideID === currentSlideId) || ({} as SlideDto);
 
     const renderEditorType = () => {
@@ -37,7 +35,6 @@ const EditorContent: React.FC<Props> = () => {
             slide,
             slides,
             onUpdatePresentation,
-            increaseBackStep,
             mask,
             unmask,
         };
@@ -67,8 +64,9 @@ const EditorContent: React.FC<Props> = () => {
         slides[currentSlideIndex] = {
             ...newSlide,
             type: type as SlideType,
-            question: newSlide.heading || newSlide.question,
-            heading: newSlide.heading || newSlide.question,
+            question: newSlide.heading || newSlide.question || newSlide.quote,
+            heading: newSlide.heading || newSlide.question || newSlide.quote,
+            quote: newSlide.heading || newSlide.question || newSlide.quote,
             paragraph: newSlide.subHeading,
             subHeading: newSlide.paragraph,
         };

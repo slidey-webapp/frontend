@@ -25,8 +25,8 @@ const PresentationHeader: React.FC<Props> = () => {
         presentationID,
         collaborations,
         usersOnline,
-        backStep,
         isOwner,
+        previousRoute,
         onUpdatePresentation,
         onShowPresentation,
         mask,
@@ -95,7 +95,7 @@ const PresentationHeader: React.FC<Props> = () => {
                     <Tooltip title="Trở lại">
                         <div
                             className="cursor-pointer transition-all duration-300 ease-in-out hover:text-neutral-500"
-                            onClick={() => navigate(-backStep)}
+                            onClick={() => navigate(previousRoute)}
                         >
                             <BaseIcon type={'arrow-back'} />
                         </div>

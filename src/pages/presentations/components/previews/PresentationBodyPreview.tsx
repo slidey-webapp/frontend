@@ -43,7 +43,7 @@ const PresentationBodyPreview: React.FC<Props> = () => {
             case SlideLayout.ImageFull:
                 return (
                     <div className="w-full h-full relative overflow-hidden">
-                        <div className="absolute w-full h-full">
+                        <div className="absolute w-full h-full top-0 left-0">
                             <img
                                 src={slide.mediaURL}
                                 style={{

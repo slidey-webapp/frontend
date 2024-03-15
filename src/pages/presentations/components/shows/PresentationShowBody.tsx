@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import { usePresentationShowContext } from '../../PresentationHostShow';
 import PresentationShowWaiting from './PresentationShowWaiting';
 import ShowBulletSlide from './ShowBulletSlide';
@@ -7,16 +7,24 @@ import ShowMultipleChoiceSlide from './ShowMultipleChoiceSlide';
 import ShowParagraphSlide from './ShowParagraphSlide';
 import ShowQuoteSlide from './ShowQuoteSlide';
 import ShowWordCloudSlide from './ShowWordCloudSlide';
+import { SlideLayout } from '../../types/slide';
 
-interface Props {}
+interface Props {
+    style?: CSSProperties;
+}
 
-const PresentationShowBody: React.FC<Props> = () => {
+const PresentationShowBody: React.FC<Props> = ({ style }) => {
     const { currentSlideId, slides, session } = usePresentationShowContext();
+    const slide = slides.find(x => x.slideID === currentSlideId);
+
+    if (session.status === 'STARTING')
+        return (
+            <div className="w-full flex-1 px-20 py-5">
+                <PresentationShowWaiting code={session.code} />
+            </div>
+        );
 
     const renderSlide = () => {
-        if (session.status === 'STARTING') return <PresentationShowWaiting code={session.code} />;
-        const slide = slides.find(x => x.slideID === currentSlideId);
-
         switch (slide?.type) {
             case 'HEADING':
                 return <ShowHeadingSlide slide={slide} />;
@@ -36,11 +44,199 @@ const PresentationShowBody: React.FC<Props> = () => {
         }
     };
 
+    const renderBody = () => {
+        if (!slide?.mediaURL || !slide.layout || slide.layout === SlideLayout.Default) {
+            return <div className="w-full h-full">{renderSlide()}</div>;
+        }
+        switch (slide.layout) {
+            case SlideLayout.ImageFull:
+                return (
+                    <div className="w-full h-full px-20 py-5">
+                        <div className="absolute w-full h-full top-0 left-0">
+                            <img
+                                src={slide.mediaURL}
+                                style={{
+                                    width: '100%',
+                                    height: '100%',
+                                    objectFit: 'cover',
+                                }}
+                            />
+                            <div
+                                className="absolute w-full h-full top-0 left-0"
+                                style={{
+                                    zIndex: 1,
+                                    background: 'rgba(255, 255, 255, 0.45)',
+                                }}
+                            />
+                        </div>
+                        <div
+                            className="w-full h-full relative"
+                            style={{
+                                zIndex: 1,
+                            }}
+                        >
+                            {renderSlide()}
+                        </div>
+                    </div>
+                );
+            case SlideLayout.ImageSideLeft:
+                return (
+                    <div className="w-full h-full flex gap-x-6 px-20 py-5">
+                        <div className="flex-1 h-full">
+                            <img
+                                src={slide.mediaURL}
+                                style={{
+                                    width: '100%',
+                                    height: '100%',
+                                    objectFit: 'contain',
+                                }}
+                            />
+                        </div>
+                        <div className="flex-1 h-full">{renderSlide()}</div>
+                    </div>
+                );
+            case SlideLayout.ImageSideRight:
+                return (
+                    <div className="w-full h-full flex gap-x-6 px-20 py-5">
+                        <div className="flex-1 h-full">{renderSlide()}</div>
+                        <div className="flex-1 h-full">
+                            <img
+                                src={slide.mediaURL}
+                                style={{
+                                    width: '100%',
+                                    height: '100%',
+                                    objectFit: 'contain',
+                                }}
+                            />
+                        </div>
+                    </div>
+                );
+            case SlideLayout.ImageLeft:
+                return (
+                    <div className="w-full h-full flex gap-x-6">
+                        <div className="flex-1 h-full">
+                            <div
+                                className=" h-full absolute top-0 left-0"
+                                style={{
+                                    width: 'calc(50% - 12px)',
+                                }}
+                            >
+                                <img
+                                    src={slide.mediaURL}
+                                    style={{
+                                        width: '100%',
+                                        height: '100%',
+                                        objectFit: 'cover',
+                                    }}
+                                />
+                            </div>
+                        </div>
+                        <div
+                            className="flex-1 h-full "
+                            style={{
+                                width: 'calc(50% - 12px)',
+                            }}
+                        >
+                            <div className="w-full h-full py-5 pr-20 pl-0">{renderSlide()}</div>
+                        </div>
+                    </div>
+                );
+            case SlideLayout.ImageRight:
+                return (
+                    <div className="w-full h-full flex gap-x-6">
+                        <div
+                            className="flex-1 h-full "
+                            style={{
+                                width: 'calc(50% - 12px)',
+                            }}
+                        >
+                            <div className="w-full h-full py-5 pl-20 pr-0">{renderSlide()}</div>
+                        </div>
+                        <div className="flex-1 h-full">
+                            <div
+                                className=" h-full absolute top-0 right-0"
+                                style={{
+                                    width: 'calc(50% - 12px)',
+                                }}
+                            >
+                                <img
+                                    src={slide.mediaURL}
+                                    style={{
+                                        width: '100%',
+                                        height: '100%',
+                                        objectFit: 'cover',
+                                    }}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                );
+            case SlideLayout.ImageTop:
+                return (
+                    <div className="w-full h-full flex flex-col gap-y-6">
+                        <div className="flex-1 w-full">
+                            <div
+                                className="w-full absolute top-0 right-0"
+                                style={{
+                                    height: 'calc(50% - 12px)',
+                                }}
+                            >
+                                <img
+                                    src={slide.mediaURL}
+                                    style={{
+                                        width: '100%',
+                                        height: '100%',
+                                        objectFit: 'cover',
+                                    }}
+                                />
+                            </div>
+                        </div>
+                        <div
+                            className="flex-1 w-full"
+                            style={{
+                                height: 'calc(50% - 12px)',
+                            }}
+                        >
+                            <div className="w-full h-full pb-5 px-20">{renderSlide()}</div>
+                        </div>
+                    </div>
+                );
+            case SlideLayout.ImageBottom:
+                return (
+                    <div className="w-full h-full flex flex-col gap-y-6">
+                        <div
+                            className="flex-1 w-full"
+                            style={{
+                                height: 'calc(50% - 12px)',
+                            }}
+                        >
+                            <div className="w-full h-full pb-5 px-20">{renderSlide()}</div>
+                        </div>
+                        <div className="flex-1 w-full">
+                            <div
+                                className="w-full absolute bottom-0 right-0"
+                                style={{
+                                    height: 'calc(50% - 12px)',
+                                }}
+                            >
+                                <img
+                                    src={slide.mediaURL}
+                                    style={{
+                                        width: '100%',
+                                        height: '100%',
+                                        objectFit: 'cover',
+                                    }}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                );
+        }
+    };
+
     return (
-        <div className="w-full flex-1 p-4">
-            <div className="w-full h-full px-20 py-5">
-                <div className="w-full h-full">{renderSlide()}</div>
-            </div>
+        <div className="w-full flex-1 max-h-full" style={style}>
+            {renderBody()}
         </div>
     );
 };

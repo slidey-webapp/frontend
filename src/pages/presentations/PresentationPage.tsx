@@ -111,7 +111,12 @@ const PresentationPage: React.FC<Props> = () => {
         gridController?.reloadData();
     };
 
-    const handleDetail = async (data: PresentationDto) => navigate('/presentation/edit/' + data.presentationID);
+    const handleDetail = async (data: PresentationDto) =>
+        navigate('/presentation/edit/' + data.presentationID, {
+            state: {
+                previousRoute: location.pathname,
+            },
+        });
 
     return (
         <AppContainer>

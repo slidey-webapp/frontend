@@ -156,7 +156,7 @@ const PresentationHostShow: React.FC<Props> = () => {
 
         const handleBeforeUnload = (event: any) => {
             event.preventDefault();
-            event.returnValue = ''; 
+            event.returnValue = '';
         };
 
         document.addEventListener<'keydown'>('keydown', keyDownHandler);
@@ -426,7 +426,7 @@ const PresentationHostShow: React.FC<Props> = () => {
                 >
                     <div className="w-full h-full flex items-center justify-center">
                         <div
-                            className=" bg-white"
+                            className=" bg-white "
                             style={{
                                 height: PreviewSizeConstant.HEIGHT,
                                 width: PreviewSizeConstant.WIDTH,
@@ -435,8 +435,13 @@ const PresentationHostShow: React.FC<Props> = () => {
                                 background: state.backgroundColor,
                             }}
                         >
-                            <div className="w-full h-full flex flex-col">
-                                <div className="w-full h-24">
+                            <div className="w-full h-full flex flex-col relative overflow-hidden">
+                                <div
+                                    className="w-full z-10"
+                                    style={{
+                                        height: 96,
+                                    }}
+                                >
                                     <div className="w-full h-full flex items-center justify-between px-4">
                                         <ButtonIconBase
                                             icon={'close'}
@@ -458,8 +463,17 @@ const PresentationHostShow: React.FC<Props> = () => {
                                         />
                                     </div>
                                 </div>
-                                <PresentationShowBody />
-                                <PresentationShowFooter ref={presentShowFooterRef} />
+                                <PresentationShowBody
+                                    style={{
+                                        height: 'calc(100% - 192px)',
+                                    }}
+                                />
+                                <PresentationShowFooter
+                                    ref={presentShowFooterRef}
+                                    style={{
+                                        height: 96,
+                                    }}
+                                />
                             </div>
                         </div>
                     </div>

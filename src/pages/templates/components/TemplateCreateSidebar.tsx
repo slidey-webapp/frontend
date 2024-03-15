@@ -11,7 +11,7 @@ import OverviewMultipleChoiceSlide from '~/pages/presentations/components/sideba
 import OverviewParagraphSlide from '~/pages/presentations/components/sidebars/OverviewParagraphSlide';
 import OverviewQuoteSlide from '~/pages/presentations/components/sidebars/OverviewQuoteSlide';
 import OverviewWordCloudSlide from '~/pages/presentations/components/sidebars/OverviewWordCloudSlide';
-import { SlideDto } from '~/pages/presentations/types/slide';
+import { SlideDto, SlideLayout } from '~/pages/presentations/types/slide';
 import NotifyUtil from '~/utils/NotifyUtil';
 import { useTemplateCreateContext } from '../TemplateCreatePage';
 import TemplateCreateNewSlidePattern from './TemplateCreateNewSlidePattern';
@@ -39,7 +39,7 @@ const TemplateCreateSidebar: React.FC<Props> = () => {
         });
     };
 
-    const renderOverviewSlide = (slide: SlideDto) => {
+    const renderOverviewSlideType = (slide: SlideDto) => {
         switch (slide?.type) {
             case 'HEADING':
                 return <OverviewHeadingSlide slide={slide} key={slide.slideID} />;
@@ -56,6 +56,146 @@ const TemplateCreateSidebar: React.FC<Props> = () => {
             case null:
             default:
                 return null;
+        }
+    };
+
+    const renderOverviewSlide = (slide: SlideDto) => {
+        const overviewSlide = renderOverviewSlideType(slide);
+
+        if (!slide?.mediaURL || !slide.layout || slide.layout === SlideLayout.Default) {
+            return <div className="w-full h-full p-2">{overviewSlide}</div>;
+        }
+
+        switch (slide.layout) {
+            case SlideLayout.ImageFull:
+                return (
+                    <div className="w-full h-full relative overflow-hidden rounded-sm">
+                        <div className="absolute w-full h-full top-0 left-0">
+                            <img
+                                src={slide.mediaURL}
+                                style={{
+                                    width: '100%',
+                                    height: '100%',
+                                    objectFit: 'cover',
+                                }}
+                            />
+                            <div
+                                className="absolute w-full h-full top-0 left-0"
+                                style={{
+                                    zIndex: 1,
+                                    background: 'rgba(255, 255, 255, 0.45)',
+                                }}
+                            />
+                        </div>
+                        <div className="w-full h-full p-2 z-10 relative">{overviewSlide}</div>
+                    </div>
+                );
+            case SlideLayout.ImageSideLeft:
+                return (
+                    <div className="w-full h-full relative p-2 flex gap-x-1 rounded-sm overflow-hidden">
+                        <div className="flex-1 h-full">
+                            <img
+                                src={slide.mediaURL}
+                                style={{
+                                    width: '100%',
+                                    height: '100%',
+                                    objectFit: 'contain',
+                                }}
+                            />
+                        </div>
+                        <div className="flex-1 h-full">{overviewSlide}</div>
+                    </div>
+                );
+            case SlideLayout.ImageSideRight:
+                return (
+                    <div className="w-full h-full relative p-2 flex gap-x-1 rounded-sm overflow-hidden">
+                        <div className="flex-1 h-full">{overviewSlide}</div>
+                        <div className="flex-1 h-full">
+                            <img
+                                src={slide.mediaURL}
+                                style={{
+                                    width: '100%',
+                                    height: '100%',
+                                    objectFit: 'contain',
+                                }}
+                            />
+                        </div>
+                    </div>
+                );
+            case SlideLayout.ImageLeft:
+                return (
+                    <div className="w-full h-full relative flex gap-x-1 rounded-sm overflow-hidden">
+                        <div className="flex-1 h-full">
+                            <img
+                                src={slide.mediaURL}
+                                style={{
+                                    width: '100%',
+                                    height: '100%',
+                                    objectFit: 'cover',
+                                }}
+                            />
+                        </div>
+                        <div className="flex-1 h-full p-2 pl-0">{overviewSlide}</div>
+                    </div>
+                );
+            case SlideLayout.ImageRight:
+                return (
+                    <div className="w-full h-full relative flex gap-x-1 rounded-sm overflow-hidden">
+                        <div className="flex-1 h-full p-2 pr-0">{overviewSlide}</div>
+                        <div className="flex-1 h-full">
+                            <img
+                                src={slide.mediaURL}
+                                style={{
+                                    width: '100%',
+                                    height: '100%',
+                                    objectFit: 'cover',
+                                }}
+                            />
+                        </div>
+                    </div>
+                );
+            case SlideLayout.ImageTop:
+                return (
+                    <div className="w-full h-full flex flex-col gap-y-1 rounded-sm overflow-hidden">
+                        <div
+                            className="flex-1 w-full"
+                            style={{
+                                maxHeight: '35%',
+                            }}
+                        >
+                            <img
+                                src={slide.mediaURL}
+                                style={{
+                                    width: '100%',
+                                    height: '100%',
+                                    objectFit: 'cover',
+                                }}
+                            />
+                        </div>
+                        <div className="flex-1 w-full p-2 pt-0">{overviewSlide}</div>
+                    </div>
+                );
+            case SlideLayout.ImageBottom:
+                return (
+                    <div className="w-full h-full flex flex-col gap-y-1 rounded-sm overflow-hidden">
+                        <div className="flex-1 w-full p-2 pb-0">{overviewSlide}</div>
+                        <div
+                            className="flex-1 w-full"
+                            style={{
+                                maxHeight: '35%',
+                            }}
+                        >
+                            <img
+                                src={slide.mediaURL}
+                                style={{
+                                    width: '100%',
+                                    height: '100%',
+                                    objectFit: 'cover',
+                                }}
+                            />
+                        </div>
+                    </div>
+                );
         }
     };
 
@@ -113,7 +253,7 @@ const TemplateCreateSidebar: React.FC<Props> = () => {
                                                 {/* @ts-ignore */}
                                                 <ContextMenuTrigger
                                                     id={'menu-context-' + slide.slideID}
-                                                    key={slide.slideID}
+                                                    key={`${slide.slideID} ${slide.mediaID}`}
                                                 >
                                                     <Draggable draggableId={slide.slideID.toString()} index={index}>
                                                         {(provided, snapshot) => {
