@@ -10,7 +10,7 @@ import { ChartType, HorizontalAlignment, TextSize, VerticalAlignment } from '~/t
 import NotifyUtil from '~/utils/NotifyUtil';
 import { usePresentationContext } from '../../PresentationDetailPage';
 import { PRESENTATION_CREATE_SLIDE_API } from '../../api/presentation.api';
-import { MultipleChoiceSlideOption, SlideDto, SlideType } from '../../types/slide';
+import { BulletSlideItem, MultipleChoiceSlideOption, SlideDto, SlideType } from '../../types/slide';
 import NewSlidePattern from './NewSlidePattern';
 import OverviewBulletSlide from './OverviewBulletSlide';
 import OverviewHeadingSlide from './OverviewHeadingSlide';
@@ -116,6 +116,7 @@ const PresentationSidebar: React.FC<Props> = ({ isReadonly }) => {
             subHeading: slideCloned.subHeading,
             paragraph: slideCloned.paragraph,
             question: slideCloned.question,
+            mediaID: slideCloned.mediaID,
             options: slideCloned.options?.map(
                 x =>
                     ({
@@ -123,6 +124,13 @@ const PresentationSidebar: React.FC<Props> = ({ isReadonly }) => {
                         option: x.option,
                         chosenAmount: 0,
                     } as MultipleChoiceSlideOption),
+            ),
+            items: slideCloned.items?.map(
+                x =>
+                    ({
+                        slideID: newSlide.slideID,
+                        value: x.value,
+                    } as BulletSlideItem),
             ),
         });
 
@@ -146,7 +154,7 @@ const PresentationSidebar: React.FC<Props> = ({ isReadonly }) => {
             textColor: rootSlide?.textColor || '#000000',
             textBackground: rootSlide?.textBackground || '#ffffff',
             chartType: rootSlide?.chartType || ChartType.Bar,
-            layout: 'Default',
+            layout: rootSlide?.layout || 'Default',
         } as SlideDto);
 
         if (response.status === 200) return response.data.result;
