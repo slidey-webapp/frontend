@@ -1,8 +1,12 @@
 import { FormControl, FormLabel, MenuItem, Select } from '@mui/material';
 import _ from 'lodash';
 import React from 'react';
+import { ImagePicker } from '~/components/forms/fields/BaseImagePickerField';
 import { ComboOptionConstant } from '~/configs/constants';
+import { UPLOAD_FILE_API } from '~/configs/global.api';
+import { convertToFormData, requestApi } from '~/libs/axios';
 import { ITemplateCreateContext } from '~/pages/templates/TemplateCreatePage';
+import { Id } from '~/types/shared';
 import { IPresentationContext, usePresentationContext } from '../../PresentationDetailPage';
 import { SlideDto, SlideType } from '../../types/slide';
 import EditorBulletSlide from './EditorBulletSlide';
@@ -11,8 +15,6 @@ import EditorMultipleChoiceSlide from './EditorMultipleChoice';
 import EditorParagraphSlide from './EditorParagraphSlide';
 import EditorQuoteSlide from './EditorQuoteSlide';
 import EditorWordCloud from './EditorWordCloud';
-import BaseForm from '~/components/forms/BaseForm';
-import { ImagePicker } from '~/components/forms/fields/BaseImagePickerField';
 
 interface Props {}
 
@@ -22,11 +24,10 @@ export interface EditorSlideProps {
     onUpdatePresentation: IPresentationContext['onUpdatePresentation'] | ITemplateCreateContext['onUpdatePresentation'];
     mask?: () => void;
     unmask?: () => void;
-    increaseBackStep: () => void;
 }
 
 const EditorContent: React.FC<Props> = () => {
-    const { currentSlideId, slides, onUpdatePresentation, mask, increaseBackStep, unmask } = usePresentationContext();
+    const { currentSlideId, slides, onUpdatePresentation, mask, unmask } = usePresentationContext();
     const slide = slides.find(x => x.slideID === currentSlideId) || ({} as SlideDto);
 
     const renderEditorType = () => {
@@ -34,7 +35,6 @@ const EditorContent: React.FC<Props> = () => {
             slide,
             slides,
             onUpdatePresentation,
-            increaseBackStep,
             mask,
             unmask,
         };
@@ -64,8 +64,9 @@ const EditorContent: React.FC<Props> = () => {
         slides[currentSlideIndex] = {
             ...newSlide,
             type: type as SlideType,
-            question: newSlide.heading || newSlide.question,
-            heading: newSlide.heading || newSlide.question,
+            question: newSlide.heading || newSlide.question || newSlide.quote,
+            heading: newSlide.heading || newSlide.question || newSlide.quote,
+            quote: newSlide.heading || newSlide.question || newSlide.quote,
             paragraph: newSlide.subHeading,
             subHeading: newSlide.paragraph,
         };
@@ -73,6 +74,23 @@ const EditorContent: React.FC<Props> = () => {
         onUpdatePresentation({
             slides: slides,
         });
+    };
+
+    const handleUpdateSlideImage = async (params: { mediaID: Id | null; mediaURL: string | null }, cb?: () => void) => {
+        const currentSlideIndex = slides.findIndex(x => x.slideID === slide.slideID);
+        const newSlide = {
+            ..._.cloneDeep(slide),
+            mediaID: params?.mediaID,
+            mediaURL: params?.mediaURL,
+        } as SlideDto;
+
+        slides[currentSlideIndex] = newSlide;
+
+        await onUpdatePresentation({
+            slides: slides,
+        });
+
+        cb?.();
     };
 
     return (
@@ -122,7 +140,36 @@ const EditorContent: React.FC<Props> = () => {
                             >
                                 Hình ảnh
                             </FormLabel>
-                            <ImagePicker />
+                            <ImagePicker
+                                defaultImage={slide.mediaURL}
+                                onChange={async file => {
+                                    if (!file) {
+                                        handleUpdateSlideImage({
+                                            mediaID: null,
+                                            mediaURL: null,
+                                        });
+                                        return;
+                                    }
+
+                                    const formValues = {
+                                        image: file,
+                                    };
+                                    const formData = convertToFormData(formValues);
+
+                                    mask();
+                                    const response = await requestApi<{
+                                        mediaID: Id;
+                                        mediaURL: string;
+                                    }>('post', UPLOAD_FILE_API, formData);
+
+                                    if (response.status !== 200 || !response.data.result) {
+                                        unmask();
+                                        return;
+                                    }
+
+                                    handleUpdateSlideImage(response.data.result, unmask);
+                                }}
+                            />
                         </FormControl>
                     </div>
                 </div>

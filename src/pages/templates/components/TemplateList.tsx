@@ -66,7 +66,11 @@ const TemplateList: React.FC<Props> = ({ renderAddonBeforeItem }) => {
         }
 
         response.data.result?.presentation?.presentationID &&
-            navigate('/presentation/edit/' + response.data.result?.presentation?.presentationID);
+            navigate('/presentation/edit/' + response.data.result?.presentation?.presentationID, {
+                state: {
+                    previousRoute: location.pathname,
+                },
+            });
     };
 
     const renderBody = () => {

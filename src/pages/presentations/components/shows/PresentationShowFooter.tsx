@@ -1,6 +1,6 @@
 import { Badge } from '@mui/material';
 import { motion } from 'framer-motion';
-import React, { useImperativeHandle, useRef } from 'react';
+import React, { CSSProperties, useImperativeHandle, useRef } from 'react';
 import ButtonIconBase from '~/components/buttons/ButtonIconBase';
 import ModalBase, { ModalBaseRef } from '~/components/modals/ModalBase';
 import { usePresentationShowContext } from '../../PresentationHostShow';
@@ -8,7 +8,9 @@ import PresentationMessageList from './PresentationMessageList';
 import PresentationQuestionList from './PresentationQuestionList';
 import BaseIcon from '~/components/icons/BaseIcon';
 
-interface Props {}
+interface Props {
+    style?: CSSProperties;
+}
 
 export interface PresentShowFooterRef {
     getModalMessageState: () => boolean;
@@ -20,7 +22,7 @@ export interface PresentShowFooterRef {
     onCloseQuestionModal: () => void;
 }
 
-const PresentationShowFooter = React.forwardRef<PresentShowFooterRef, Props>((props, ref) => {
+const PresentationShowFooter = React.forwardRef<PresentShowFooterRef, Props>(({ style }, ref) => {
     const {
         isFirstSlide,
         isLastSlide,
@@ -67,7 +69,7 @@ const PresentationShowFooter = React.forwardRef<PresentShowFooterRef, Props>((pr
         const questionUnAnsweredCount = questions.filter(x => !x.isAnswered).length;
 
         return (
-            <div className="flex-1 px-4 text-black  flex items-center justify-center ">
+            <div className="flex-1 px-4 text-black  flex items-center justify-center z-10">
                 <div className="w-full h-full flex items-center justify-between">
                     <div className="flex-1 flex justify-start ">
                         <div className="rounded-full w-fit bg-[#ededf099] flex items-center">
@@ -260,7 +262,7 @@ const PresentationShowFooter = React.forwardRef<PresentShowFooterRef, Props>((pr
         const currentSlideIndex = slides.findIndex(x => x.slideID === currentSlideId);
 
         return (
-            <div className="w-full h-1 bg-transparent mb-[1px]">
+            <div className="w-full h-1 bg-transparent mb-[1px] z-10">
                 <motion.div
                     style={{
                         height: '100%',
@@ -287,7 +289,7 @@ const PresentationShowFooter = React.forwardRef<PresentShowFooterRef, Props>((pr
     );
 
     return (
-        <div className="w-full h-24 flex flex-col">
+        <div className="w-full h-24 flex flex-col" style={style}>
             {renderActionButton()}
             {renderProgressBar()}
             <ModalBase ref={modalQuestionRef} />

@@ -5,7 +5,7 @@ import { EditorSlideProps } from './EditorContent';
 
 interface Props extends EditorSlideProps {}
 
-const EditorQuoteSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentation, increaseBackStep }) => {
+const EditorQuoteSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentation }) => {
     if (slide.type !== 'QUOTE') return null;
 
     const handleChange = _.debounce((name: string, value: any) => {

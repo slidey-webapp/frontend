@@ -1,17 +1,17 @@
+import clsx from 'clsx';
 import React, { useState } from 'react';
-import { useTemplateCreateContext } from '../TemplateCreatePage';
 import { useNavigate } from 'react-router-dom';
+import BaseIcon from '~/components/icons/BaseIcon';
 import { EditorType } from '~/pages/presentations/components/editors/PresentationBodyEditor';
 import HistoryUtil from '~/utils/HistoryUtil';
-import clsx from 'clsx';
-import BaseIcon from '~/components/icons/BaseIcon';
+import { useTemplateCreateContext } from '../TemplateCreatePage';
 import TemplateCreateEditorContent from './TemplateCreateEditorContent';
 import TemplateCreateEditorDesign from './TemplateCreateEditorDesign';
 
 interface Props {}
 
 const TemplateCreateBodyEditor: React.FC<Props> = () => {
-    const { currentSlideId, increaseBackStep } = useTemplateCreateContext();
+    const { currentSlideId } = useTemplateCreateContext();
     const navigate = useNavigate();
     const [editorType, setEditorType] = useState<EditorType>(
         (HistoryUtil.getSearchParam('editorType') as EditorType) || 'content',
@@ -43,7 +43,6 @@ const TemplateCreateBodyEditor: React.FC<Props> = () => {
                                 editorType: 'content',
                             });
                             setEditorType('content');
-                            increaseBackStep();
                         }}
                     >
                         <BaseIcon type="drive-file-rename-outlined" />
@@ -64,7 +63,6 @@ const TemplateCreateBodyEditor: React.FC<Props> = () => {
                                 editorType: 'design',
                             });
                             setEditorType('design');
-                            increaseBackStep();
                         }}
                     >
                         <BaseIcon type="color-lens-outlined" />

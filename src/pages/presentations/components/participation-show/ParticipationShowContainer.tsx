@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import React, { useRef } from 'react';
 import ModalBase, { ModalBaseRef } from '~/components/modals/ModalBase';
+import logoSrc from '~/images/logo.png';
 import { usePresentationJoinSessionContext } from '../../PresentationJoinSession';
 import ParticipantSendMessage from './ParticipantSendMessage';
 import ParticipantSendQuestion from './ParticipantSendQuestion';
@@ -10,7 +11,6 @@ import ParticipantShowWordCloudSlide from './ParticipantShowWordCloudSlide';
 import ParticipationShowHeadingSlide from './ParticipationShowHeadingSlide';
 import ParticipationShowMultipleChoiceSlide from './ParticipationShowMultipleChoiceSlide';
 import ParticipationShowParagraphSlide from './ParticipationShowParagraphSlide';
-import logoSrc from '~/images/logo.png';
 
 interface Props {}
 
@@ -82,7 +82,24 @@ const ParticipationShowContainer: React.FC<Props> = () => {
                         padding: 16,
                     }}
                 >
-                    <div className="h-full w-full flex flex-col gap-y-16">
+                    <div className="h-full w-full flex flex-col gap-y-6">
+                        {slide?.mediaURL && (
+                            <div
+                                className="w-full rounded-lg overflow-hidden"
+                                style={{
+                                    height: 300,
+                                }}
+                            >
+                                <img
+                                    src={slide?.mediaURL}
+                                    style={{
+                                        width: '100%',
+                                        height: '100%',
+                                        objectFit: 'cover',
+                                    }}
+                                />
+                            </div>
+                        )}
                         <div className="w-full h-fit">{renderSlide()}</div>
                         <div className="flex-1 flex flex-col justify-end items-center">
                             <div className="w-full">

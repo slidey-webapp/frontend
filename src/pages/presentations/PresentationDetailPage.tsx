@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import React, { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { RootState, useAppSelector } from '~/AppStore';
 import Forbidden from '~/components/errors/Forbidden';
 import Loading from '~/components/loadings/Loading';
@@ -29,11 +29,10 @@ export interface IPresentationContext {
     currentSlideId: Id;
     collaborations: CollaborationDto[];
     usersOnline: User[];
-    backStep: number;
     hover: PlacementHover;
     isOwner: boolean;
+    previousRoute: string;
     setHoverState: React.Dispatch<React.SetStateAction<PlacementHover>>;
-    increaseBackStep: () => void;
     setState: React.Dispatch<React.SetStateAction<State>>;
     setCurrentSlideId: (id: Id) => void;
     mask: () => void;
@@ -58,11 +57,13 @@ interface State {
     currentSlideId: Id;
     collaborations: CollaborationDto[];
     reRender: boolean;
-    backStep: number;
+    previousRoute: string;
 }
 
 const PresentationDetailPage: React.FC<Props> = () => {
     const { presentationID } = useParams<{ presentationID: string }>();
+
+    const location = useLocation();
 
     const navigate = useNavigate();
     const authUser = useAppSelector((state: RootState) => state.auth.authUser);
@@ -77,8 +78,18 @@ const PresentationDetailPage: React.FC<Props> = () => {
         currentSlideId: '',
         collaborations: [],
         reRender: false,
-        backStep: 1,
+        previousRoute: '/dashboard/presentation',
     });
+
+    useEffect(() => {
+        if (location.state?.previousRoute) {
+            setState(pre => ({
+                ...pre,
+                previousRoute: location.state?.previousRoute,
+            }));
+        }
+    }, []);
+
     const [hoverState, setHoverState] = useState<PlacementHover>({
         verticalAlignment: null,
         horizontalAlignment: null,
@@ -142,7 +153,6 @@ const PresentationDetailPage: React.FC<Props> = () => {
                     const preState = _.cloneDeep(pre);
 
                     let currentId = preState.currentSlideId;
-                    let backStep = preState.backStep;
 
                     const isCurrentSlideDeleted = newSlides.every(x => x.slideID !== currentId);
 
@@ -156,7 +166,6 @@ const PresentationDetailPage: React.FC<Props> = () => {
                         HistoryUtil.pushSearchParams(navigate, {
                             current: currentId,
                         });
-                        backStep = backStep + 1;
                     }
 
                     return {
@@ -167,7 +176,6 @@ const PresentationDetailPage: React.FC<Props> = () => {
                         },
                         slides: newSlides,
                         currentSlideId: currentId,
-                        backStep,
                     };
                 });
             },
@@ -285,15 +293,14 @@ const PresentationDetailPage: React.FC<Props> = () => {
                             collaborations: state.collaborations,
                             usersOnline: userOnlineRef.current,
                             hover: hoverState,
-                            backStep: state.backStep,
                             isOwner: authUser?.user.accountID === state.presentation.createdBy,
+                            previousRoute: state.previousRoute,
                             setCurrentSlideId: id => {
                                 HistoryUtil.pushSearchParams(navigate, {
                                     current: id,
                                 });
-                                setState(pre => ({ ...pre, currentSlideId: id, backStep: pre.backStep + 1 }));
+                                setState(pre => ({ ...pre, currentSlideId: id }));
                             },
-                            increaseBackStep: () => setState(pre => ({ ...pre, backStep: pre.backStep + 1 })),
                             setHoverState,
                             setState,
                             mask: () => overlayRef.current?.open(),

@@ -74,6 +74,7 @@ const IconsMap = {
     'lock-outlined': loadable(() => import('@mui/icons-material/LockOutlined')),
     'unlock-outlined': loadable(() => import('@mui/icons-material/LockOpenOutlined')),
     'power-setting': loadable(() => import('@mui/icons-material/PowerSettingsNew')),
+    'eye-outlined': loadable(() => import('@mui/icons-material/VisibilityOutlined')),
 };
 
 type Size = 8 | 10 | 12 | 14 | 16 | 18 | 20 | 22 | 24 | 26 | 28;

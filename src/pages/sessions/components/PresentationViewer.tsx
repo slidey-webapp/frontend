@@ -21,15 +21,12 @@ const PresentationViewer = ({ presentation }: PresentationViewerProps) => {
                     collaborations: [],
                     usersOnline: [],
                     setCurrentSlideId: setCurrentSlideId,
-                    backStep: 1,
                     hover: {} as any,
                     isOwner: true,
                     setHoverState: () => {
                         //
                     },
-                    increaseBackStep: () => {
-                        //
-                    },
+                    previousRoute: '',
                     setState: () => {
                         //
                     },

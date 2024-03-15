@@ -5,7 +5,7 @@ import { EditorSlideProps } from './EditorContent';
 
 interface Props extends EditorSlideProps {}
 
-const EditorWordCloud: React.FC<Props> = ({ slide, slides, onUpdatePresentation, increaseBackStep }) => {
+const EditorWordCloud: React.FC<Props> = ({ slide, slides, onUpdatePresentation }) => {
     if (slide.type !== 'WORD_CLOUD') return null;
 
     const handleChange = _.debounce((name: string, value: any) => {
