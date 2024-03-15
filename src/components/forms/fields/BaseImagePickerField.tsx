@@ -121,7 +121,7 @@ export const ImagePicker: React.FC<ImagePickerProps> = ({
                         borderRadius: 'inherit',
                     }}
                     id={`image-picker-field${name}`}
-                    accept="image/png, image/jpg"
+                    accept="image/png, image/jpeg"
                     onChange={handleUploadClick}
                 />
                 <label
@@ -173,7 +173,7 @@ export const ImagePicker: React.FC<ImagePickerProps> = ({
                             </div>
                         </>
                     ) : (
-                        <div className="px-[14px] py-[16.5px]">
+                        <div className="p-3 w-full h-full">
                             <Typography
                                 variant="caption"
                                 className="block"
@@ -183,7 +183,7 @@ export const ImagePicker: React.FC<ImagePickerProps> = ({
                             >
                                 Hình ảnh
                             </Typography>
-                            <div className="pt-2 pb-1">
+                            <div className="pt-2 pb-1 text-sm">
                                 Kéo thả để đính kèm hoặc
                                 <span className="text-green-500 ml-1">Tải lên</span>
                             </div>
@@ -194,7 +194,7 @@ export const ImagePicker: React.FC<ImagePickerProps> = ({
                                     color: 'neutral.400',
                                 }}
                             >
-                                Image file formats - JPG, JPEG, PNG, GIF
+                                Ảnh được chấp nhận - JPG, JPEG, PNG
                             </Typography>
                             <Typography
                                 variant="caption"
@@ -203,7 +203,7 @@ export const ImagePicker: React.FC<ImagePickerProps> = ({
                                     color: 'neutral.400',
                                 }}
                             >
-                                Image size less than 2MB
+                                Size ảnh tối đa 5MB
                             </Typography>
                         </div>
                     )}

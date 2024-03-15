@@ -1,12 +1,20 @@
 import { SxProps, Theme, Tooltip } from '@mui/material';
+import clsx from 'clsx';
 import _ from 'lodash';
 import { MuiColorInput } from 'mui-color-input';
 import React from 'react';
 import BaseIcon, { BaseIconProps } from '~/components/icons/BaseIcon';
+import { ReactComponent as ImageBottom } from '~/images/slide/image-bottom.svg';
+import { ReactComponent as ImageDefault } from '~/images/slide/image-default.svg';
+import { ReactComponent as ImageFull } from '~/images/slide/image-full.svg';
+import { ReactComponent as ImageLeft } from '~/images/slide/image-left.svg';
+import { ReactComponent as ImageRight } from '~/images/slide/image-right.svg';
+import { ReactComponent as ImageSideBySideLeft } from '~/images/slide/image-side-by-side-left.svg';
+import { ReactComponent as ImageSideBySideRight } from '~/images/slide/image-side-by-side-right.svg';
+import { ReactComponent as ImageTop } from '~/images/slide/image-top.svg';
+import { SlideDto, SlideLayout } from '~/pages/presentations/types/slide';
 import { ChartType, HorizontalAlignment, TextSize, TextSizes, VerticalAlignment } from '~/types/shared';
 import { useTemplateCreateContext } from '../TemplateCreatePage';
-import { SlideDto } from '~/pages/presentations/types/slide';
-import clsx from 'clsx';
 
 interface Props {}
 
@@ -351,6 +359,94 @@ const TemplateCreateEditorDesign: React.FC<Props> = () => {
             </div>
             <div className="overflow-x-hidden overflow-y-auto flex-1">
                 <div className="flex flex-col">
+                    <div className={'p-4 border-b border-neutral-200'}>
+                        <div className="font-semibold mb-4">Bố cục</div>
+                        <div className="grid grid-cols-4 gap-2">
+                            {[
+                                {
+                                    Svg: ImageDefault,
+                                    tooltip: 'Mặc định',
+                                    key: SlideLayout.Default,
+                                    active: !slide.layout || slide.layout === SlideLayout.Default,
+                                },
+                                {
+                                    Svg: ImageFull,
+                                    tooltip: 'Ảnh full',
+                                    key: SlideLayout.ImageFull,
+                                    disabled: false,
+                                    active: slide.layout === SlideLayout.ImageFull,
+                                },
+                                {
+                                    Svg: ImageSideBySideLeft,
+                                    tooltip: 'Ảnh cạnh bên trái',
+                                    key: SlideLayout.ImageSideLeft,
+                                    disabled: false,
+                                    active: slide.layout === SlideLayout.ImageSideLeft,
+                                },
+                                {
+                                    Svg: ImageSideBySideRight,
+                                    tooltip: 'Ảnh cạnh bên phải',
+                                    key: SlideLayout.ImageSideRight,
+                                    disabled: false,
+                                    active: slide.layout === SlideLayout.ImageSideRight,
+                                },
+                                {
+                                    Svg: ImageLeft,
+                                    tooltip: 'Ảnh bên trái',
+                                    key: SlideLayout.ImageLeft,
+                                    disabled: false,
+                                    active: slide.layout === SlideLayout.ImageLeft,
+                                },
+                                {
+                                    Svg: ImageRight,
+                                    tooltip: 'Ảnh bên phải',
+                                    key: SlideLayout.ImageRight,
+                                    disabled: false,
+                                    active: slide.layout === SlideLayout.ImageRight,
+                                },
+                                {
+                                    Svg: ImageTop,
+                                    tooltip: 'Ảnh bên trên',
+                                    key: SlideLayout.ImageTop,
+                                    disabled: false,
+                                    active: slide.layout === SlideLayout.ImageTop,
+                                },
+                                {
+                                    Svg: ImageBottom,
+                                    tooltip: 'Ảnh bên dưới',
+                                    key: SlideLayout.ImageBottom,
+                                    disabled: false,
+                                    active: slide.layout === SlideLayout.ImageBottom,
+                                },
+                            ].map(x => {
+                                return (
+                                    <div key={x.key} className="col-span-1">
+                                        <Tooltip title={x.tooltip}>
+                                            <div
+                                                className={clsx(
+                                                    'p-2 rounded-lg flex items-center justify-center cursor-pointer',
+                                                    'transition-all ease-in-out duration-100 border border-neutral-100 hover:border-indigo-main',
+                                                    {
+                                                        '!border-indigo-500': x.active,
+                                                        'cursor-not-allowed': x.disabled,
+                                                    },
+                                                )}
+                                                onClick={() => {
+                                                    if (x.disabled) return;
+                                                    handleUpdatePresentation({
+                                                        field: 'layout',
+                                                        newValue: x.key,
+                                                    });
+                                                }}
+                                            >
+                                                <x.Svg />
+                                            </div>
+                                        </Tooltip>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
                     {configs.map((config, configIndex) => {
                         return (
                             <div

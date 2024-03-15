@@ -23,6 +23,8 @@ export interface ITemplateCreateContext {
     onUpdatePresentation: (params: { name?: string; slides?: SlideDto[] }) => void;
     setCurrentSlideId: (id: Id) => void;
     onCreateTemplate: () => Promise<void>;
+    mask: () => void;
+    unmask: () => void;
 }
 
 export const TemplateCreateContext = createContext<ITemplateCreateContext>({} as ITemplateCreateContext);
@@ -121,6 +123,8 @@ const TemplateCreatePage: React.FC<Props> = () => {
                     setState,
                     onUpdatePresentation: handleUpdatePresentation,
                     onCreateTemplate: handleCreateTemplate,
+                    mask: () => overlayRef.current?.open(),
+                    unmask: () => overlayRef.current?.close(),
                 }}
             >
                 <TemplateCreateHeader />
