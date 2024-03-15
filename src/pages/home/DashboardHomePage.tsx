@@ -56,7 +56,12 @@ const DashboardHomePage: React.FC<Props> = () => {
     const [recentVisitedItem, setRecentVisitedItem] = useState<HistoryDto[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const handleDetailPresentation = async (presentationID: Id) => navigate('/presentation/edit/' + presentationID);
+    const handleDetailPresentation = async (presentationID: Id) =>
+        navigate('/presentation/edit/' + presentationID, {
+            state: {
+                previousRoute: location.pathname,
+            },
+        });
 
     const handleCreatePresentation = async () => {
         modalRef.current?.onOpen(

@@ -25,11 +25,10 @@ export interface EditorSlideProps {
     onUpdatePresentation: IPresentationContext['onUpdatePresentation'] | ITemplateCreateContext['onUpdatePresentation'];
     mask?: () => void;
     unmask?: () => void;
-    increaseBackStep: () => void;
 }
 
 const EditorContent: React.FC<Props> = () => {
-    const { currentSlideId, slides, onUpdatePresentation, mask, increaseBackStep, unmask } = usePresentationContext();
+    const { currentSlideId, slides, onUpdatePresentation, mask, unmask } = usePresentationContext();
     const slide = slides.find(x => x.slideID === currentSlideId) || ({} as SlideDto);
 
     const renderEditorType = () => {
@@ -37,7 +36,6 @@ const EditorContent: React.FC<Props> = () => {
             slide,
             slides,
             onUpdatePresentation,
-            increaseBackStep,
             mask,
             unmask,
         };

@@ -9,7 +9,7 @@ import { useTemplateCreateContext } from '../TemplateCreatePage';
 interface Props {}
 
 const TemplateCreateHeader: React.FC<Props> = () => {
-    const { presentation, onUpdatePresentation, backStep, onCreateTemplate } = useTemplateCreateContext();
+    const { presentation, onUpdatePresentation, onCreateTemplate } = useTemplateCreateContext();
 
     const navigate = useNavigate();
 
@@ -27,7 +27,7 @@ const TemplateCreateHeader: React.FC<Props> = () => {
                     <Tooltip title="Trở lại">
                         <div
                             className="cursor-pointer transition-all duration-300 ease-in-out hover:text-neutral-500"
-                            onClick={() => navigate(-backStep)}
+                            onClick={() => navigate('/dashboard/template')}
                         >
                             <BaseIcon type={'arrow-back'} />
                         </div>

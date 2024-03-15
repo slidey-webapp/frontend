@@ -15,7 +15,7 @@ import { EditorSlideProps } from '~/pages/presentations/components/editors/Edito
 interface Props {}
 
 const TemplateCreateEditorContent: React.FC<Props> = () => {
-    const { currentSlideId, slides, onUpdatePresentation, increaseBackStep } = useTemplateCreateContext();
+    const { currentSlideId, slides, onUpdatePresentation } = useTemplateCreateContext();
     const slide = slides.find(x => x.slideID === currentSlideId) || ({} as SlideDto);
 
     const renderEditorType = () => {
@@ -23,7 +23,6 @@ const TemplateCreateEditorContent: React.FC<Props> = () => {
             slide,
             slides,
             onUpdatePresentation,
-            increaseBackStep,
         };
 
         switch (slide?.type) {

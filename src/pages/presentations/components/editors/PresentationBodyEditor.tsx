@@ -12,7 +12,7 @@ interface Props {}
 export type EditorType = 'content' | 'design';
 
 const PresentationBodyEditor: React.FC<Props> = () => {
-    const { currentSlideId,increaseBackStep } = usePresentationContext();
+    const { currentSlideId } = usePresentationContext();
     const navigate = useNavigate();
     const [editorType, setEditorType] = useState<EditorType>(
         (HistoryUtil.getSearchParam('editorType') as EditorType) || 'content',
@@ -44,7 +44,6 @@ const PresentationBodyEditor: React.FC<Props> = () => {
                                 editorType: 'content',
                             });
                             setEditorType('content');
-                            increaseBackStep();
                         }}
                     >
                         <BaseIcon type="drive-file-rename-outlined" />
@@ -65,7 +64,6 @@ const PresentationBodyEditor: React.FC<Props> = () => {
                                 editorType: 'design',
                             });
                             setEditorType('design');
-                            increaseBackStep();
                         }}
                     >
                         <BaseIcon type="color-lens-outlined" />

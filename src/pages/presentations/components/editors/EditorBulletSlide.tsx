@@ -8,7 +8,7 @@ import { EditorSlideProps } from './EditorContent';
 
 interface Props extends EditorSlideProps {}
 
-const EditorBulletSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentation, increaseBackStep, mask, unmask }) => {
+const EditorBulletSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentation, mask, unmask }) => {
     if (slide.type !== 'BULLET_LIST') return null;
 
     const handleUpdateSlide = async (newSlide: SlideDto) => {

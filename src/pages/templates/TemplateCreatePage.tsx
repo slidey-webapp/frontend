@@ -18,8 +18,6 @@ export interface ITemplateCreateContext {
     slides: SlideDto[];
     hover: PlacementHover;
     currentSlideId: Id;
-    backStep: number;
-    increaseBackStep: () => void;
     setHoverState: React.Dispatch<React.SetStateAction<PlacementHover>>;
     setState: React.Dispatch<React.SetStateAction<State>>;
     onUpdatePresentation: (params: { name?: string; slides?: SlideDto[] }) => void;
@@ -116,8 +114,6 @@ const TemplateCreatePage: React.FC<Props> = () => {
                     slides: state.slides,
                     hover: hoverState,
                     currentSlideId: state.currentSlideId,
-                    backStep: state.backStep,
-                    increaseBackStep: () => setState(pre => ({ ...pre, backStep: pre.backStep + 1 })),
                     setCurrentSlideId: id => {
                         setState(pre => ({ ...pre, currentSlideId: id }));
                     },
