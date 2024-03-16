@@ -98,7 +98,7 @@ export const SlidePatternItem = ({
 };
 
 const NewSlidePattern: React.FC<Props> = () => {
-    const { presentationID, mask, unmask, setCurrentSlideId } = usePresentationContext();
+    const { presentationID, mask, unmask, setState } = usePresentationContext();
 
     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
 
@@ -128,12 +128,18 @@ const NewSlidePattern: React.FC<Props> = () => {
         } as SlideDto);
 
         if (response.status === 200) {
-            const slideId = response.data?.result?.slideID;
-            setTimeout(() => {
-                slideId && setCurrentSlideId(slideId);
-                unmask();
-                handleClose();
-            }, 350);
+            const slide = response.data?.result;
+            unmask();
+            handleClose();
+
+            if (!slide) return;
+
+            setState(pre => ({
+                ...pre,
+                currentSlideId: slide?.slideID,
+                slides: [...pre.slides, slide],
+            }));
+
             return;
         }
 

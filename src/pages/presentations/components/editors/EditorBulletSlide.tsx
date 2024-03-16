@@ -11,7 +11,7 @@ interface Props extends EditorSlideProps {}
 const EditorBulletSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentation, mask, unmask }) => {
     if (slide.type !== 'BULLET_LIST') return null;
 
-    const handleUpdateSlide = async (newSlide: SlideDto) => {
+    const handleUpdateItemsSlide = async (newSlide: SlideDto) => {
         const currentSlideIndex = slides.findIndex(x => x.slideID === slide.slideID);
 
         slides[currentSlideIndex] = newSlide;
@@ -23,11 +23,22 @@ const EditorBulletSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentatio
         unmask?.();
     };
 
+    const handleUpdateSlide = (newSlide: SlideDto) => {
+        const currentSlideIndex = slides.findIndex(x => x.slideID === slide.slideID);
+
+        slides[currentSlideIndex] = newSlide;
+
+        onUpdatePresentation({
+            slides: slides,
+        });
+    };
+
     const handleChangeHeading = _.debounce((value: string) => {
         const newSlide = {
             ..._.cloneDeep(slide),
             heading: value,
         };
+
         handleUpdateSlide(newSlide);
     }, 200);
 
@@ -41,7 +52,8 @@ const EditorBulletSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentatio
             ..._.cloneDeep(slide),
             items,
         };
-        handleUpdateSlide(newSlide);
+
+        handleUpdateItemsSlide(newSlide);
     };
 
     const handleRemoveItem = (index: number) => {
@@ -52,7 +64,7 @@ const EditorBulletSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentatio
             ..._.cloneDeep(slide),
             items,
         };
-        handleUpdateSlide(newSlide);
+        handleUpdateItemsSlide(newSlide);
     };
 
     const handleUpdateItem = _.debounce((index: number, value: string) => {
@@ -73,7 +85,7 @@ const EditorBulletSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentatio
     const renderItems = () => {
         return (slide.items || []).map((item, index) => {
             return (
-                <div key={item.bulletListSlideItemID}className="w-full flex items-center justify-between">
+                <div key={item.bulletListSlideItemID} className="w-full flex items-center justify-between">
                     <FormControl sx={{ minWidth: 150 }} size="small">
                         <TextField
                             variant="outlined"

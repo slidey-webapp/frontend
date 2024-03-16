@@ -19,7 +19,7 @@ export default class ComponentUtil {
 
         const activeStyle: React.CSSProperties = active
             ? {
-                  border: `2px solid ${_.get(indigo, 'main')}`,
+                  border: `3px solid ${_.get(indigo, 'main')}`,
               }
             : {};
 

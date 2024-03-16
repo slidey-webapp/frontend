@@ -4,16 +4,26 @@ import { useNavigate } from 'react-router';
 import { useAppSelector } from '~/AppStore';
 import { ButtonBase } from '~/components/buttons/ButtonBase';
 import logoSrc from '~/images/logo.png';
+import ComponentUtil from '~/utils/ComponentUtil';
 
 interface Props {}
 
 const LandingHeader: React.FC<Props> = () => {
-    const { isAuthenticated } = useAppSelector(x => x.auth);
+    const { authUser } = useAppSelector(x => x.auth);
     const navigate = useNavigate();
 
     const renderRight = () => {
-        if (isAuthenticated)
-            return <ButtonBase color="primary" onClick={() => navigate('/dashboard')} title="Không gian làm việc" />;
+        if (authUser)
+            return (
+                <div className="flex items-center gap-x-4">
+                    <ButtonBase color="primary" onClick={() => navigate('/dashboard')} title="Không gian làm việc" />
+                    {ComponentUtil.renderAvatarUser({
+                        fullName: authUser?.user?.fullname,
+                        size: 36,
+                        tooltip: true,
+                    })}
+                </div>
+            );
 
         return (
             <div className="flex gap-x-4">

@@ -127,7 +127,6 @@ export class SocketEvent {
     static HOST_JOIN_SESSION = 'host_join_session';
     static JOIN_EDIT_PRESENTATION = 'join_edit_presentation';
     static UPDATE_PRESENTATION = 'update_presentation';
-    static PING_EDIT_PRESENTATION = 'ping_edit_presentation';
     static LEAVE_EDIT_PRESENTATION = 'leave_edit_presentation';
     static REMOVE_COLLAB = 'remove_collab';
     static JOIN_COLLAB = 'join_collab';

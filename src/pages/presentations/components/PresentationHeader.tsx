@@ -83,7 +83,7 @@ const PresentationHeader: React.FC<Props> = () => {
 
     return (
         <div
-            className="w-full flex items-center px-4 border-b border-[#e8e8eb]"
+            className="w-full flex items-center px-4 border-b border-[#e8e8eb] bg-neutral-700"
             style={{
                 minHeight: 56,
                 maxHeight: 56,
@@ -97,7 +97,12 @@ const PresentationHeader: React.FC<Props> = () => {
                             className="cursor-pointer transition-all duration-300 ease-in-out hover:text-neutral-500"
                             onClick={() => navigate(previousRoute)}
                         >
-                            <BaseIcon type={'arrow-back'} />
+                            <BaseIcon
+                                type={'arrow-back'}
+                                style={{
+                                    color: '#fff',
+                                }}
+                            />
                         </div>
                     </Tooltip>
                     <div className="w-56 ml-4" title={presentation.name}>
@@ -114,6 +119,19 @@ const PresentationHeader: React.FC<Props> = () => {
                                         }),
                                     200,
                                 )}
+                                sx={{
+                                    '& input': {
+                                        color: '#fff',
+                                    },
+                                    '& .MuiInputBase-root': {
+                                        '&::after': {
+                                            borderColor: '#fff',
+                                        },
+                                        '&::before': {
+                                            borderColor: '#fff',
+                                        },
+                                    },
+                                }}
                             />
                         </FormControl>
                     </div>
@@ -250,7 +268,7 @@ const PresentationHeader: React.FC<Props> = () => {
                                         size: 32,
                                         tooltip:
                                             collab.accountID === authUser?.user.accountID ? 'Bạn' : collab.fullname,
-                                        active: usersOnline.some(x => x.accountID === collab.accountID),
+                                        active: usersOnline.some(accountID => accountID === collab.accountID),
                                     });
                                 })}
                             </AvatarGroup>

@@ -32,7 +32,7 @@ const reorder = (list: SlideDto[], startIndex: number, endIndex: number) => {
 };
 
 const PresentationSidebar: React.FC<Props> = ({ isReadonly }) => {
-    const { currentSlideId, presentationID, slides, onUpdatePresentation, setCurrentSlideId, setState } =
+    const { currentSlideId, presentationID, slides, onUpdatePresentation, setCurrentSlideId, setState, mask, unmask } =
         usePresentationContext();
 
     const onDragEnd: OnDragEndResponder = async result => {
@@ -222,15 +222,12 @@ const PresentationSidebar: React.FC<Props> = ({ isReadonly }) => {
         const slideIndex = newSlides.findIndex(x => x.slideID === slide.slideID);
 
         newSlides.splice(slideIndex, 1);
-
-        setState(pre => ({
-            ...pre,
-            slides: newSlides,
-        }));
-
+     
+        mask()
         await onUpdatePresentation({
             slides: newSlides,
         });
+        unmask()
 
         if (slide.slideID !== currentSlideId) return;
 
@@ -242,7 +239,9 @@ const PresentationSidebar: React.FC<Props> = ({ isReadonly }) => {
     };
 
     const handleDuplicateSlide = async (slide: SlideDto) => {
+        mask()
         const newSlide = await createSlide(slide.type, _.cloneDeep(slide));
+        unmask()
         if (!newSlide) return;
 
         const newSlides = _.cloneDeep(slides);
