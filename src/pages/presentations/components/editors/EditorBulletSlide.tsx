@@ -5,7 +5,6 @@ import { ButtonBase } from '~/components/buttons/ButtonBase';
 import { ButtonIconBase } from '~/components/buttons/ButtonIconBase';
 import { BulletSlideItem, SlideDto } from '../../types/slide';
 import { EditorSlideProps } from './EditorContent';
-import { usePresentationContext } from '../../PresentationDetailPage';
 
 interface Props extends EditorSlideProps {}
 
