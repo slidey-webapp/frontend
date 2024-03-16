@@ -10,7 +10,7 @@ interface Props extends EditorSlideProps {}
 const EditorMultipleChoiceSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentation, mask, unmask }) => {
     if (slide.type !== 'MULTIPLE_CHOICE') return null;
 
-    const handleUpdateSlide = async (newSlide: SlideDto) => {
+    const handleUpdateOptionsSlide = async (newSlide: SlideDto) => {
         const currentSlideIndex = slides.findIndex(x => x.slideID === slide.slideID);
 
         slides[currentSlideIndex] = newSlide;
@@ -20,6 +20,16 @@ const EditorMultipleChoiceSlide: React.FC<Props> = ({ slide, slides, onUpdatePre
             slides: slides,
         });
         unmask?.();
+    };
+
+    const handleUpdateSlide = (newSlide: SlideDto) => {
+        const currentSlideIndex = slides.findIndex(x => x.slideID === slide.slideID);
+
+        slides[currentSlideIndex] = newSlide;
+
+        onUpdatePresentation({
+            slides: slides,
+        });
     };
 
     const handleChangeQuestion = _.debounce((value: string) => {
@@ -40,7 +50,7 @@ const EditorMultipleChoiceSlide: React.FC<Props> = ({ slide, slides, onUpdatePre
             ..._.cloneDeep(slide),
             options,
         };
-        handleUpdateSlide(newSlide);
+        handleUpdateOptionsSlide(newSlide);
     };
 
     const handleRemoveOption = (index: number) => {
@@ -51,7 +61,7 @@ const EditorMultipleChoiceSlide: React.FC<Props> = ({ slide, slides, onUpdatePre
             ..._.cloneDeep(slide),
             options,
         };
-        handleUpdateSlide(newSlide);
+        handleUpdateOptionsSlide(newSlide);
     };
 
     const handleUpdateOption = _.debounce((index: number, value: string) => {
