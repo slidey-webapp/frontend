@@ -82,7 +82,7 @@ const TopNav: React.FC<Props> = ({ onNavOpen }) => {
                             >
                                 {ComponentUtil.renderAvatarUser({
                                     fullName: authUser?.user?.fullname,
-                                    size: 40,
+                                    size: 36,
                                 })}
                             </div>
                         )}
