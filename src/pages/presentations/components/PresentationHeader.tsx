@@ -250,7 +250,7 @@ const PresentationHeader: React.FC<Props> = () => {
                                         size: 32,
                                         tooltip:
                                             collab.accountID === authUser?.user.accountID ? 'Bạn' : collab.fullname,
-                                        active: usersOnline.some(x => x.accountID === collab.accountID),
+                                        active: usersOnline.some(accountID => accountID === collab.accountID),
                                     });
                                 })}
                             </AvatarGroup>

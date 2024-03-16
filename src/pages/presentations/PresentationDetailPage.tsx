@@ -28,7 +28,7 @@ export interface IPresentationContext {
     slides: SlideDto[];
     currentSlideId: Id;
     collaborations: CollaborationDto[];
-    usersOnline: User[];
+    usersOnline: Id[];
     hover: PlacementHover;
     isOwner: boolean;
     previousRoute: string;
@@ -70,7 +70,7 @@ const PresentationDetailPage: React.FC<Props> = () => {
     const { socket } = useSocketContext();
 
     const overlayRef = useRef<OverlayRef>(null);
-    const userOnlineRef = useRef<User[]>(authUser?.user ? [authUser.user] : []);
+    const userOnlineRef = useRef<Id[]>(authUser?.user ? [authUser.user.accountID] : []);
 
     const [state, setState] = useState<State>({
         presentation: {} as PresentationDto,
@@ -105,15 +105,8 @@ const PresentationDetailPage: React.FC<Props> = () => {
             token: authUser?.token,
         });
 
-        const interval = setInterval(() => {
-            socket.emit(SocketEvent.PING_EDIT_PRESENTATION);
-        }, 2000);
-
-        socket.on(SocketEvent.JOIN_EDIT_PRESENTATION, ({ user }: { user: User }) => {
-            const isExist = userOnlineRef.current.some(x => x.accountID === user.accountID);
-            if (isExist) return;
-
-            userOnlineRef.current.push(user);
+        socket.on(SocketEvent.JOIN_EDIT_PRESENTATION, ({ allUsers }: { user: User; allUsers: User[] }) => {
+            userOnlineRef.current = allUsers.map(x => x.accountID);
 
             setState(pre => ({
                 ...pre,
@@ -121,20 +114,8 @@ const PresentationDetailPage: React.FC<Props> = () => {
             }));
         });
 
-        socket.on(SocketEvent.PING_EDIT_PRESENTATION, ({ user }: { user: User }) => {
-            const isExist = userOnlineRef.current.some(x => x.accountID === user.accountID);
-            if (isExist) return;
-
-            userOnlineRef.current.push(user);
-
-            setState(pre => ({
-                ...pre,
-                reRender: !pre.reRender,
-            }));
-        });
-
-        socket.on(SocketEvent.LEAVE_EDIT_PRESENTATION, ({ user }: { user: User }) => {
-            userOnlineRef.current = userOnlineRef.current.filter(x => x.accountID !== user.accountID);
+        socket.on(SocketEvent.LEAVE_EDIT_PRESENTATION, ({ allUsers }: { user: User; allUsers: User[] }) => {
+            userOnlineRef.current = allUsers.map(x => x.accountID);
             setState(pre => ({
                 ...pre,
                 reRender: !pre.reRender,
@@ -204,7 +185,6 @@ const PresentationDetailPage: React.FC<Props> = () => {
 
         return () => {
             socket.disconnect();
-            clearInterval(interval);
         };
     }, []);
 
