@@ -19,7 +19,7 @@ import PresentationMain from './components/PresentationMain';
 import { CollaborationDto } from './types/collaboration';
 import { PresentationDto } from './types/presentation';
 import { SessionDto } from './types/session';
-import { SlideDto } from './types/slide';
+import { SlideDto, SlideLayout } from './types/slide';
 interface Props {}
 
 export interface IPresentationContext {
@@ -45,6 +45,7 @@ export interface PlacementHover {
     verticalAlignment: VerticalAlignment | null;
     horizontalAlignment: HorizontalAlignment | null;
     chartType: ChartType | null;
+    layout: SlideLayout | null;
 }
 
 export const PresentationContext = createContext<IPresentationContext>({} as IPresentationContext);
@@ -94,6 +95,7 @@ const PresentationDetailPage: React.FC<Props> = () => {
         verticalAlignment: null,
         horizontalAlignment: null,
         chartType: null,
+        layout: null,
     });
     const [isForbidden, setIsForbidden] = useState<boolean>(false);
 

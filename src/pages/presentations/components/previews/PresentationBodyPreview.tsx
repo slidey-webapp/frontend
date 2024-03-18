@@ -35,17 +35,20 @@ const PresentationBodyPreview: React.FC<Props> = () => {
     };
 
     const renderBody = () => {
-        if (!slide?.mediaURL || !slide.layout || slide.layout === SlideLayout.Default) {
+        const layout = hover.layout || slide?.layout;
+        const mediaURL = slide?.mediaURL
+
+        if (!mediaURL || !layout || layout === SlideLayout.Default) {
             return <div className="w-full h-full p-8">{renderSlide()}</div>;
         }
 
-        switch (slide.layout) {
+        switch (layout) {
             case SlideLayout.ImageFull:
                 return (
                     <div className="w-full h-full relative overflow-hidden">
                         <div className="absolute w-full h-full top-0 left-0">
                             <img
-                                src={slide.mediaURL}
+                                src={mediaURL}
                                 style={{
                                     width: '100%',
                                     height: '100%',
@@ -68,7 +71,7 @@ const PresentationBodyPreview: React.FC<Props> = () => {
                     <div className="w-full h-full relative p-8 flex gap-x-4">
                         <div className="flex-1 h-full">
                             <img
-                                src={slide.mediaURL}
+                                src={mediaURL}
                                 style={{
                                     width: '100%',
                                     height: '100%',
@@ -85,7 +88,7 @@ const PresentationBodyPreview: React.FC<Props> = () => {
                         <div className="flex-1 h-full">{renderSlide()}</div>
                         <div className="flex-1 h-full">
                             <img
-                                src={slide.mediaURL}
+                                src={mediaURL}
                                 style={{
                                     width: '100%',
                                     height: '100%',
@@ -100,7 +103,7 @@ const PresentationBodyPreview: React.FC<Props> = () => {
                     <div className="w-full h-full relative flex gap-x-4">
                         <div className="flex-1 h-full">
                             <img
-                                src={slide.mediaURL}
+                                src={mediaURL}
                                 style={{
                                     width: '100%',
                                     height: '100%',
@@ -117,7 +120,7 @@ const PresentationBodyPreview: React.FC<Props> = () => {
                         <div className="flex-1 h-full p-8 pr-0">{renderSlide()}</div>
                         <div className="flex-1 h-full">
                             <img
-                                src={slide.mediaURL}
+                                src={mediaURL}
                                 style={{
                                     width: '100%',
                                     height: '100%',
@@ -137,7 +140,7 @@ const PresentationBodyPreview: React.FC<Props> = () => {
                             }}
                         >
                             <img
-                                src={slide.mediaURL}
+                                src={mediaURL}
                                 style={{
                                     width: '100%',
                                     height: '100%',
@@ -159,7 +162,7 @@ const PresentationBodyPreview: React.FC<Props> = () => {
                             }}
                         >
                             <img
-                                src={slide.mediaURL}
+                                src={mediaURL}
                                 style={{
                                     width: '100%',
                                     height: '100%',
