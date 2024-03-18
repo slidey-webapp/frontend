@@ -313,6 +313,15 @@ export const routeList: RouteDefinition[] = [
         ),
     },
     {
+        title: 'Tạo mẫu',
+        path: '/template/edit/:presentationID',
+        element: (
+            <Suspense>
+                <TemplateCreatePage />
+            </Suspense>
+        ),
+    },
+    {
         title: 'Tham gia phiên trình chiếu',
         path: 'join/:code',
         element: (
