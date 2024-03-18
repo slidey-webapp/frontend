@@ -19,7 +19,7 @@ const TemplatePage: React.FC<Props> = () => {
                 <ButtonBase onClick={handleCreate} color={'success'} title="Tạo mới" startIcon={'add'} />
             </div>
             <div className="base-grid p-7 flex-1 relative overflow-x-hidden overflow-y-auto">
-                <TemplateList />
+                <TemplateList allowDelete allowEdit />
             </div>
         </AppContainer>
     );

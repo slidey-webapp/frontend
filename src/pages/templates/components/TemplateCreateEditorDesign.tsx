@@ -1,4 +1,4 @@
-import { SxProps, Theme, Tooltip } from '@mui/material';
+import { SxProps, Theme, Tooltip, TooltipProps } from '@mui/material';
 import clsx from 'clsx';
 import _ from 'lodash';
 import { MuiColorInput } from 'mui-color-input';
@@ -368,6 +368,21 @@ const TemplateCreateEditorDesign: React.FC<Props> = () => {
                                     tooltip: 'Mặc định',
                                     key: SlideLayout.Default,
                                     active: !slide.layout || slide.layout === SlideLayout.Default,
+                                    onMouseOver: () =>
+                                        setHoverState(pre => ({
+                                            ...pre,
+                                            layout: SlideLayout.Default,
+                                        })),
+                                    onMouseLeave: () =>
+                                        setHoverState(pre => {
+                                            const preCloned = _.cloneDeep(pre);
+                                            if (preCloned.layout === SlideLayout.Default) {
+                                                preCloned.layout = null;
+                                            }
+
+                                            return preCloned;
+                                        }),
+                                    placement: 'top',
                                 },
                                 {
                                     Svg: ImageFull,
@@ -375,6 +390,21 @@ const TemplateCreateEditorDesign: React.FC<Props> = () => {
                                     key: SlideLayout.ImageFull,
                                     disabled: false,
                                     active: slide.layout === SlideLayout.ImageFull,
+                                    onMouseOver: () =>
+                                        setHoverState(pre => ({
+                                            ...pre,
+                                            layout: SlideLayout.ImageFull,
+                                        })),
+                                    onMouseLeave: () =>
+                                        setHoverState(pre => {
+                                            const preCloned = _.cloneDeep(pre);
+                                            if (preCloned.layout === SlideLayout.ImageFull) {
+                                                preCloned.layout = null;
+                                            }
+
+                                            return preCloned;
+                                        }),
+                                    placement: 'top',
                                 },
                                 {
                                     Svg: ImageSideBySideLeft,
@@ -382,6 +412,21 @@ const TemplateCreateEditorDesign: React.FC<Props> = () => {
                                     key: SlideLayout.ImageSideLeft,
                                     disabled: false,
                                     active: slide.layout === SlideLayout.ImageSideLeft,
+                                    onMouseOver: () =>
+                                        setHoverState(pre => ({
+                                            ...pre,
+                                            layout: SlideLayout.ImageSideLeft,
+                                        })),
+                                    onMouseLeave: () =>
+                                        setHoverState(pre => {
+                                            const preCloned = _.cloneDeep(pre);
+                                            if (preCloned.layout === SlideLayout.ImageSideLeft) {
+                                                preCloned.layout = null;
+                                            }
+
+                                            return preCloned;
+                                        }),
+                                    placement: 'top',
                                 },
                                 {
                                     Svg: ImageSideBySideRight,
@@ -389,6 +434,21 @@ const TemplateCreateEditorDesign: React.FC<Props> = () => {
                                     key: SlideLayout.ImageSideRight,
                                     disabled: false,
                                     active: slide.layout === SlideLayout.ImageSideRight,
+                                    onMouseOver: () =>
+                                        setHoverState(pre => ({
+                                            ...pre,
+                                            layout: SlideLayout.ImageSideRight,
+                                        })),
+                                    onMouseLeave: () =>
+                                        setHoverState(pre => {
+                                            const preCloned = _.cloneDeep(pre);
+                                            if (preCloned.layout === SlideLayout.ImageSideRight) {
+                                                preCloned.layout = null;
+                                            }
+
+                                            return preCloned;
+                                        }),
+                                    placement: 'top',
                                 },
                                 {
                                     Svg: ImageLeft,
@@ -396,6 +456,21 @@ const TemplateCreateEditorDesign: React.FC<Props> = () => {
                                     key: SlideLayout.ImageLeft,
                                     disabled: false,
                                     active: slide.layout === SlideLayout.ImageLeft,
+                                    onMouseOver: () =>
+                                        setHoverState(pre => ({
+                                            ...pre,
+                                            layout: SlideLayout.ImageLeft,
+                                        })),
+                                    onMouseLeave: () =>
+                                        setHoverState(pre => {
+                                            const preCloned = _.cloneDeep(pre);
+                                            if (preCloned.layout === SlideLayout.ImageLeft) {
+                                                preCloned.layout = null;
+                                            }
+
+                                            return preCloned;
+                                        }),
+                                    placement: 'bottom',
                                 },
                                 {
                                     Svg: ImageRight,
@@ -403,6 +478,21 @@ const TemplateCreateEditorDesign: React.FC<Props> = () => {
                                     key: SlideLayout.ImageRight,
                                     disabled: false,
                                     active: slide.layout === SlideLayout.ImageRight,
+                                    onMouseOver: () =>
+                                        setHoverState(pre => ({
+                                            ...pre,
+                                            layout: SlideLayout.ImageRight,
+                                        })),
+                                    onMouseLeave: () =>
+                                        setHoverState(pre => {
+                                            const preCloned = _.cloneDeep(pre);
+                                            if (preCloned.layout === SlideLayout.ImageRight) {
+                                                preCloned.layout = null;
+                                            }
+
+                                            return preCloned;
+                                        }),
+                                    placement: 'bottom',
                                 },
                                 {
                                     Svg: ImageTop,
@@ -410,6 +500,21 @@ const TemplateCreateEditorDesign: React.FC<Props> = () => {
                                     key: SlideLayout.ImageTop,
                                     disabled: false,
                                     active: slide.layout === SlideLayout.ImageTop,
+                                    onMouseOver: () =>
+                                        setHoverState(pre => ({
+                                            ...pre,
+                                            layout: SlideLayout.ImageTop,
+                                        })),
+                                    onMouseLeave: () =>
+                                        setHoverState(pre => {
+                                            const preCloned = _.cloneDeep(pre);
+                                            if (preCloned.layout === SlideLayout.ImageTop) {
+                                                preCloned.layout = null;
+                                            }
+
+                                            return preCloned;
+                                        }),
+                                    placement: 'bottom',
                                 },
                                 {
                                     Svg: ImageBottom,
@@ -417,11 +522,26 @@ const TemplateCreateEditorDesign: React.FC<Props> = () => {
                                     key: SlideLayout.ImageBottom,
                                     disabled: false,
                                     active: slide.layout === SlideLayout.ImageBottom,
+                                    onMouseOver: () =>
+                                        setHoverState(pre => ({
+                                            ...pre,
+                                            layout: SlideLayout.ImageBottom,
+                                        })),
+                                    onMouseLeave: () =>
+                                        setHoverState(pre => {
+                                            const preCloned = _.cloneDeep(pre);
+                                            if (preCloned.layout === SlideLayout.ImageBottom) {
+                                                preCloned.layout = null;
+                                            }
+
+                                            return preCloned;
+                                        }),
+                                    placement: 'bottom',
                                 },
                             ].map(x => {
                                 return (
                                     <div key={x.key} className="col-span-1">
-                                        <Tooltip title={x.tooltip}>
+                                        <Tooltip title={x.tooltip} placement={x.placement as TooltipProps['placement']}>
                                             <div
                                                 className={clsx(
                                                     'p-2 rounded-lg flex items-center justify-center cursor-pointer',
@@ -438,6 +558,8 @@ const TemplateCreateEditorDesign: React.FC<Props> = () => {
                                                         newValue: x.key,
                                                     });
                                                 }}
+                                                onMouseOver={x.onMouseOver}
+                                                onMouseLeave={x.onMouseLeave}
                                             >
                                                 <x.Svg />
                                             </div>

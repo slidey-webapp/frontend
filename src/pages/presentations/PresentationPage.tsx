@@ -35,6 +35,7 @@ const PresentationPage: React.FC<Props> = () => {
     const handleCreate = async () => {
         modalRef.current?.onOpen(
             <TemplateList
+                allowCreate
                 renderAddonBeforeItem={() => {
                     return (
                         <Grid item xs={12} sm={6} md={4}>
