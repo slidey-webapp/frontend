@@ -65,6 +65,7 @@ const TemplateCreatePage: React.FC<Props> = () => {
         verticalAlignment: null,
         horizontalAlignment: null,
         chartType: null,
+        layout: null,
     });
 
     const overlayRef = useRef<OverlayRef>(null);
