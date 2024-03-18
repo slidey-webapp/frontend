@@ -7,13 +7,14 @@ type Zero = 0;
 type PositiveInt = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 type ValidNumber = Zero | PositiveInt;
 export type Percentage = `${ValidNumber}%` | `${PositiveInt}${ValidNumber}%` | '100%';
+export type ModalWidth = Percentage | number;
 
 interface Props {
     className?: string;
 }
 
 export interface ModalBaseRef {
-    onOpen: (Component: JSX.Element, title: string | React.ReactNode, percentWidth?: Percentage) => void;
+    onOpen: (Component: JSX.Element, title?: string | React.ReactNode, width?: ModalWidth) => void;
     onClose: () => void;
     state: boolean;
 }
@@ -22,7 +23,7 @@ interface State {
     open: boolean;
     title?: string | React.ReactNode;
     children: JSX.Element | null;
-    percentWidth: Percentage;
+    width: ModalWidth;
 }
 
 const ModalBase = forwardRef<ModalBaseRef, Props>((props, ref) => {
@@ -30,7 +31,7 @@ const ModalBase = forwardRef<ModalBaseRef, Props>((props, ref) => {
         open: false,
         title: '',
         children: null,
-        percentWidth: '50%',
+        width: '50%',
     });
 
     React.useEffect(() => {
@@ -39,13 +40,13 @@ const ModalBase = forwardRef<ModalBaseRef, Props>((props, ref) => {
         };
     }, []);
 
-    const handleOpen = (Component: JSX.Element, title: string | React.ReactNode, percentWidth: Percentage = '50%') => {
+    const handleOpen = (Component: JSX.Element, title: string | React.ReactNode, width: ModalWidth = '50%') => {
         setState(prevState => ({
             ...prevState,
             title,
             open: true,
             children: Component,
-            percentWidth,
+            width,
         }));
     };
 
@@ -66,30 +67,32 @@ const ModalBase = forwardRef<ModalBaseRef, Props>((props, ref) => {
                 maxWidth: '100vw',
                 borderRadius: 0,
                 bgcolor: 'transparent',
-                overflow: 'hidden'
+                overflow: 'hidden',
             }}
             PaperProps={{
                 sx: {
                     minWidth: 400,
                     maxWidth: '100vw',
-                    width: state.percentWidth ?? 400,
+                    width: state.width ?? 400,
                 },
             }}
         >
-            <Typography
-                variant="h6"
-                sx={{ py: 2, px: 3 }}
-                display="flex"
-                alignItems={'center'}
-                justifyContent={'space-between'}
-            >
-                <div>{state.title}</div>
-                <div className="w-6 h-6 rounded-full duration-300">
-                    <IconButton onClick={handleClose}>
-                        <BaseIcon type="close" />
-                    </IconButton>
-                </div>
-            </Typography>
+            {state.title && (
+                <Typography
+                    variant="h6"
+                    sx={{ py: 2, px: 3 }}
+                    display="flex"
+                    alignItems={'center'}
+                    justifyContent={'space-between'}
+                >
+                    <div>{state.title}</div>
+                    <div className="w-6 h-6 rounded-full duration-300">
+                        <IconButton onClick={handleClose}>
+                            <BaseIcon type="close" />
+                        </IconButton>
+                    </div>
+                </Typography>
+            )}
             <div className={clsx('p-6 pt-2 overflow-auto', props.className)}>{state.children}</div>
         </Dialog>
     );

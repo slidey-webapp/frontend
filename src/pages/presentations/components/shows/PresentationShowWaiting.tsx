@@ -1,12 +1,14 @@
 import { Tooltip } from '@mui/material';
 import clsx from 'clsx';
 import QRCode from 'qrcode.react';
-import React from 'react';
+import React, { useRef } from 'react';
 import { ButtonBase } from '~/components/buttons/ButtonBase';
 import { requestApi } from '~/libs/axios';
 import { usePresentationShowContext } from '../../PresentationHostShow';
 import { SESSION_START_API } from '../../api/presentation.api';
 import ComponentUtil from '~/utils/ComponentUtil';
+import ButtonIconBase from '~/components/buttons/ButtonIconBase';
+import ModalBase, { ModalBaseRef } from '~/components/modals/ModalBase';
 
 interface Props {
     code: string;
@@ -16,6 +18,7 @@ const PresentationShowWaiting: React.FC<Props> = ({ code }) => {
     const joiningUrl = window.location.origin + '/join/' + code;
 
     const { sessionId, setState, participants } = usePresentationShowContext();
+    const modalRef = useRef<ModalBaseRef>(null);
 
     const handleStartSession = async () => {
         await requestApi('post', SESSION_START_API, {
@@ -29,6 +32,43 @@ const PresentationShowWaiting: React.FC<Props> = ({ code }) => {
                 },
             }));
         });
+    };
+
+    const handleViewQr = () => {
+        modalRef.current?.onOpen(
+            <div
+                className="p-4"
+                style={{
+                    width: 500,
+                    height: 500,
+                }}
+            >
+                <JoiningQRCode url={joiningUrl} size={468} />
+            </div>,
+            '',
+            500,
+        );
+    };
+
+    const JoiningQRCode: React.FC<{
+        url: string;
+        size?: number;
+        width?: number | string;
+        height?: number | string;
+    }> = ({ url, size, width, height }) => {
+        return (
+            <QRCode
+                value={url}
+                renderAs="canvas"
+                size={size}
+                width={width}
+                height={height}
+                bgColor={'#ffffff'}
+                fgColor={'#000000'}
+                level={'L'}
+                includeMargin={false}
+            />
+        );
     };
 
     return (
@@ -58,16 +98,26 @@ const PresentationShowWaiting: React.FC<Props> = ({ code }) => {
                         </Tooltip>
                     </div>
                 </div>
-                <div>
-                    <QRCode
-                        value={joiningUrl}
-                        renderAs="canvas"
-                        size={168}
-                        bgColor={'#ffffff'}
-                        fgColor={'#000000'}
-                        level={'L'}
-                        includeMargin={false}
-                    />
+                <div className="w-fit h-fit relative group">
+                    <JoiningQRCode url={joiningUrl} size={168} />
+                    <div
+                        className={clsx(
+                            'absolute top-0 left-0 w-full h-full flex opacity-0 items-center justify-center',
+                            'transition-all duration-200 ease-in-out group-hover:!opacity-100 z-10 cursor-default',
+                        )}
+                        style={{
+                            background: 'rgba(0, 0, 0, 0.45)',
+                            color: '#fff',
+                        }}
+                    >
+                        <ButtonIconBase
+                            icon="eye-outlined"
+                            tooltip="Xem ảnh"
+                            color="inherit"
+                            size={'extraLarge'}
+                            onClick={handleViewQr}
+                        />
+                    </div>
                 </div>
             </div>
             <div className="mt-4">
@@ -130,6 +180,7 @@ const PresentationShowWaiting: React.FC<Props> = ({ code }) => {
                     )}
                 </div>
             </div>
+            <ModalBase ref={modalRef} className="!p-0" />
         </div>
     );
 };
