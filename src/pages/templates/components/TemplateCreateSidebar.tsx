@@ -272,7 +272,7 @@ const TemplateCreateSidebar: React.FC<Props> = () => {
                                                                     </div>
                                                                     <div
                                                                         className={clsx(
-                                                                            'flex-1 h-full border-2 p-2 bg-white flex items-center justify-center border-neutral-100 rounded ',
+                                                                            'flex-1 h-full border-2 bg-white flex items-center justify-center border-neutral-100 rounded ',
                                                                             'cursor-pointer transition-all duration-200 ease-in-out hover:border-neutral-300',
                                                                             {
                                                                                 '!border-indigo-main': active,

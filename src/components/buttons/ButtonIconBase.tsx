@@ -2,7 +2,7 @@ import { Button, ButtonProps, Tooltip } from '@mui/material';
 import * as React from 'react';
 import BaseIcon, { BaseIconProps } from '../icons/BaseIcon';
 
-type Size = 'small' | 'medium' | 'large';
+type Size = 'small' | 'medium' | 'large' | 'extraLarge';
 
 type Props = Omit<ButtonProps, 'size'> & {
     tooltip?: string;
@@ -25,6 +25,10 @@ const sizes: {
         width: 40,
         height: 40,
     },
+    extraLarge: {
+        width: 56,
+        height: 56,
+    },
 };
 
 const iconSizes: {
@@ -33,6 +37,7 @@ const iconSizes: {
     small: 16,
     medium: 18,
     large: 20,
+    extraLarge: 28,
 };
 
 export const ButtonIconBase: React.FC<Props> = ({
@@ -54,6 +59,7 @@ export const ButtonIconBase: React.FC<Props> = ({
                 ...sizes[size],
                 ...style,
             }}
+            // @ts-ignore
             size={size}
             {...props}
         >

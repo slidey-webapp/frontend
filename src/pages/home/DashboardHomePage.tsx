@@ -66,6 +66,7 @@ const DashboardHomePage: React.FC<Props> = () => {
     const handleCreatePresentation = async () => {
         modalRef.current?.onOpen(
             <TemplateList
+                allowCreate
                 renderAddonBeforeItem={() => {
                     return (
                         <Grid item xs={12} sm={6} md={4}>

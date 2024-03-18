@@ -4,21 +4,24 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BaseIcon from '~/components/icons/BaseIcon';
 import Loading from '~/components/loadings/Loading';
+import Overlay, { OverlayRef } from '~/components/loadings/Overlay';
 import { ComboOptionConstant } from '~/configs/constants';
-import { PaginatedList, requestApi } from '~/libs/axios';
-import { PRESENTATION_CREATE_API } from '~/pages/presentations/api/presentation.api';
+import { PaginatedList, baseDeleteWithoutIdApi, requestApi } from '~/libs/axios';
+import { PRESENTATION_CREATE_API, PRESENTATION_DELETE_API } from '~/pages/presentations/api/presentation.api';
 import { PresentationDto } from '~/pages/presentations/types/presentation';
 import { SlideDto, SlideType } from '~/pages/presentations/types/slide';
 import NotifyUtil from '~/utils/NotifyUtil';
 import { TEMPLATE_INDEX_API } from '../api/template.api';
 import TemplateItem from './TemplateItem';
-import Overlay, { OverlayRef } from '~/components/loadings/Overlay';
 
 export interface Props {
     renderAddonBeforeItem?: () => JSX.Element;
+    allowDelete?: boolean;
+    allowCreate?: boolean;
+    allowEdit?: boolean;
 }
 
-const TemplateList: React.FC<Props> = ({ renderAddonBeforeItem }) => {
+const TemplateList: React.FC<Props> = ({ renderAddonBeforeItem, allowDelete, allowCreate, allowEdit }) => {
     const navigate = useNavigate();
 
     const [templates, setTemplates] = useState<PresentationDto[]>([]);
@@ -27,21 +30,22 @@ const TemplateList: React.FC<Props> = ({ renderAddonBeforeItem }) => {
 
     const overlayRef = useRef<OverlayRef>(null);
 
-    useEffect(() => {
-        const fetchTemplates = () => {
-            requestApi<PaginatedList<PresentationDto>>('get', TEMPLATE_INDEX_API, null, {
-                params: {
-                    offset: 0,
-                    limit: 10,
-                },
+    const fetchTemplates = async () => {
+        await requestApi<PaginatedList<PresentationDto>>('get', TEMPLATE_INDEX_API, null, {
+            params: {
+                offset: 0,
+                limit: 10,
+            },
+        })
+            .then(res => {
+                if (res.status === 200) {
+                    setTemplates(res.data.result?.items || []);
+                }
             })
-                .then(res => {
-                    if (res.status === 200) {
-                        setTemplates(res.data.result?.items || []);
-                    }
-                })
-                .finally(() => setIsLoading(false));
-        };
+            .finally(() => setIsLoading(false));
+    };
+
+    useEffect(() => {
         fetchTemplates();
     }, []);
 
@@ -71,6 +75,17 @@ const TemplateList: React.FC<Props> = ({ renderAddonBeforeItem }) => {
                     previousRoute: location.pathname,
                 },
             });
+    };
+
+    const handleDeleteTemplate = async (data: PresentationDto) => {
+        NotifyUtil.confirmDialog('Thông báo', 'Bạn có chắc muốn xóa mẫu này ?').then(async confirm => {
+            if (confirm.isConfirmed) {
+                overlayRef.current?.open();
+                await baseDeleteWithoutIdApi(PRESENTATION_DELETE_API, { presentationID: data.presentationID }, 'post');
+                await fetchTemplates();
+                overlayRef.current?.close();
+            }
+        });
     };
 
     const renderBody = () => {
@@ -190,16 +205,50 @@ const TemplateList: React.FC<Props> = ({ renderAddonBeforeItem }) => {
                                             >
                                                 Xem trước
                                             </div>
-                                            <div
-                                                className={clsx(
-                                                    'rounded-full h-8 text-xs border-2 border-indigo-main bg-indigo-main',
-                                                    'flex items-center justify-center transition-all duration-200 ease-in-out',
-                                                    'text-white hover:bg-white hover:text-indigo-main px-3',
-                                                )}
-                                                onClick={() => handleCreatePresent(item)}
-                                            >
-                                                <BaseIcon type="add" size={18} />
-                                            </div>
+                                            {allowCreate && (
+                                                <div
+                                                    className={clsx(
+                                                        'rounded-full h-8 text-xs border-2 border-indigo-main bg-indigo-main',
+                                                        'flex items-center justify-center transition-all duration-200 ease-in-out',
+                                                        'text-white hover:bg-white hover:text-indigo-main px-3',
+                                                    )}
+                                                    onClick={() => handleCreatePresent(item)}
+                                                >
+                                                    <BaseIcon type="add" size={18} />
+                                                </div>
+                                            )}
+                                            {allowEdit && (
+                                                <div
+                                                    className={clsx(
+                                                        'rounded-full h-8 text-xs border-2 border-green-500 bg-green-500',
+                                                        'flex items-center justify-center transition-all duration-200 ease-in-out',
+                                                        'text-white hover:bg-white hover:text-green-500 px-3',
+                                                    )}
+                                                    onClick={e => {
+                                                        e.preventDefault();
+                                                        e.stopPropagation();
+                                                        navigate('/template/edit/' + item.presentationID);
+                                                    }}
+                                                >
+                                                    <BaseIcon type="edit" size={18} />
+                                                </div>
+                                            )}
+                                            {allowDelete && (
+                                                <div
+                                                    className={clsx(
+                                                        'rounded-full h-8 text-xs border-2 border-red-500 bg-red-500',
+                                                        'flex items-center justify-center transition-all duration-200 ease-in-out',
+                                                        'text-white hover:bg-white hover:text-red-500 px-3',
+                                                    )}
+                                                    onClick={e => {
+                                                        e.preventDefault();
+                                                        e.stopPropagation();
+                                                        handleDeleteTemplate(item);
+                                                    }}
+                                                >
+                                                    <BaseIcon type="delete" size={18} />
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 </Stack>
