@@ -1,4 +1,4 @@
-import { Box, Grid, Stack, Typography } from '@mui/material';
+import { Box, Grid, Stack, Tooltip, Typography } from '@mui/material';
 import _ from 'lodash';
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -266,29 +266,36 @@ const DashboardHomePage: React.FC<Props> = () => {
                                 return (
                                     <Grid key={item.visitHistoryID} item xs={12} sm={6} md={4} lg={3}>
                                         <Stack direction="column">
-                                            <Box
-                                                sx={{
-                                                    padding: '1rem',
-                                                    borderRadius: '8px',
-                                                    transition: 'all .3s',
-                                                    cursor: 'pointer',
-                                                    borderWidth: 2,
-                                                    borderColor: _.get(neutral, '100'),
-                                                    borderStyle: 'solid',
-                                                    '&:hover': {
-                                                        borderColor: _.get(indigo, 'main'),
-                                                    },
-                                                    marginBottom: '0.5rem',
-                                                    aspectRatio: '16 / 9',
-                                                }}
-                                                onClick={() => handleDetailPresentation(item.assetID)}
-                                            >
-                                                {renderSlide(item.asset?.firstSlide)}
-                                            </Box>
+                                            <Tooltip title={item.asset.name}>
+                                                <Box
+                                                    sx={{
+                                                        padding: '1rem',
+                                                        borderRadius: '8px',
+                                                        transition: 'all .3s',
+                                                        cursor: 'pointer',
+                                                        borderWidth: 2,
+                                                        borderColor: _.get(neutral, '100'),
+                                                        borderStyle: 'solid',
+                                                        '&:hover': {
+                                                            borderColor: _.get(indigo, 'main'),
+                                                        },
+                                                        marginBottom: '0.5rem',
+                                                        aspectRatio: '16 / 9',
+                                                    }}
+                                                    onClick={() => handleDetailPresentation(item.assetID)}
+                                                >
+                                                    {renderSlide(item.asset?.firstSlide)}
+                                                </Box>
+                                            </Tooltip>
                                             <Typography
                                                 component="p"
                                                 variant="subtitle1"
-                                                sx={{ cursor: 'pointer' }}
+                                                sx={{
+                                                    cursor: 'pointer',
+                                                    whiteSpace: 'nowrap',
+                                                    overflow: 'hidden',
+                                                    textOverflow: 'ellipsis',
+                                                }}
                                                 onClick={() => handleDetailPresentation(item.assetID)}
                                             >
                                                 {item.asset.name}
