@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion';
 import React, { CSSProperties, useMemo } from 'react';
-import BaseIcon from '~/components/icons/BaseIcon';
 import { ShowFontSizeConstant } from '~/configs/constants';
 import { HorizontalAlignment, TextSize, VerticalAlignment } from '~/types/shared';
 import { SlideDto } from '../../types/slide';
@@ -134,18 +133,18 @@ const ShowBulletSlide: React.FC<Props> = ({ slide }) => {
                             }}
                             className="flex items-center"
                         >
-                            <motion.span
+                            <motion.li
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 transition={{
                                     duration: 2,
                                     delay: index / 3,
                                 }}
+                                className="list-disc list-inside list"
                                 key={index}
                             >
-                                <BaseIcon type="dot" size={12} className="mr-2.5" />
                                 {item.value}
-                            </motion.span>
+                            </motion.li>
                         </div>
                     );
                 })}

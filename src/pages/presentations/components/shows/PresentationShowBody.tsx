@@ -46,7 +46,7 @@ const PresentationShowBody: React.FC<Props> = ({ style }) => {
 
     const renderBody = () => {
         if (!slide?.mediaURL || !slide.layout || slide.layout === SlideLayout.Default) {
-            return <div className="w-full h-full">{renderSlide()}</div>;
+            return <div className="w-full h-full px-20 py-5">{renderSlide()}</div>;
         }
         switch (slide.layout) {
             case SlideLayout.ImageFull:

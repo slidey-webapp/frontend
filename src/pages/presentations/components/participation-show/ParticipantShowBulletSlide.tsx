@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion';
 import React from 'react';
-import BaseIcon from '~/components/icons/BaseIcon';
 import { SlideDto } from '../../types/slide';
 
 interface Props {
@@ -47,7 +46,7 @@ const ParticipantShowBulletSlide: React.FC<Props> = ({ slide }) => {
                             }}
                             className="flex items-center"
                         >
-                            <motion.span
+                            <motion.li
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 transition={{
@@ -55,10 +54,10 @@ const ParticipantShowBulletSlide: React.FC<Props> = ({ slide }) => {
                                     delay: index / 3,
                                 }}
                                 key={index}
+                                className="list-disc list-inside list"
                             >
-                                <BaseIcon type="dot" size={12} className="mr-2.5" />
                                 {item.value}
-                            </motion.span>
+                            </motion.li>
                         </div>
                     );
                 })}
