@@ -96,13 +96,11 @@ export class ShowFontSizeConstant {
     static HEADING_LARGE = '96px';
     static HEADING_EXTRA_LARGE = '128px';
 
-    static SECONDARY_EXTRA_SMALL = '16px';
-    static SECONDARY_SMALL = '20px';
-    static SECONDARY_MEDIUM = '24px';
-    static SECONDARY_LARGE = '30px';
-    static SECONDARY_EXTRA_LARGE = '36px';
-
-    static HEADING = '72px';
+    static SECONDARY_EXTRA_SMALL = '20px';
+    static SECONDARY_SMALL = '24px';
+    static SECONDARY_MEDIUM = '28px';
+    static SECONDARY_LARGE = '34px';
+    static SECONDARY_EXTRA_LARGE = '40px';
 }
 
 export class PreviewSizeConstant {

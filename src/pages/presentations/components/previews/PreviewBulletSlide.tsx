@@ -3,7 +3,6 @@ import { PreviewFontSizeConstant } from '~/configs/constants';
 import { HorizontalAlignment, TextSize, VerticalAlignment } from '~/types/shared';
 import { IPresentationContext } from '../../PresentationDetailPage';
 import { SlideDto } from '../../types/slide';
-import BaseIcon from '~/components/icons/BaseIcon';
 
 interface Props {
     slide: SlideDto;
@@ -110,27 +109,26 @@ const PreviewBulletSlide: React.FC<Props> = ({ slide, hover }) => {
                 className={'font-semibold mb-5'}
                 style={{
                     fontSize: headingSize,
-                    ...horizontalAlignment
+                    ...horizontalAlignment,
                 }}
             >
                 {slide.heading}
             </div>
-            <div className="w-fit">
+            <ul className="w-fit">
                 {slide.items?.map(item => {
                     return (
-                        <div
+                        <li
                             key={item.bulletListSlideItemID}
                             style={{
                                 fontSize: secondarySize,
                             }}
-                            className="flex items-center"
+                            className="list-disc list-inside list"
                         >
-                            <BaseIcon type="dot" size={12} className="mr-2.5" />
                             {item.value}
-                        </div>
+                        </li>
                     );
                 })}
-            </div>
+            </ul>
         </div>
     );
 };

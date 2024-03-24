@@ -20,7 +20,10 @@ const GroupForm: React.FC<Props> = ({ rowData, modalType, onClose, onSuccess }) 
         try {
             const url = modalType == 'create' ? GROUP_CREATE_API : GROUP_UPDATE_API + '/' + rowData?.groupID;
 
-            const response = await requestApi<GroupDto>('post', url, formValues);
+            const response = await requestApi<GroupDto>('post', url, {
+                ...formValues,
+                groupID: rowData?.groupID,
+            });
             if (response?.status === 200 || response?.status === 400) {
                 if (response.status === 200) {
                     onSuccess();
