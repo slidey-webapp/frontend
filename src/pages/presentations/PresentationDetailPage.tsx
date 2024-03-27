@@ -11,7 +11,12 @@ import { useSocketContext } from '~/providers/SocketProvider';
 import { User } from '~/types/auth';
 import { ChartType, HorizontalAlignment, Id, VerticalAlignment } from '~/types/shared';
 import HistoryUtil from '~/utils/HistoryUtil';
-import { PRESENTATION_UPDATE_API, SESSION_INITIAL_API, VISIT_HISTORY_API } from './api/presentation.api';
+import {
+    PRESENTATION_UPDATE_API,
+    SESSION_END_API,
+    SESSION_INITIAL_API,
+    VISIT_HISTORY_API,
+} from './api/presentation.api';
 import { useCollaborationsQuery } from './api/useCollaborationsQuery';
 import { usePresentationDetail } from './api/usePresentationDetail';
 import PresentationHeader from './components/PresentationHeader';
@@ -20,6 +25,7 @@ import { CollaborationDto } from './types/collaboration';
 import { PresentationDto } from './types/presentation';
 import { SessionDto } from './types/session';
 import { SlideDto, SlideLayout } from './types/slide';
+import NotifyUtil from '~/utils/NotifyUtil';
 interface Props {}
 
 export interface IPresentationContext {
@@ -248,6 +254,13 @@ const PresentationDetailPage: React.FC<Props> = () => {
         });
         overlayRef.current?.close();
 
+        if (response.status === 400) {
+            NotifyUtil.warn(
+                'Bài thuyết trình đang được trình chiếu, vui lòng kết thúc phiên trình chiếu đề bắt đầu phiên mới!',
+            );
+
+            return;
+        }
         if (response.status !== 200) return;
 
         const sessionId = response.data.result?.session?.sessionID;

@@ -85,9 +85,9 @@ const ParticipationShowContainer: React.FC<Props> = () => {
                     <div className="h-full w-full flex flex-col gap-y-6">
                         {slide?.mediaURL && (
                             <div
-                                className="w-full rounded-lg overflow-hidden"
+                                className="w-full aspect-square rounded-lg overflow-hidden"
                                 style={{
-                                    height: 300,
+                                    minHeight: 350,
                                 }}
                             >
                                 <img
@@ -95,7 +95,7 @@ const ParticipationShowContainer: React.FC<Props> = () => {
                                     style={{
                                         width: '100%',
                                         height: '100%',
-                                        objectFit: 'cover',
+                                        objectFit: 'contain',
                                     }}
                                 />
                             </div>

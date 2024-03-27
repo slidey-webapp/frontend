@@ -11,9 +11,8 @@ import { PaginatedList, requestApi } from '~/libs/axios';
 import { useSocketContext } from '~/providers/SocketProvider';
 import { Id } from '~/types/shared';
 import NotifyUtil from '~/utils/NotifyUtil';
-import { SESSION_JOIN_API, SESSION_MESSAGE_INDEX_API, SESSION_QUESTION_INDEX_API } from './api/presentation.api';
+import { SESSION_JOIN_API, SESSION_QUESTION_INDEX_API } from './api/presentation.api';
 import ParticipationShowContainer from './components/participation-show/ParticipationShowContainer';
-import { MessageDto } from './types/message';
 import { ParticipantDto } from './types/participant';
 import { PresentationDto } from './types/presentation';
 import { QuestionDto } from './types/question';
@@ -25,7 +24,6 @@ export interface IPresentationJoinSessionContext {
     participantID: Id;
     slide?: SlideDto;
     questions: QuestionDto[];
-    messages: MessageDto[];
 }
 
 export const PresentationJoinSessionContext = createContext<IPresentationJoinSessionContext>(
@@ -43,7 +41,6 @@ interface State {
     sessionId?: Id;
     slide?: SlideDto;
     questions: QuestionDto[];
-    messages: MessageDto[];
 }
 
 const PresentationJoinSession: React.FC<Props> = () => {
@@ -54,7 +51,6 @@ const PresentationJoinSession: React.FC<Props> = () => {
     const { authUser } = useAppSelector((state: RootState) => state.auth);
 
     const [state, setState] = useState<State>({
-        messages: [],
         questions: [],
     });
 
@@ -68,21 +64,6 @@ const PresentationJoinSession: React.FC<Props> = () => {
             setState(pre => ({
                 ...pre,
                 questions: res.data.result?.items || [],
-            }));
-        },
-        enabled: !!state.sessionId,
-    });
-
-    const { refetch: refetchMessageList } = useQuery({
-        queryKey: ['MessageList'],
-        queryFn: () =>
-            requestApi<PaginatedList<MessageDto>>('get', SESSION_MESSAGE_INDEX_API, null, {
-                params: { sessionID: state.sessionId, offset: 0, limit: 100000 },
-            }),
-        onSuccess: res => {
-            setState(pre => ({
-                ...pre,
-                messages: res.data.result?.items || [],
             }));
         },
         enabled: !!state.sessionId,
@@ -139,12 +120,7 @@ const PresentationJoinSession: React.FC<Props> = () => {
         socket.on(SocketEvent.END_SESSION, () => {
             setState({
                 questions: [],
-                messages: [],
             });
-        });
-
-        socket.on(SocketEvent.MESSAGE, async ({ message }: { message: MessageDto }) => {
-            await refetchMessageList();
         });
 
         socket.on(SocketEvent.QUESTION, async ({ question }: { question: QuestionDto }) => {
@@ -235,7 +211,6 @@ const PresentationJoinSession: React.FC<Props> = () => {
                 sessionID: state.sessionId as Id,
                 slide: state.slide,
                 questions: state.questions,
-                messages: state.messages,
             }}
         >
             <div className="w-full h-screen overflow-hidden relative flex items-center justify-center">

@@ -3,7 +3,7 @@ import React, { useRef } from 'react';
 import { ButtonBase } from '~/components/buttons/ButtonBase';
 import ButtonIconBase from '~/components/buttons/ButtonIconBase';
 import BaseForm, { BaseFormRef } from '~/components/forms/BaseForm';
-import Overlay, { OverlayRef } from '~/components/loadings/Overlay';
+import Empty from '~/components/layouts/Empty';
 import { requestApi } from '~/libs/axios';
 import { Id } from '~/types/shared';
 import NotifyUtil from '~/utils/NotifyUtil';
@@ -48,9 +48,13 @@ const ParticipantSendQuestion: React.FC<Props> = () => {
         response.data.message && NotifyUtil.error(response.data.message);
     };
 
-    return (
-        <div className="relative">
-            {questions.length > 0 && (
+    const renderBody = () => {
+        if (!questions || questions.length === 0) {
+            return <Empty className='my-6' />;
+        }
+
+        return (
+            questions.length > 0 && (
                 <div className="flex flex-col gap-y-2 px-6 pt-2">
                     {questions.map((question, index) => {
                         const isVoted = question.votes.some(vote => vote.participantID === participantID);
@@ -83,7 +87,13 @@ const ParticipantSendQuestion: React.FC<Props> = () => {
                         );
                     })}
                 </div>
-            )}
+            )
+        );
+    };
+
+    return (
+        <div className="relative">
+            {renderBody()}
             <BaseForm
                 className="sticky bottom-0 p-6 pt-3 bg-white"
                 ref={formRef}

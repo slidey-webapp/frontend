@@ -9,6 +9,7 @@ import NotifyUtil from '~/utils/NotifyUtil';
 import { usePresentationShowContext } from '../../PresentationHostShow';
 import { SESSION_QUESTION_MARK_AS_SOLVED_API } from '../../api/presentation.api';
 import { QuestionDto } from '../../types/question';
+import Empty from '~/components/layouts/Empty';
 
 interface Props {
     sessionID: Id;
@@ -30,59 +31,63 @@ const PresentationQuestionList: React.FC<Props> = ({ sessionID }) => {
         response.data.message && NotifyUtil.error(response.data.message);
     };
 
-    return (
-        <div className="">
-            {questions.map((question, index) => {
-                return (
+    const renderBody = () => {
+        if (!questions || questions.length === 0) {
+            return <Empty className='my-6' />;
+        }
+
+        return questions.map((question, index) => {
+            return (
+                <div
+                    key={question.questionID}
+                    className={clsx({
+                        'mb-4': index < questions.length - 1,
+                        'text-neutral-500 font-normal': question.isAnswered,
+                        'text-indigo-main': !question.isAnswered,
+                    })}
+                >
                     <div
-                        key={question.questionID}
-                        className={clsx({
-                            'mb-4': index < questions.length - 1,
-                            'text-neutral-500 font-normal': question.isAnswered,
-                            'text-indigo-main': !question.isAnswered,
+                        className={clsx('py-2 px-4 mb-2 flex', {
+                            'text-neutral-500 font-normal cursor-default': question.isAnswered,
+                            'text-indigo-main cursor-pointer': !question.isAnswered,
                         })}
+                        style={{
+                            boxShadow: 'rgba(0, 0, 0, 0.04) 0px 5px 22px, rgba(0, 0, 0, 0.03) 0px 0px 0px 0.5px',
+                            borderRadius: 20,
+                        }}
+                        onClick={() =>
+                            markAsSolved({
+                                isAnswered: question.isAnswered,
+                                questionID: question.questionID,
+                            })
+                        }
                     >
-                        <div
-                            className={clsx('py-2 px-4 mb-2 flex', {
-                                'text-neutral-500 font-normal cursor-default': question.isAnswered,
-                                'text-indigo-main cursor-pointer': !question.isAnswered,
-                            })}
-                            style={{
-                                boxShadow: 'rgba(0, 0, 0, 0.04) 0px 5px 22px, rgba(0, 0, 0, 0.03) 0px 0px 0px 0.5px',
-                                borderRadius: 20,
-                            }}
-                            onClick={() =>
-                                markAsSolved({
-                                    isAnswered: question.isAnswered,
-                                    questionID: question.questionID,
-                                })
-                            }
-                        >
-                            <div className="flex w-9 h-full">
-                                <div className="h-fit flex flex-col items-center pt-1">
-                                    <BaseIcon type="thumb-up-alt" size={18} />
-                                    <span className="text-sm">{question.totalVoted}</span>
-                                </div>
-                            </div>
-                            <div className="flex flex-1">
-                                <div className="flex-1">{question.content}</div>
-                                {!question.isAnswered && (
-                                    <div className="w-5 flex justify-end">
-                                        <div className="w-fit h-6">
-                                            <BaseIcon type="dot" size={12} />
-                                        </div>
-                                    </div>
-                                )}
+                        <div className="flex w-9 h-full">
+                            <div className="h-fit flex flex-col items-center pt-1">
+                                <BaseIcon type="thumb-up-alt" size={18} />
+                                <span className="text-sm">{question.totalVoted}</span>
                             </div>
                         </div>
-                        <div className="px-4 text-xs">
-                            {moment.utc(question.createdAt, DateTimeUtil.DATE_TIME_FORMAT).fromNow()}
+                        <div className="flex flex-1">
+                            <div className="flex-1">{question.content}</div>
+                            {!question.isAnswered && (
+                                <div className="w-5 flex justify-end">
+                                    <div className="w-fit h-6">
+                                        <BaseIcon type="dot" size={12} />
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </div>
-                );
-            })}
-        </div>
-    );
+                    <div className="px-4 text-xs">
+                        {moment.utc(question.createdAt, DateTimeUtil.DATE_TIME_FORMAT).fromNow()}
+                    </div>
+                </div>
+            );
+        });
+    };
+
+    return <div className="">{renderBody()}</div>;
 };
 
 export default PresentationQuestionList;

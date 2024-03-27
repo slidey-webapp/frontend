@@ -1,8 +1,8 @@
 import _ from 'lodash';
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
-import { useQuery } from 'react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 import { RootState, useAppSelector } from '~/AppStore';
+import ButtonIconBase from '~/components/buttons/ButtonIconBase';
 import FullScreen, { FullScreenRef } from '~/components/full-screen/FullScreen';
 import Loading from '~/components/loadings/Loading';
 import ModalBase, { ModalBaseRef } from '~/components/modals/ModalBase';
@@ -26,7 +26,6 @@ import { PresentationDto } from './types/presentation';
 import { QuestionDto } from './types/question';
 import { SessionDto } from './types/session';
 import { MultipleChoiceSlideOption, SlideDto } from './types/slide';
-import ButtonIconBase from '~/components/buttons/ButtonIconBase';
 
 export interface IPresentationShowContext {
     sessionId: Id;
@@ -237,11 +236,11 @@ const PresentationHostShow: React.FC<Props> = () => {
         );
 
         socket.on(SocketEvent.MESSAGE, async ({ message }: { message: MessageDto }) => {
-            await refetchMessageList();
+            await fetchMessageList(sessionID);
         });
 
         socket.on(SocketEvent.QUESTION, async ({ question }: { question: QuestionDto }) => {
-            await refetchQuestionList();
+            await fetchQuestionList(sessionID);
 
             if (presentShowFooterRef.current?.getModalQuestionState()) return;
 
@@ -252,7 +251,7 @@ const PresentationHostShow: React.FC<Props> = () => {
         });
 
         socket.on(SocketEvent.UPVOTE_QUESTION, async ({ question }: { question: QuestionDto }) => {
-            await refetchQuestionList();
+            await fetchQuestionList(sessionID);
         });
 
         socket.on(SocketEvent.ANSWER_QUESTION, async ({ question: { questionID } }: { question: QuestionDto }) => {
@@ -309,33 +308,59 @@ const PresentationHostShow: React.FC<Props> = () => {
         },
     });
 
-    const { refetch: refetchQuestionList } = useQuery({
-        queryKey: ['QuestionList'],
-        queryFn: () =>
-            requestApi<PaginatedList<QuestionDto>>('get', SESSION_QUESTION_INDEX_API, null, {
-                params: { sessionID, offset: 0, limit: 100000 },
-            }),
-        onSuccess: res => {
+    const fetchQuestionList = async (sesId?: Id) => {
+        if (!sesId) return;
+        const response = await requestApi<PaginatedList<QuestionDto>>('get', SESSION_QUESTION_INDEX_API, null, {
+            params: { sessionID: sesId, offset: 0, limit: 100000 },
+        });
+        if (response.status === 200) {
             setState(pre => ({
                 ...pre,
-                questions: res.data.result?.items || [],
+                questions: response.data.result?.items || [],
             }));
-        },
-    });
+        }
+    };
 
-    const { refetch: refetchMessageList } = useQuery({
-        queryKey: ['MessageList'],
-        queryFn: () =>
-            requestApi<PaginatedList<MessageDto>>('get', SESSION_MESSAGE_INDEX_API, null, {
-                params: { sessionID, offset: 0, limit: 100000 },
-            }),
-        onSuccess: res => {
+    const fetchMessageList = async (sesId?: Id) => {
+        if (!sesId) return;
+        const response = await requestApi<PaginatedList<MessageDto>>('get', SESSION_MESSAGE_INDEX_API, null, {
+            params: { sessionID: sesId, offset: 0, limit: 100000 },
+        });
+        if (response.status === 200) {
             setState(pre => ({
                 ...pre,
-                messages: res.data.result?.items || [],
+                messages: response.data.result?.items || [],
             }));
-        },
-    });
+        }
+    };
+
+    // const { refetch: refetchQuestionList } = useQuery({
+    //     queryKey: ['QuestionList', sessionID],
+    //     queryFn: () =>
+    //         requestApi<PaginatedList<QuestionDto>>('get', SESSION_QUESTION_INDEX_API, null, {
+    //             params: { sessionID, offset: 0, limit: 100000 },
+    //         }),
+    //     onSuccess: res => {
+    //         setState(pre => ({
+    //             ...pre,
+    //             questions: res.data.result?.items || [],
+    //         }));
+    //     },
+    // });
+
+    // const { refetch: refetchMessageList } = useQuery({
+    //     queryKey: ['MessageList', sessionID],
+    //     queryFn: () =>
+    //         requestApi<PaginatedList<MessageDto>>('get', SESSION_MESSAGE_INDEX_API, null, {
+    //             params: { sessionID, offset: 0, limit: 100000 },
+    //         }),
+    //     onSuccess: res => {
+    //         setState(pre => ({
+    //             ...pre,
+    //             messages: res.data.result?.items || [],
+    //         }));
+    //     },
+    // });
 
     const handleSlideChange = async (action: 'previous' | 'next') => {
         const currentSlideIndex = state.slides.findIndex(x => x.slideID === state.currentSlideId);
