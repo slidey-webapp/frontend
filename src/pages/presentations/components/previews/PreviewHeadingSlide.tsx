@@ -12,6 +12,8 @@ interface Props {
 const PreviewHeadingSlide: React.FC<Props> = ({ slide, hover }) => {
     if (slide.type !== 'HEADING') return null;
 
+    const subHeading = slide.subHeading?.replace(/\n/g, '<br>');
+
     const verticalAlignment = useMemo<CSSProperties | undefined>(() => {
         const verAlign = hover?.verticalAlignment || slide.verticalAlignment;
 
@@ -53,9 +55,9 @@ const PreviewHeadingSlide: React.FC<Props> = ({ slide, hover }) => {
                 textAlign: 'right',
             };
 
-            return {
-                textAlign: 'left',
-            };
+        return {
+            textAlign: 'left',
+        };
     }, [slide.horizontalAlignment, hover]);
 
     const { headingSize, secondarySize } = useMemo<{
@@ -114,9 +116,10 @@ const PreviewHeadingSlide: React.FC<Props> = ({ slide, hover }) => {
                     fontSize: secondarySize,
                     ...horizontalAlignment,
                 }}
-            >
-                {slide.subHeading}
-            </div>
+                dangerouslySetInnerHTML={{
+                    __html: subHeading,
+                }}
+            />
         </div>
     );
 };

@@ -11,6 +11,8 @@ interface Props {
 const ShowHeadingSlide: React.FC<Props> = ({ slide }) => {
     if (slide.type !== 'HEADING') return null;
 
+    const subHeading = slide.subHeading?.replace(/\n/g, '<br>');
+
     const verticalAlignment = useMemo<CSSProperties | undefined>(() => {
         if (slide.verticalAlignment === VerticalAlignment.Top)
             return {
@@ -121,7 +123,7 @@ const ShowHeadingSlide: React.FC<Props> = ({ slide }) => {
                     fontSize: secondarySize,
                 }}
             >
-                {slide.subHeading.split(' ').map((el, i) => (
+                {subHeading.split('<br>').map((el, i) => (
                     <motion.span
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
@@ -131,7 +133,8 @@ const ShowHeadingSlide: React.FC<Props> = ({ slide }) => {
                         }}
                         key={i}
                     >
-                        {el}{' '}
+                        {el}
+                        <br />
                     </motion.span>
                 ))}
             </div>

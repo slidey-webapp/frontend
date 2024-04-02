@@ -1,6 +1,6 @@
 import React from 'react';
 import { usePresentationContext } from '../../PresentationDetailPage';
-import { SlideLayout } from '../../types/slide';
+import { SlideDto, SlideLayout } from '../../types/slide';
 import PreviewBulletSlide from './PreviewBulletSlide';
 import PreviewHeadingSlide from './PreviewHeadingSlide';
 import PreviewMultipleChoiceSlide from './PreviewMultipleChoiceSlide';
@@ -9,6 +9,19 @@ import PreviewQuoteSlide from './PreviewQuoteSlide';
 import PreviewWordCloudSlide from './PreviewWordCloudSlide';
 
 interface Props {}
+
+export const checkEmptyContent = (slide: SlideDto) => {
+    return (
+        !slide.heading &&
+        !slide.paragraph &&
+        !slide.subHeading &&
+        !slide.author &&
+        !slide.question &&
+        !slide.quote &&
+        (!slide.options || slide.options?.length === 0) &&
+        (!slide.items || slide.items.length === 0)
+    );
+};
 
 const PresentationBodyPreview: React.FC<Props> = () => {
     const { currentSlideId, slides, hover } = usePresentationContext();
@@ -36,7 +49,7 @@ const PresentationBodyPreview: React.FC<Props> = () => {
 
     const renderBody = () => {
         const layout = hover.layout || slide?.layout;
-        const mediaURL = slide?.mediaURL
+        const mediaURL = slide?.mediaURL;
 
         if (!mediaURL || !layout || layout === SlideLayout.Default) {
             return <div className="w-full h-full p-8">{renderSlide()}</div>;
@@ -55,15 +68,19 @@ const PresentationBodyPreview: React.FC<Props> = () => {
                                     objectFit: 'cover',
                                 }}
                             />
-                            <div
-                                className="absolute w-full h-full top-0 left-0"
-                                style={{
-                                    zIndex: 1,
-                                    background: 'rgba(255, 255, 255, 0.45)',
-                                }}
-                            />
+                            {!checkEmptyContent(slide) && (
+                                <div
+                                    className="absolute w-full h-full top-0 left-0"
+                                    style={{
+                                        zIndex: 1,
+                                        background: 'rgba(255, 255, 255, 0.45)',
+                                    }}
+                                />
+                            )}
                         </div>
-                        <div className="w-full h-full p-8 z-10 relative">{renderSlide()}</div>
+                        {!checkEmptyContent(slide) && (
+                            <div className="w-full h-full p-8 z-10 relative">{renderSlide()}</div>
+                        )}
                     </div>
                 );
             case SlideLayout.ImageSideLeft:

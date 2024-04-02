@@ -9,6 +9,8 @@ interface Props {
 const ParticipationShowHeadingSlide: React.FC<Props> = ({ slide }) => {
     if (slide.type !== 'HEADING') return null;
 
+    const subHeading = slide.subHeading?.replace(/\n/g, '<br>');
+
     return (
         <div className="w-full h-full flex flex-col">
             <div
@@ -35,19 +37,20 @@ const ParticipationShowHeadingSlide: React.FC<Props> = ({ slide }) => {
                 style={{
                     fontSize: 18,
                 }}
-                className='mt-6'
+                className="mt-6"
             >
-                {slide.subHeading.split(' ').map((el, i) => (
+                {subHeading.split('<br>').map((el, i) => (
                     <motion.span
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{
-                            duration: 0.05,
-                            delay: i / 20,
+                            duration: 0.1,
+                            delay: i / 10,
                         }}
                         key={i}
                     >
-                        {el}{' '}
+                        {el}
+                        <br />
                     </motion.span>
                 ))}
             </div>

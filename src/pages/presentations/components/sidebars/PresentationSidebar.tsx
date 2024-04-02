@@ -18,6 +18,7 @@ import OverviewMultipleChoiceSlide from './OverviewMultipleChoiceSlide';
 import OverviewParagraphSlide from './OverviewParagraphSlide';
 import OverviewQuoteSlide from './OverviewQuoteSlide';
 import OverviewWordCloudSlide from './OverviewWordCloudSlide';
+import { checkEmptyContent } from '../previews/PresentationBodyPreview';
 
 interface Props {
     isReadonly?: boolean;
@@ -90,15 +91,19 @@ const PresentationSidebar: React.FC<Props> = ({ isReadonly }) => {
                                     objectFit: 'cover',
                                 }}
                             />
-                            <div
-                                className="absolute w-full h-full top-0 left-0"
-                                style={{
-                                    zIndex: 1,
-                                    background: 'rgba(255, 255, 255, 0.45)',
-                                }}
-                            />
+                            {!checkEmptyContent(slide) && (
+                                <div
+                                    className="absolute w-full h-full top-0 left-0"
+                                    style={{
+                                        zIndex: 1,
+                                        background: 'rgba(255, 255, 255, 0.45)',
+                                    }}
+                                />
+                            )}
                         </div>
-                        <div className="w-full h-full p-2 z-10 relative">{overviewSlide}</div>
+                        {!checkEmptyContent(slide) && (
+                            <div className="w-full h-full p-2 z-10 relative">{overviewSlide}</div>
+                        )}
                     </div>
                 );
             case SlideLayout.ImageSideLeft:
@@ -222,12 +227,12 @@ const PresentationSidebar: React.FC<Props> = ({ isReadonly }) => {
         const slideIndex = newSlides.findIndex(x => x.slideID === slide.slideID);
 
         newSlides.splice(slideIndex, 1);
-     
-        mask()
+
+        mask();
         await onUpdatePresentation({
             slides: newSlides,
         });
-        unmask()
+        unmask();
 
         if (slide.slideID !== currentSlideId) return;
 
@@ -239,9 +244,9 @@ const PresentationSidebar: React.FC<Props> = ({ isReadonly }) => {
     };
 
     const handleDuplicateSlide = async (slide: SlideDto) => {
-        mask()
+        mask();
         const newSlide = await createSlide(slide.type, _.cloneDeep(slide));
-        unmask()
+        unmask();
         if (!newSlide) return;
 
         const newSlides = _.cloneDeep(slides);
