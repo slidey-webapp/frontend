@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import PresentationMain from '~/pages/presentations/components/PresentationMain';
 import { PresentationContext } from '~/pages/presentations/PresentationDetailPage';
-import { Id } from '~/types/shared';
-import { SlideDto } from '~/pages/presentations/types/slide';
+import PresentationMain from '~/pages/presentations/components/PresentationMain';
 import { PresentationDto } from '~/pages/presentations/types/presentation';
+import { SlideDto } from '~/pages/presentations/types/slide';
+import { Id } from '~/types/shared';
 interface PresentationViewerProps {
     presentation: PresentationDto & { slides?: SlideDto[] };
 }
@@ -38,10 +38,13 @@ const PresentationViewer = ({ presentation }: PresentationViewerProps) => {
                     },
                     onUpdatePresentation: () => {
                         // do nothing
-                        return new Promise(resolve => resolve());
                     },
                     onShowPresentation: () => {
                         // do nothing
+                    },
+                    fetchUpdatePresentation: () => {
+                        //
+                        return Promise.resolve();
                     },
                 }}
             >

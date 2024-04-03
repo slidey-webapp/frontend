@@ -66,7 +66,7 @@ const colorInputSx: SxProps<Theme> = {
 };
 
 const EditorDesign: React.FC<Props> = () => {
-    const { currentSlideId, slides, onUpdatePresentation, setHoverState, mask, unmask } = usePresentationContext();
+    const { currentSlideId, slides, fetchUpdatePresentation, setHoverState, mask, unmask } = usePresentationContext();
     const currentSlideIndex = slides.findIndex(x => x.slideID === currentSlideId);
     const currentSlide = slides.find(x => x.slideID === currentSlideId);
     if (!currentSlide || currentSlideIndex === -1) return null;
@@ -111,11 +111,9 @@ const EditorDesign: React.FC<Props> = () => {
             };
         }
 
-        mask();
-        await onUpdatePresentation({
+        await fetchUpdatePresentation({
             slides: slidesCloned,
         });
-        unmask();
     };
 
     const configs: Config[] = [

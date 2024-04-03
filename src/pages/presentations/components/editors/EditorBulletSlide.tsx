@@ -8,7 +8,14 @@ import { EditorSlideProps } from './EditorContent';
 
 interface Props extends EditorSlideProps {}
 
-const EditorBulletSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentation, mask, unmask }) => {
+const EditorBulletSlide: React.FC<Props> = ({
+    slide,
+    slides,
+    onUpdatePresentation,
+    mask,
+    unmask,
+    fetchUpdatePresentation,
+}) => {
     if (slide.type !== 'BULLET_LIST') return null;
 
     const handleUpdateItemsSlide = async (newSlide: SlideDto) => {
@@ -17,7 +24,7 @@ const EditorBulletSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentatio
         slides[currentSlideIndex] = newSlide;
 
         mask?.();
-        await onUpdatePresentation({
+        await fetchUpdatePresentation?.({
             slides: slides,
         });
         unmask?.();
@@ -33,14 +40,14 @@ const EditorBulletSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentatio
         });
     };
 
-    const handleChangeHeading = _.debounce((value: string) => {
+    const handleChangeHeading = (value: string) => {
         const newSlide = {
             ..._.cloneDeep(slide),
             heading: value,
         };
 
         handleUpdateSlide(newSlide);
-    }, 200);
+    };
 
     const handleAddItem = () => {
         const items = _.cloneDeep(slide.items) || [];
@@ -67,7 +74,7 @@ const EditorBulletSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentatio
         handleUpdateItemsSlide(newSlide);
     };
 
-    const handleUpdateItem = _.debounce((index: number, value: string) => {
+    const handleUpdateItem = (index: number, value: string) => {
         const items = _.cloneDeep(slide.items);
 
         items[index] = {
@@ -80,7 +87,7 @@ const EditorBulletSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentatio
             items,
         };
         handleUpdateSlide(newSlide);
-    }, 200);
+    };
 
     const renderItems = () => {
         return (slide.items || []).map((item, index) => {
