@@ -27,6 +27,10 @@ const TemplateCreateEditorContent: React.FC<Props> = () => {
             slide,
             slides,
             onUpdatePresentation,
+            fetchUpdatePresentation: params => {
+                onUpdatePresentation(params);
+                return Promise.resolve();
+            },
         };
 
         switch (slide?.type) {

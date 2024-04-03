@@ -21,7 +21,7 @@ export interface EditorSlideProps {
     slide: SlideDto;
     slides: SlideDto[];
     onUpdatePresentation: IPresentationContext['onUpdatePresentation'];
-    fetchUpdatePresentation?: IPresentationContext['fetchUpdatePresentation'];
+    fetchUpdatePresentation: IPresentationContext['fetchUpdatePresentation'];
     mask?: () => void;
     unmask?: () => void;
 }

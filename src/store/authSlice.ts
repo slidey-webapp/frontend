@@ -116,7 +116,7 @@ export const loginAsync =
                 NotifyUtil.error(response.data?.message || 'Có lỗi xảy ra');
             }
         } else {
-            NotifyUtil.error('Lỗi kết nối máy chủ, xin vui lòng liên hệ quản trị viên hoặc thử lại sau');
+            NotifyUtil.error(response.data.message || 'Lỗi kết nối máy chủ, xin vui lòng liên hệ quản trị viên hoặc thử lại sau');
         }
         callback?.();
         return true;

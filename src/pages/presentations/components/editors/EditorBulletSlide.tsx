@@ -24,7 +24,7 @@ const EditorBulletSlide: React.FC<Props> = ({
         slides[currentSlideIndex] = newSlide;
 
         mask?.();
-        await fetchUpdatePresentation?.({
+        await fetchUpdatePresentation({
             slides: slides,
         });
         unmask?.();
