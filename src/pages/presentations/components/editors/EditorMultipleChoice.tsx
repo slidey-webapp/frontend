@@ -7,7 +7,14 @@ import { MultipleChoiceSlideOption, SlideDto } from '../../types/slide';
 import { EditorSlideProps } from './EditorContent';
 interface Props extends EditorSlideProps {}
 
-const EditorMultipleChoiceSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentation, mask, unmask }) => {
+const EditorMultipleChoiceSlide: React.FC<Props> = ({
+    slide,
+    slides,
+    onUpdatePresentation,
+    mask,
+    unmask,
+    fetchUpdatePresentation,
+}) => {
     if (slide.type !== 'MULTIPLE_CHOICE') return null;
 
     const handleUpdateOptionsSlide = async (newSlide: SlideDto) => {
@@ -16,7 +23,7 @@ const EditorMultipleChoiceSlide: React.FC<Props> = ({ slide, slides, onUpdatePre
         slides[currentSlideIndex] = newSlide;
 
         mask?.();
-        await onUpdatePresentation({
+        await fetchUpdatePresentation?.({
             slides: slides,
         });
         unmask?.();
@@ -32,13 +39,13 @@ const EditorMultipleChoiceSlide: React.FC<Props> = ({ slide, slides, onUpdatePre
         });
     };
 
-    const handleChangeQuestion = _.debounce((value: string) => {
+    const handleChangeQuestion = (value: string) => {
         const newSlide = {
             ..._.cloneDeep(slide),
             question: value,
         };
         handleUpdateSlide(newSlide);
-    }, 200);
+    };
 
     const handleAddOption = () => {
         const options = _.cloneDeep(slide.options);
@@ -64,7 +71,7 @@ const EditorMultipleChoiceSlide: React.FC<Props> = ({ slide, slides, onUpdatePre
         handleUpdateOptionsSlide(newSlide);
     };
 
-    const handleUpdateOption = _.debounce((index: number, value: string) => {
+    const handleUpdateOption = (index: number, value: string) => {
         const options = _.cloneDeep(slide.options);
 
         options[index] = {
@@ -77,7 +84,7 @@ const EditorMultipleChoiceSlide: React.FC<Props> = ({ slide, slides, onUpdatePre
             options,
         };
         handleUpdateSlide(newSlide);
-    }, 200);
+    };
 
     const renderOptions = () => {
         return (slide.options || []).map((option, index) => {

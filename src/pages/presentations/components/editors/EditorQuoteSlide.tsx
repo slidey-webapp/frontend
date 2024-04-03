@@ -8,7 +8,7 @@ interface Props extends EditorSlideProps {}
 const EditorQuoteSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentation }) => {
     if (slide.type !== 'QUOTE') return null;
 
-    const handleChange = _.debounce((name: string, value: any) => {
+    const handleChange = (name: string, value: any) => {
         const currentSlideIndex = slides.findIndex(x => x.slideID === slide.slideID);
         const newSlide = {
             ..._.cloneDeep(slide),
@@ -19,7 +19,7 @@ const EditorQuoteSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentation
         onUpdatePresentation({
             slides: slides,
         });
-    }, 200);
+    };
 
     return (
         <>

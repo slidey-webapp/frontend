@@ -1,5 +1,4 @@
 import { AvatarGroup, Box, Divider, FormControl, TextField, Tooltip, Typography } from '@mui/material';
-import _ from 'lodash';
 import React, { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { RootState, useAppSelector } from '~/AppStore';
@@ -112,13 +111,11 @@ const PresentationHeader: React.FC<Props> = () => {
                                 size="small"
                                 placeholder="Tên bài trình chiếu..."
                                 defaultValue={presentation.name}
-                                onChange={_.debounce(
-                                    event =>
-                                        onUpdatePresentation({
-                                            name: event.target.value,
-                                        }),
-                                    200,
-                                )}
+                                onChange={event =>
+                                    onUpdatePresentation({
+                                        name: event.target.value,
+                                    })
+                                }
                                 sx={{
                                     '& input': {
                                         color: '#fff',

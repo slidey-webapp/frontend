@@ -5,7 +5,6 @@ import { ImagePicker } from '~/components/forms/fields/BaseImagePickerField';
 import { ComboOptionConstant } from '~/configs/constants';
 import { UPLOAD_FILE_API } from '~/configs/global.api';
 import { convertToFormData, requestApi } from '~/libs/axios';
-import { ITemplateCreateContext } from '~/pages/templates/TemplateCreatePage';
 import { Id } from '~/types/shared';
 import { IPresentationContext, usePresentationContext } from '../../PresentationDetailPage';
 import { SlideDto, SlideType } from '../../types/slide';
@@ -21,13 +20,15 @@ interface Props {}
 export interface EditorSlideProps {
     slide: SlideDto;
     slides: SlideDto[];
-    onUpdatePresentation: IPresentationContext['onUpdatePresentation'] | ITemplateCreateContext['onUpdatePresentation'];
+    onUpdatePresentation: IPresentationContext['onUpdatePresentation'];
+    fetchUpdatePresentation?: IPresentationContext['fetchUpdatePresentation'];
     mask?: () => void;
     unmask?: () => void;
 }
 
 const EditorContent: React.FC<Props> = () => {
-    const { currentSlideId, slides, onUpdatePresentation, mask, unmask } = usePresentationContext();
+    const { currentSlideId, slides, onUpdatePresentation, mask, unmask, fetchUpdatePresentation } =
+        usePresentationContext();
     const slide = slides.find(x => x.slideID === currentSlideId) || ({} as SlideDto);
 
     const renderEditorType = () => {
@@ -37,6 +38,7 @@ const EditorContent: React.FC<Props> = () => {
             onUpdatePresentation,
             mask,
             unmask,
+            fetchUpdatePresentation,
         };
 
         switch (slide?.type) {
@@ -58,7 +60,7 @@ const EditorContent: React.FC<Props> = () => {
         }
     };
 
-    const handleChangeSlideType = (type: string) => {
+    const handleChangeSlideType = async (type: string) => {
         const newSlide = _.cloneDeep(slide);
         const currentSlideIndex = slides.findIndex(x => x.slideID === currentSlideId);
         slides[currentSlideIndex] = {
@@ -71,7 +73,7 @@ const EditorContent: React.FC<Props> = () => {
             subHeading: newSlide.paragraph,
         };
 
-        onUpdatePresentation({
+        await fetchUpdatePresentation({
             slides: slides,
         });
     };
@@ -86,7 +88,7 @@ const EditorContent: React.FC<Props> = () => {
 
         slides[currentSlideIndex] = newSlide;
 
-        await onUpdatePresentation({
+        await fetchUpdatePresentation({
             slides: slides,
         });
 

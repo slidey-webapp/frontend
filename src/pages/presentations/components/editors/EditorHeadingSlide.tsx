@@ -8,7 +8,7 @@ interface Props extends EditorSlideProps {}
 const EditorHeadingSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentation }) => {
     if (slide.type !== 'HEADING') return null;
 
-    const handleChange = _.debounce((name: string, value: any) => {
+    const handleChange = (name: string, value: any) => {
         const currentSlideIndex = slides.findIndex(x => x.slideID === slide.slideID);
         const newSlide = {
             ..._.cloneDeep(slide),
@@ -19,9 +19,7 @@ const EditorHeadingSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentati
         onUpdatePresentation({
             slides: slides,
         });
-
-        return '';
-    }, 200);
+    };
 
     return (
         <>

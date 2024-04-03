@@ -11,6 +11,7 @@ import NotifyUtil from '~/utils/NotifyUtil';
 import { usePresentationContext } from '../../PresentationDetailPage';
 import { PRESENTATION_CREATE_SLIDE_API } from '../../api/presentation.api';
 import { BulletSlideItem, MultipleChoiceSlideOption, SlideDto, SlideLayout, SlideType } from '../../types/slide';
+import { checkEmptyContent } from '../previews/PresentationBodyPreview';
 import NewSlidePattern from './NewSlidePattern';
 import OverviewBulletSlide from './OverviewBulletSlide';
 import OverviewHeadingSlide from './OverviewHeadingSlide';
@@ -18,7 +19,6 @@ import OverviewMultipleChoiceSlide from './OverviewMultipleChoiceSlide';
 import OverviewParagraphSlide from './OverviewParagraphSlide';
 import OverviewQuoteSlide from './OverviewQuoteSlide';
 import OverviewWordCloudSlide from './OverviewWordCloudSlide';
-import { checkEmptyContent } from '../previews/PresentationBodyPreview';
 
 interface Props {
     isReadonly?: boolean;
@@ -33,8 +33,16 @@ const reorder = (list: SlideDto[], startIndex: number, endIndex: number) => {
 };
 
 const PresentationSidebar: React.FC<Props> = ({ isReadonly }) => {
-    const { currentSlideId, presentationID, slides, onUpdatePresentation, setCurrentSlideId, setState, mask, unmask } =
-        usePresentationContext();
+    const {
+        currentSlideId,
+        presentationID,
+        slides,
+        fetchUpdatePresentation,
+        setCurrentSlideId,
+        setState,
+        mask,
+        unmask,
+    } = usePresentationContext();
 
     const onDragEnd: OnDragEndResponder = async result => {
         if (!result.destination || result.destination?.index === result.source.index) return;
@@ -46,7 +54,7 @@ const PresentationSidebar: React.FC<Props> = ({ isReadonly }) => {
             slides: newSlides,
         }));
 
-        onUpdatePresentation({
+        await fetchUpdatePresentation({
             slides: newSlides,
         });
     };
@@ -229,7 +237,7 @@ const PresentationSidebar: React.FC<Props> = ({ isReadonly }) => {
         newSlides.splice(slideIndex, 1);
 
         mask();
-        await onUpdatePresentation({
+        await fetchUpdatePresentation({
             slides: newSlides,
         });
         unmask();
@@ -246,8 +254,10 @@ const PresentationSidebar: React.FC<Props> = ({ isReadonly }) => {
     const handleDuplicateSlide = async (slide: SlideDto) => {
         mask();
         const newSlide = await createSlide(slide.type, _.cloneDeep(slide));
-        unmask();
-        if (!newSlide) return;
+        if (!newSlide) {
+            unmask();
+            return;
+        }
 
         const newSlides = _.cloneDeep(slides);
         const slideCloned = _.cloneDeep(slide);
@@ -283,9 +293,10 @@ const PresentationSidebar: React.FC<Props> = ({ isReadonly }) => {
             slides: newSlides,
         }));
 
-        await onUpdatePresentation({
+        await fetchUpdatePresentation({
             slides: newSlides,
         });
+        unmask();
     };
 
     const createSlide = async (type: SlideType, rootSlide?: SlideDto) => {

@@ -11,12 +11,8 @@ import { useSocketContext } from '~/providers/SocketProvider';
 import { User } from '~/types/auth';
 import { ChartType, HorizontalAlignment, Id, VerticalAlignment } from '~/types/shared';
 import HistoryUtil from '~/utils/HistoryUtil';
-import {
-    PRESENTATION_UPDATE_API,
-    SESSION_END_API,
-    SESSION_INITIAL_API,
-    VISIT_HISTORY_API,
-} from './api/presentation.api';
+import NotifyUtil from '~/utils/NotifyUtil';
+import { PRESENTATION_UPDATE_API, SESSION_INITIAL_API, VISIT_HISTORY_API } from './api/presentation.api';
 import { useCollaborationsQuery } from './api/useCollaborationsQuery';
 import { usePresentationDetail } from './api/usePresentationDetail';
 import PresentationHeader from './components/PresentationHeader';
@@ -25,7 +21,6 @@ import { CollaborationDto } from './types/collaboration';
 import { PresentationDto } from './types/presentation';
 import { SessionDto } from './types/session';
 import { SlideDto, SlideLayout } from './types/slide';
-import NotifyUtil from '~/utils/NotifyUtil';
 interface Props {}
 
 export interface IPresentationContext {
@@ -43,7 +38,8 @@ export interface IPresentationContext {
     setCurrentSlideId: (id: Id) => void;
     mask: () => void;
     unmask: () => void;
-    onUpdatePresentation: (params: { name?: string; slides?: SlideDto[] }) => Promise<void>;
+    onUpdatePresentation: (params: { name?: string; slides?: SlideDto[] }) => void;
+    fetchUpdatePresentation: (params: { name?: string; slides?: SlideDto[] }) => Promise<void>;
     onShowPresentation: (groupID?: Id) => void;
 }
 
@@ -104,6 +100,7 @@ const PresentationDetailPage: React.FC<Props> = () => {
         layout: null,
     });
     const [isForbidden, setIsForbidden] = useState<boolean>(false);
+    const [isChanged, setIsChanged] = useState<boolean>(false);
 
     useEffect(() => {
         !socket.connected && socket.connect();
@@ -196,6 +193,24 @@ const PresentationDetailPage: React.FC<Props> = () => {
         };
     }, []);
 
+    useEffect(() => {
+        const interval = setInterval(() => {
+            if (!isChanged) return;
+
+            requestApi('post', PRESENTATION_UPDATE_API, {
+                presentationID,
+                name: state.presentation.name || '',
+                slides: state.slides || [],
+            });
+
+            setIsChanged(false);
+        }, 500);
+
+        return () => {
+            clearInterval(interval);
+        };
+    }, [isChanged]);
+
     const { isFetching: isFetchingPresentation } = usePresentationDetail(presentationID, {
         onSuccess: res => {
             if (res.status === 403) {
@@ -234,6 +249,18 @@ const PresentationDetailPage: React.FC<Props> = () => {
     );
 
     const handleUpdatePresentation = async (params: { name?: string; slides?: SlideDto[] }) => {
+        setIsChanged(true);
+        setState(pre => ({
+            ...pre,
+            presentation: {
+                ...pre.presentation,
+                name: params.name || pre.presentation?.name,
+            },
+            slides: params.slides || pre.slides,
+        }));
+    };
+
+    const fetchUpdatePresentation = async (params: { name?: string; slides?: SlideDto[] }) => {
         if (!params.name) _.set(params, 'name', state.presentation.name || '');
         if (!params.slides) _.set(params, 'slides', state.slides || []);
 
@@ -302,6 +329,7 @@ const PresentationDetailPage: React.FC<Props> = () => {
                             unmask: () => overlayRef.current?.close(),
                             onUpdatePresentation: handleUpdatePresentation,
                             onShowPresentation: handleShowPresentation,
+                            fetchUpdatePresentation,
                         }}
                     >
                         <PresentationHeader />
