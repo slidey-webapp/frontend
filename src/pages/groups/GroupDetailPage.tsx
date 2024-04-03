@@ -57,6 +57,9 @@ const GroupDetailPage: React.FC<Props> = () => {
             setMembers(resMembers);
             setRole(resRole);
         },
+        keepPreviousData: false,
+        cacheTime: 0,
+        staleTime: 0,
     });
 
     const group = useMemo(() => responseGroup?.data?.result?.group, [isFetchingGroup]);
@@ -87,7 +90,10 @@ const GroupDetailPage: React.FC<Props> = () => {
                 role: event?.target?.value,
             });
 
-            if (response?.status === 200) return;
+            if (response?.status === 200) {
+                await refetchMembers();
+                return;
+            }
 
             NotifyUtil.error(response.data?.message || 'Có lỗi xảy ra');
         } catch (err) {
