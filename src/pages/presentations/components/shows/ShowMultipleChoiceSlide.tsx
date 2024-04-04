@@ -94,14 +94,14 @@ const ShowMultipleChoiceSlide: React.FC<Props> = ({ slide }) => {
     const chartRef = useRef<ReactEChartsRef>(null);
 
     const renderChart = () => {
-        const dataXAxis = options.map(x => ({
+        const dataXAxis = (options || []).map(x => ({
             value: x.option,
             textStyle: {
                 fontSize: secondarySize,
             },
         }));
 
-        const dataSeries = options.map((opt, index) => {
+        const dataSeries = (options || []).map((opt, index) => {
             return {
                 value: opt.chosenAmount ?? 0,
                 itemStyle: {

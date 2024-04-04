@@ -22,12 +22,13 @@ export interface EditorSlideProps {
     slides: SlideDto[];
     onUpdatePresentation: IPresentationContext['onUpdatePresentation'];
     fetchUpdatePresentation: IPresentationContext['fetchUpdatePresentation'];
+    control: IPresentationContext['control'];
     mask?: () => void;
     unmask?: () => void;
 }
 
 const EditorContent: React.FC<Props> = () => {
-    const { currentSlideId, slides, onUpdatePresentation, mask, unmask, fetchUpdatePresentation } =
+    const { currentSlideId, slides, onUpdatePresentation, mask, unmask, fetchUpdatePresentation, control } =
         usePresentationContext();
     const slide = slides.find(x => x.slideID === currentSlideId) || ({} as SlideDto);
 
@@ -35,6 +36,7 @@ const EditorContent: React.FC<Props> = () => {
         const slideProps: EditorSlideProps = {
             slide,
             slides,
+            control,
             onUpdatePresentation,
             mask,
             unmask,
@@ -143,6 +145,7 @@ const EditorContent: React.FC<Props> = () => {
                                 Hình ảnh
                             </FormLabel>
                             <ImagePicker
+                                key={slide.mediaURL}
                                 defaultImage={slide.mediaURL}
                                 onChange={async file => {
                                     if (!file) {

@@ -1,11 +1,12 @@
-import { FormControl, FormLabel, TextField } from '@mui/material';
+import { FormControl, FormLabel } from '@mui/material';
 import _ from 'lodash';
 import React from 'react';
+import BaseTextField from '~/components/forms/fields/BaseTextField';
 import { EditorSlideProps } from './EditorContent';
 
 interface Props extends EditorSlideProps {}
 
-const EditorQuoteSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentation }) => {
+const EditorQuoteSlide: React.FC<Props> = ({ slide, control, slides, onUpdatePresentation }) => {
     if (slide.type !== 'QUOTE') return null;
 
     const handleChange = (name: string, value: any) => {
@@ -32,13 +33,17 @@ const EditorQuoteSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentation
                 >
                     Trích dẫn
                 </FormLabel>
-                <TextField
+                <BaseTextField
+                    name="quote"
+                    control={control}
+                    defaultValue={slide.quote}
+                    value={slide.quote}
+                    classNameCol="col-span-12"
                     variant="outlined"
                     size="small"
-                    placeholder="Trích dẫn"
+                    placeholder="Trích dẫn..."
                     rows={3}
                     multiline
-                    defaultValue={slide.quote}
                     onChange={event => handleChange('quote', event.target.value)}
                 />
             </FormControl>
@@ -52,11 +57,15 @@ const EditorQuoteSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentation
                 >
                     Tác giả
                 </FormLabel>
-                <TextField
-                    variant="outlined"
+                <BaseTextField
+                    name="author"
+                    control={control}
                     defaultValue={slide.author}
-                    placeholder="Tác giả"
+                    value={slide.author}
+                    classNameCol="col-span-12"
+                    variant="outlined"
                     size="small"
+                    placeholder="Tác giả..."
                     onChange={event => handleChange('author', event.target.value)}
                 />
             </FormControl>

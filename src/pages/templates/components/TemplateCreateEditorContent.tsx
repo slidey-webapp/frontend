@@ -19,7 +19,7 @@ import { useTemplateCreateContext } from '../TemplateCreatePage';
 interface Props {}
 
 const TemplateCreateEditorContent: React.FC<Props> = () => {
-    const { currentSlideId, slides, onUpdatePresentation, mask, unmask } = useTemplateCreateContext();
+    const { currentSlideId, slides, control, onUpdatePresentation, mask, unmask } = useTemplateCreateContext();
     const slide = slides.find(x => x.slideID === currentSlideId) || ({} as SlideDto);
 
     const renderEditorType = () => {
@@ -31,6 +31,7 @@ const TemplateCreateEditorContent: React.FC<Props> = () => {
                 onUpdatePresentation(params);
                 return Promise.resolve();
             },
+            control,
         };
 
         switch (slide?.type) {

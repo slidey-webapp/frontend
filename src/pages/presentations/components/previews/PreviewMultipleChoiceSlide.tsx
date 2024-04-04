@@ -1,5 +1,5 @@
 import { EChartsOption } from 'echarts';
-import React, { CSSProperties, useEffect, useMemo, useRef } from 'react';
+import React, { CSSProperties, useMemo, useRef } from 'react';
 import { ReactECharts, ReactEChartsRef } from '~/components/charts/ReactECharts';
 import { COLORS, PreviewFontSizeConstant } from '~/configs/constants';
 import { ChartType, HorizontalAlignment, TextSize, VerticalAlignment } from '~/types/shared';
@@ -97,8 +97,8 @@ const PreviewMultipleChoiceSlide: React.FC<Props> = ({ slide, hover }) => {
     const chartRef = useRef<ReactEChartsRef>(null);
 
     const renderChart = () => {
-        const dataXAxis = slide.options.map(x => x.option);
-        const dataSeries = slide.options.map((x, index) => ({
+        const dataXAxis = (slide.options || []).map(x => x.option);
+        const dataSeries = (slide.options || []).map((x, index) => ({
             value: hover?.chartType ? Math.round(Math.random() * 10) : 0,
             itemStyle: {
                 color: COLORS[index],

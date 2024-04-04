@@ -548,7 +548,7 @@ const EditorDesign: React.FC<Props> = () => {
                                                     'transition-all ease-in-out duration-100 border border-neutral-100 hover:border-indigo-main',
                                                     {
                                                         '!border-indigo-500': x.active,
-                                                        'cursor-not-allowed': x.disabled,
+                                                        '!cursor-not-allowed': x.disabled,
                                                     },
                                                 )}
                                                 onClick={() => {
@@ -607,7 +607,8 @@ const EditorDesign: React.FC<Props> = () => {
                                                                                     'rounded-r-lg ':
                                                                                         index ===
                                                                                         (row.items?.length || 0) - 1,
-                                                                                    'cursor-not-allowed': item.disabled,
+                                                                                    '!cursor-not-allowed':
+                                                                                        item.disabled,
                                                                                 },
                                                                             )}
                                                                             onClick={

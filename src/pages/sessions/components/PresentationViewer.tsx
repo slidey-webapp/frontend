@@ -13,6 +13,7 @@ const PresentationViewer = ({ presentation }: PresentationViewerProps) => {
     return (
         <div className="base-grid rounded-none">
             <PresentationContext.Provider
+                // @ts-ignore
                 value={{
                     presentationID: presentation.presentationID as Id,
                     presentation: presentation,

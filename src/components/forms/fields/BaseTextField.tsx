@@ -1,11 +1,12 @@
-import { TextField } from '@mui/material';
+import { BaseTextFieldProps, TextField } from '@mui/material';
 import React from 'react';
 import { Control, Controller } from 'react-hook-form';
 import { FormField } from '../BaseForm';
 
-interface Props extends FormField {
-    control: Control<any>;
-}
+type Props = FormField &
+    BaseTextFieldProps & {
+        control: Control<any>;
+    };
 
 const BaseTextField: React.FC<Props> = ({ control, name, ...props }) => {
     return (

@@ -1,8 +1,9 @@
-import { FormControl, FormLabel, TextField } from '@mui/material';
+import { FormControl, FormLabel } from '@mui/material';
 import _ from 'lodash';
 import React from 'react';
 import { ButtonBase } from '~/components/buttons/ButtonBase';
 import ButtonIconBase from '~/components/buttons/ButtonIconBase';
+import BaseTextField from '~/components/forms/fields/BaseTextField';
 import { MultipleChoiceSlideOption, SlideDto } from '../../types/slide';
 import { EditorSlideProps } from './EditorContent';
 interface Props extends EditorSlideProps {}
@@ -10,6 +11,7 @@ interface Props extends EditorSlideProps {}
 const EditorMultipleChoiceSlide: React.FC<Props> = ({
     slide,
     slides,
+    control,
     onUpdatePresentation,
     mask,
     unmask,
@@ -48,7 +50,7 @@ const EditorMultipleChoiceSlide: React.FC<Props> = ({
     };
 
     const handleAddOption = () => {
-        const options = _.cloneDeep(slide.options);
+        const options = _.cloneDeep(slide.options || []);
         options.push({
             option: 'Lựa chọn ' + options.length,
         } as MultipleChoiceSlideOption);
@@ -91,11 +93,15 @@ const EditorMultipleChoiceSlide: React.FC<Props> = ({
             return (
                 <div key={option.optionID} className="w-full flex items-center justify-between">
                     <FormControl sx={{ minWidth: 150 }} size="small">
-                        <TextField
+                        <BaseTextField
+                            name={`options[${index}].option`}
+                            control={control}
                             variant="outlined"
                             size="small"
-                            placeholder={'Lựa chọn ' + index}
+                            placeholder={'Lựa chọn ' + index + '...'}
                             defaultValue={option.option}
+                            value={option.option}
+                            classNameCol="col-span-12"
                             onChange={event => handleUpdateOption(index, event.target.value)}
                         />
                     </FormControl>
@@ -121,11 +127,15 @@ const EditorMultipleChoiceSlide: React.FC<Props> = ({
                 >
                     Câu hỏi
                 </FormLabel>
-                <TextField
+                <BaseTextField
+                    name="question"
+                    control={control}
+                    defaultValue={slide.question}
+                    value={slide.question}
+                    classNameCol="col-span-12"
                     variant="outlined"
                     size="small"
-                    placeholder="Câu hỏi"
-                    defaultValue={slide.question}
+                    placeholder="Câu hỏi..."
                     onChange={event => handleChangeQuestion(event.target.value)}
                 />
             </FormControl>

@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
+import { Control, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import Loading from '~/components/loadings/Loading';
 import Overlay, { OverlayRef } from '~/components/loadings/Overlay';
@@ -21,6 +22,7 @@ export interface ITemplateCreateContext {
     slides: SlideDto[];
     hover: PlacementHover;
     currentSlideId: Id;
+    control: Control<SlideDto, any>;
     setHoverState: React.Dispatch<React.SetStateAction<PlacementHover>>;
     setState: React.Dispatch<React.SetStateAction<State>>;
     onUpdatePresentation: (params: { name?: string; slides?: SlideDto[] }) => void;
@@ -47,6 +49,8 @@ const firstSlideId = Math.random();
 const TemplateCreatePage: React.FC<Props> = () => {
     const { presentationID } = useParams<{ presentationID: string }>();
     const navigate = useNavigate();
+
+    const { control, setValue } = useForm<SlideDto>();
 
     const [state, setState] = useState<State>({
         presentation: {
@@ -174,6 +178,7 @@ const TemplateCreatePage: React.FC<Props> = () => {
             ) : (
                 <TemplateCreateContext.Provider
                     value={{
+                        control: control,
                         presentation: state.presentation,
                         slides: state.slides,
                         hover: hoverState,

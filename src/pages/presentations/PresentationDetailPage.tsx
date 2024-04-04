@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import React, { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { Control, UseFormSetValue, useForm } from 'react-hook-form';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { RootState, useAppSelector } from '~/AppStore';
 import Forbidden from '~/components/errors/Forbidden';
@@ -41,6 +42,10 @@ export interface IPresentationContext {
     onUpdatePresentation: (params: { name?: string; slides?: SlideDto[] }) => void;
     fetchUpdatePresentation: (params: { name?: string; slides?: SlideDto[] }) => Promise<void>;
     onShowPresentation: (groupID?: Id) => void;
+    // hookForm: UseFormReturn<SlideDto, any, undefined>;
+
+    control: Control<SlideDto, any>;
+    setValue: UseFormSetValue<SlideDto>;
 }
 
 export interface PlacementHover {
@@ -67,6 +72,7 @@ const PresentationDetailPage: React.FC<Props> = () => {
     const { presentationID } = useParams<{ presentationID: string }>();
 
     const location = useLocation();
+    const { control, setValue } = useForm<SlideDto>();
 
     const navigate = useNavigate();
     const authUser = useAppSelector((state: RootState) => state.auth.authUser);
@@ -129,7 +135,9 @@ const PresentationDetailPage: React.FC<Props> = () => {
 
         socket.on(
             SocketEvent.UPDATE_PRESENTATION,
-            ({ presentation }: { presentation: PresentationDto & { slides?: SlideDto[] } }) => {
+            ({ presentation, user }: { presentation: PresentationDto & { slides?: SlideDto[] }; user: User }) => {
+                if (user.accountID === authUser?.user.accountID) return;
+
                 const newSlides = _.cloneDeep(presentation.slides) || [];
                 if (_.isEmpty(newSlides)) return;
 
@@ -139,6 +147,38 @@ const PresentationDetailPage: React.FC<Props> = () => {
                     const preState = _.cloneDeep(pre);
 
                     let currentId = preState.currentSlideId;
+                    const newCurrentSlide = newSlides.find(x => x.slideID === currentId);
+
+                    if (newCurrentSlide) {
+                        switch (newCurrentSlide?.type) {
+                            case 'HEADING':
+                                setValue('heading', newCurrentSlide?.heading);
+                                setValue('subHeading', newCurrentSlide?.subHeading);
+                                break;
+                            case 'PARAGRAPH':
+                                setValue('heading', newCurrentSlide?.heading);
+                                setValue('paragraph', newCurrentSlide?.paragraph);
+                                break;
+                            case 'MULTIPLE_CHOICE':
+                                setValue('question', newCurrentSlide?.question);
+                                // todo: options
+                                break;
+                            case 'BULLET_LIST':
+                                setValue('heading', newCurrentSlide?.heading);
+                                // todo: items
+                                break;
+                            case 'WORD_CLOUD':
+                                setValue('question', newCurrentSlide?.question);
+                                break;
+                            case 'QUOTE':
+                                setValue('quote', newCurrentSlide?.quote);
+                                setValue('author', newCurrentSlide?.author);
+                                break;
+                            case null:
+                            default:
+                                break;
+                        }
+                    }
 
                     const isCurrentSlideDeleted = newSlides.every(x => x.slideID !== currentId);
 
@@ -264,6 +304,15 @@ const PresentationDetailPage: React.FC<Props> = () => {
         if (!params.name) _.set(params, 'name', state.presentation.name || '');
         if (!params.slides) _.set(params, 'slides', state.slides || []);
 
+        setState(pre => ({
+            ...pre,
+            slides: params?.slides || pre.slides,
+            presentation: {
+                ...pre.presentation,
+                name: params.name || pre.presentation.name,
+            },
+        }));
+
         await requestApi('post', PRESENTATION_UPDATE_API, {
             presentationID,
             ...params,
@@ -317,6 +366,9 @@ const PresentationDetailPage: React.FC<Props> = () => {
                             hover: hoverState,
                             isOwner: authUser?.user.accountID === state.presentation.createdBy,
                             previousRoute: state.previousRoute,
+                            control,
+                            setValue,
+                            // hookForm,
                             setCurrentSlideId: id => {
                                 HistoryUtil.pushSearchParams(navigate, {
                                     current: id,
@@ -332,8 +384,10 @@ const PresentationDetailPage: React.FC<Props> = () => {
                             fetchUpdatePresentation,
                         }}
                     >
-                        <PresentationHeader />
-                        <PresentationMain />
+                        <form noValidate className="w-full h-full">
+                            <PresentationHeader />
+                            <PresentationMain />
+                        </form>
                     </PresentationContext.Provider>
                     <Overlay ref={overlayRef} />
                 </>

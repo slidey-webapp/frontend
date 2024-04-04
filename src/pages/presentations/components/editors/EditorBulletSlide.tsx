@@ -1,8 +1,9 @@
-import { FormControl, FormLabel, TextField } from '@mui/material';
+import { FormControl, FormLabel } from '@mui/material';
 import _ from 'lodash';
 import React from 'react';
 import { ButtonBase } from '~/components/buttons/ButtonBase';
 import { ButtonIconBase } from '~/components/buttons/ButtonIconBase';
+import BaseTextField from '~/components/forms/fields/BaseTextField';
 import { BulletSlideItem, SlideDto } from '../../types/slide';
 import { EditorSlideProps } from './EditorContent';
 
@@ -11,6 +12,7 @@ interface Props extends EditorSlideProps {}
 const EditorBulletSlide: React.FC<Props> = ({
     slide,
     slides,
+    control,
     onUpdatePresentation,
     mask,
     unmask,
@@ -94,11 +96,15 @@ const EditorBulletSlide: React.FC<Props> = ({
             return (
                 <div key={item.bulletListSlideItemID} className="w-full flex items-center justify-between">
                     <FormControl sx={{ minWidth: 150 }} size="small">
-                        <TextField
+                        <BaseTextField
+                            name={`items[${index}].value`}
+                            control={control}
                             variant="outlined"
                             size="small"
-                            placeholder={'Lựa chọn ' + index}
+                            placeholder={'Lựa chọn ' + index + '...'}
                             defaultValue={item.value}
+                            value={item.value}
+                            classNameCol="col-span-12"
                             onChange={event => handleUpdateItem(index, event.target.value)}
                         />
                     </FormControl>
@@ -124,11 +130,15 @@ const EditorBulletSlide: React.FC<Props> = ({
                 >
                     Tiêu đề
                 </FormLabel>
-                <TextField
+                <BaseTextField
+                    name="heading"
+                    control={control}
+                    defaultValue={slide.heading}
+                    value={slide.heading}
+                    classNameCol="col-span-12"
                     variant="outlined"
                     size="small"
-                    placeholder="Tiêu đề"
-                    defaultValue={slide.heading}
+                    placeholder="Tiêu đề..."
                     onChange={event => handleChangeHeading(event.target.value)}
                 />
             </FormControl>

@@ -217,7 +217,7 @@ const PresentationHostShow: React.FC<Props> = () => {
                         if (sl.slideID !== option.slideID) return sl;
                         if (sl.type !== 'MULTIPLE_CHOICE' && sl.type !== 'WORD_CLOUD') return sl;
                         if (sl.type === 'MULTIPLE_CHOICE') {
-                            sl.options = sl.options.map(opt => {
+                            sl.options = (sl.options || []).map(opt => {
                                 if (opt.optionID !== option.optionID) return opt;
 
                                 opt.chosenAmount = (opt.chosenAmount ?? 0) + 1;

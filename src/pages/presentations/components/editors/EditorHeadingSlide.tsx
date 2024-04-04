@@ -1,14 +1,17 @@
-import { FormControl, FormLabel, TextField } from '@mui/material';
+import { FormControl, FormLabel } from '@mui/material';
 import _ from 'lodash';
 import React from 'react';
+import BaseTextField from '~/components/forms/fields/BaseTextField';
 import { EditorSlideProps } from './EditorContent';
 
 interface Props extends EditorSlideProps {}
 
-const EditorHeadingSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentation }) => {
+const EditorHeadingSlide: React.FC<Props> = ({ slide, slides, control, onUpdatePresentation }) => {
     if (slide.type !== 'HEADING') return null;
 
     const handleChange = (name: string, value: any) => {
+        console.log(name, value);
+
         const currentSlideIndex = slides.findIndex(x => x.slideID === slide.slideID);
         const newSlide = {
             ..._.cloneDeep(slide),
@@ -32,11 +35,15 @@ const EditorHeadingSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentati
                 >
                     Tiêu đề
                 </FormLabel>
-                <TextField
+                <BaseTextField
+                    name="heading"
+                    control={control}
+                    defaultValue={slide.heading}
+                    value={slide.heading}
+                    classNameCol="col-span-12"
                     variant="outlined"
                     size="small"
-                    placeholder="Heading"
-                    defaultValue={slide.heading}
+                    placeholder="Tiêu đề..."
                     onChange={event => handleChange('heading', event.target.value)}
                 />
             </FormControl>
@@ -50,9 +57,13 @@ const EditorHeadingSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentati
                 >
                     Tiêu đề phụ
                 </FormLabel>
-                <TextField
-                    variant="outlined"
+                <BaseTextField
+                    name="subHeading"
+                    control={control}
                     defaultValue={slide.subHeading}
+                    value={slide.subHeading}
+                    classNameCol="col-span-12"
+                    variant="outlined"
                     placeholder="Subheading"
                     size="small"
                     multiline

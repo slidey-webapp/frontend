@@ -8,6 +8,7 @@ import ShowParagraphSlide from './ShowParagraphSlide';
 import ShowQuoteSlide from './ShowQuoteSlide';
 import ShowWordCloudSlide from './ShowWordCloudSlide';
 import { SlideLayout } from '../../types/slide';
+import { checkEmptyContent } from '../previews/PresentationBodyPreview';
 
 interface Props {
     style?: CSSProperties;
@@ -51,7 +52,7 @@ const PresentationShowBody: React.FC<Props> = ({ style }) => {
         switch (slide.layout) {
             case SlideLayout.ImageFull:
                 return (
-                    <div className="w-full h-full px-20 py-5">
+                    <div className="w-full h-full relative overflow-hidden">
                         <div className="absolute w-full h-full top-0 left-0">
                             <img
                                 src={slide.mediaURL}
@@ -61,22 +62,19 @@ const PresentationShowBody: React.FC<Props> = ({ style }) => {
                                     objectFit: 'cover',
                                 }}
                             />
-                            <div
-                                className="absolute w-full h-full top-0 left-0"
-                                style={{
-                                    zIndex: 1,
-                                    background: 'rgba(255, 255, 255, 0.45)',
-                                }}
-                            />
+                            {!checkEmptyContent(slide) && (
+                                <div
+                                    className="absolute w-full h-full top-0 left-0"
+                                    style={{
+                                        zIndex: 1,
+                                        background: 'rgba(255, 255, 255, 0.45)',
+                                    }}
+                                />
+                            )}
                         </div>
-                        <div
-                            className="w-full h-full relative"
-                            style={{
-                                zIndex: 1,
-                            }}
-                        >
-                            {renderSlide()}
-                        </div>
+                        {!checkEmptyContent(slide) && (
+                            <div className="w-full h-full p-8 z-10 relative">{renderSlide()}</div>
+                        )}
                     </div>
                 );
             case SlideLayout.ImageSideLeft:

@@ -1,11 +1,12 @@
-import { FormControl, FormLabel, TextField } from '@mui/material';
+import { FormControl, FormLabel } from '@mui/material';
 import _ from 'lodash';
 import React from 'react';
+import BaseTextField from '~/components/forms/fields/BaseTextField';
 import { EditorSlideProps } from './EditorContent';
 
 interface Props extends EditorSlideProps {}
 
-const EditorWordCloud: React.FC<Props> = ({ slide, slides, onUpdatePresentation }) => {
+const EditorWordCloud: React.FC<Props> = ({ slide, slides, control, onUpdatePresentation }) => {
     if (slide.type !== 'WORD_CLOUD') return null;
 
     const handleChange = (name: string, value: any) => {
@@ -32,11 +33,15 @@ const EditorWordCloud: React.FC<Props> = ({ slide, slides, onUpdatePresentation 
                 >
                     Câu hỏi
                 </FormLabel>
-                <TextField
+                <BaseTextField
+                    name="question"
+                    control={control}
+                    defaultValue={slide.question}
+                    value={slide.question}
+                    classNameCol="col-span-12"
                     variant="outlined"
                     size="small"
-                    placeholder="Câu hỏi"
-                    defaultValue={slide.question}
+                    placeholder="Câu hỏi..."
                     onChange={event => handleChange('question', event.target.value)}
                 />
             </FormControl>

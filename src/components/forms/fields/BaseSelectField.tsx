@@ -31,7 +31,7 @@ const BaseSelectField: React.FC<Props> = ({ control, name, options = [], ...prop
                             }}
                             {...props}
                         >
-                            {options.map(({ value, label }) => {
+                            {(options || []).map(({ value, label }) => {
                                 return (
                                     <MenuItem key={value} value={value}>
                                         {label}

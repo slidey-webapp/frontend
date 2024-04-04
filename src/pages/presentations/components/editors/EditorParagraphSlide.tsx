@@ -1,11 +1,12 @@
-import { FormControl, FormLabel, TextField } from '@mui/material';
+import { FormControl, FormLabel } from '@mui/material';
 import _ from 'lodash';
 import React from 'react';
+import BaseTextField from '~/components/forms/fields/BaseTextField';
 import { EditorSlideProps } from './EditorContent';
 
 interface Props extends EditorSlideProps {}
 
-const EditorParagraphSlide: React.FC<Props> = ({ slide, slides, onUpdatePresentation }) => {
+const EditorParagraphSlide: React.FC<Props> = ({ slide, slides, control, onUpdatePresentation }) => {
     if (slide.type !== 'PARAGRAPH') return null;
 
     const handleChange = (name: string, value: any) => {
@@ -19,8 +20,6 @@ const EditorParagraphSlide: React.FC<Props> = ({ slide, slides, onUpdatePresenta
         onUpdatePresentation({
             slides: slides,
         });
-
-        return '';
     };
 
     return (
@@ -34,11 +33,15 @@ const EditorParagraphSlide: React.FC<Props> = ({ slide, slides, onUpdatePresenta
                 >
                     Tiêu đề
                 </FormLabel>
-                <TextField
+                <BaseTextField
+                    name="heading"
+                    control={control}
+                    defaultValue={slide.heading}
+                    value={slide.heading}
+                    classNameCol="col-span-12"
                     variant="outlined"
                     size="small"
-                    placeholder="Heading"
-                    defaultValue={slide.heading}
+                    placeholder="Tiêu đề..."
                     onChange={event => handleChange('heading', event.target.value)}
                 />
             </FormControl>
@@ -50,12 +53,16 @@ const EditorParagraphSlide: React.FC<Props> = ({ slide, slides, onUpdatePresenta
                         fontWeight: 600,
                     }}
                 >
-                    Đoạn văn
+                    Tiêu đề phụ
                 </FormLabel>
-                <TextField
-                    variant="outlined"
+                <BaseTextField
+                    name="paragraph"
+                    control={control}
                     defaultValue={slide.paragraph}
-                    placeholder="Paragraph"
+                    value={slide.paragraph}
+                    classNameCol="col-span-12"
+                    variant="outlined"
+                    placeholder="Văn bản..."
                     size="small"
                     multiline
                     rows={7}
