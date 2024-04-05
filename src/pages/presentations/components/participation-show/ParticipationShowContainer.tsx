@@ -32,6 +32,7 @@ const ParticipationShowContainer: React.FC<Props> = () => {
                         slide={slide}
                         participantID={participantID}
                         sessionID={sessionID}
+                        key={slide.slideID}
                     />
                 );
             case 'QUOTE':
